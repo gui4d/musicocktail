@@ -1,6 +1,6 @@
 CFLAGS=-W -Wall 
 
-programme.exe :cocktail.o  main.o
+programme.exe : main.o ingredient.o
 	gcc $^ -o programme.exe $(CFLAGS)
 
 %.o :%.c

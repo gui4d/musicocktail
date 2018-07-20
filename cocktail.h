@@ -1,16 +1,10 @@
+#ifndef _COCKTAIL
+
+#define _COCKTAIL
 #include <stdlib.h>
 #include <stdio.h>
 #include<string.h>
-
-typedef struct {
-    char* name; 
-    float salt;
-    float sugar; 
-    float strenght; 
-    int iddIngredient; 
-
-}INGREDIENT;
- 
+#include"ingredient.h"
 
 typedef struct {
     char* name;
@@ -20,3 +14,5 @@ typedef struct {
     float* listAmount;
     int iddRecette;
 }RECETTE; 
+
+#endif

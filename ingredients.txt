@@ -1,6 +1,11 @@
-1 /nom/salt/sugar/strenght/iddingredient//
+2 /nom/salt/sugar/strenght/iddingredient//
 rhumr blanc exotic 
 3.14
 0.
 60.2
 0
+rhum brun exotic 
+3.14
+1.
+60.2
+1

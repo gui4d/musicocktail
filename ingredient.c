@@ -1,4 +1,4 @@
-#include "cocktail.h"
+#include "ingredient.h"
 
 int readNbIngredient(FILE* ingredientFile)
 {
