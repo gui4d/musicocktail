@@ -61,7 +61,7 @@ int initRecipeList()
     extern RECIPE* LIST_RECIPES; 
     extern int NUMBER_RECIPES;
     FILE* recipeFile=NULL;
-    recipeFile = fopen("recipes.txt", "r" );
+    recipeFile = fopen(RECIPESFILE, "r" );
     if(recipeFile!=NULL)
     {
         NUMBER_RECIPES=initNbIngredient(recipeFile);
@@ -100,7 +100,7 @@ void readRecipe(RECIPE Recipe, int verbose){
         }
     }
     else{
-        printf("name: %s",Recipe->name);
+        printf("%s",Recipe->name);
         for( int i = 0; i < Recipe->nbIngredients ; i++ ){
             readIngredient( ingredient((Recipe->listIddIngredients)[i]), verbose ); 
             printf("%f ml\n",Recipe->listAmount[i]); 
@@ -113,7 +113,7 @@ void readAllRecipes(){
     extern RECIPE* LIST_RECIPES; 
     extern int NUMBER_RECIPES;
     for( int i = 0; i <NUMBER_RECIPES ; i++){
-        readRecipe(LIST_RECIPES[i],0);
+        readRecipe(LIST_RECIPES[i],Nverbose );
     }
 }
 

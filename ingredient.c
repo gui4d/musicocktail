@@ -3,6 +3,7 @@
 
 int initNbIngredient(FILE* ingredientFile)
 {
+    if(ingredientFile== NULL)return 0; 
     char* charNbIngredient=NULL;  
     size_t charSize=0;
     getline( &charNbIngredient, &charSize , ingredientFile);
@@ -16,6 +17,7 @@ int initIngredient(FILE* ingredientFile,int iddIngredient)
     char* line=NULL;
     size_t lineSize=0;
     getline( &line, &lineSize , ingredientFile);
+    line[strcspn(line, "\n")] = 0;
     LIST_INGREDIENTS[iddIngredient]->name= strdup(line);  
     line=NULL;
     lineSize=0;
@@ -44,7 +46,7 @@ int initIngredientList()
     extern INGREDIENT* LIST_INGREDIENTS;
     extern int NUMBER_INGREDIENTS;
     FILE* ingredientFile=NULL;
-    ingredientFile = fopen("ingredients.txt", "r" );
+    ingredientFile = fopen(INGREDIENTSFILE, "r" );
     if(ingredientFile!=NULL)
     {
         NUMBER_INGREDIENTS=initNbIngredient(ingredientFile);
@@ -63,10 +65,63 @@ int initIngredientList()
     }
 }
 
-void freeIngredientList()
+int writeIngredientList(char * IngrdientFileName)
 {
     extern INGREDIENT* LIST_INGREDIENTS;
     extern int NUMBER_INGREDIENTS;
+    FILE* ingredientFile;
+    ingredientFile = fopen(IngrdientFileName, "w");
+    if( ingredientFile == NULL){
+        printf("error when trying to open file %s \n ", IngrdientFileName); 
+        return 0 ;
+    }
+    else{
+        fprintf(ingredientFile,"%d                           -name - salt - sugar - strenght - iddingredient \n",NUMBER_INGREDIENTS);
+        for( int i = 0 ; i < NUMBER_INGREDIENTS ; i++)
+        {
+          fprintf(ingredientFile,"%s\n", LIST_INGREDIENTS[i]->name); 
+          fprintf(ingredientFile,"%f---------------salt\n", LIST_INGREDIENTS[i]->salt);
+          fprintf(ingredientFile,"%f---------------sugar\n", LIST_INGREDIENTS[i]->sugar);
+          fprintf(ingredientFile,"%f---------------strenght\n", LIST_INGREDIENTS[i]->strenght);
+          fprintf(ingredientFile,"%d---------------idd ingredient\n", LIST_INGREDIENTS[i]->iddIngredient);    
+        }
+        fclose(ingredientFile);
+    }
+    return 1;
+}
+
+
+void freeIngredientList(int saveNewIngredients)
+{
+    extern INGREDIENT* LIST_INGREDIENTS;
+    extern int NUMBER_INGREDIENTS;
+    if(saveNewIngredients){
+        FILE* ingredientsFile= NULL;
+        ingredientsFile= fopen(INGREDIENTSFILE,"r");
+        if(ingredientsFile==NULL){
+            printf("error when  opening ingredient file , new ingredients can't be saved \n");
+        }
+        else{
+            int previousNumberIngredient = initNbIngredient(ingredientsFile);
+            fclose(ingredientsFile);
+            if(previousNumberIngredient< NUMBER_INGREDIENTS){
+                char * temporaryName="temporaryIngredients.txt";
+                if( writeIngredientList(temporaryName))
+                {
+                    remove(RECIPESFILE);
+                    rename(temporaryName,RECIPESFILE);
+                }
+                
+                else
+                {
+                   printf("error when writing ingredients list in a new file \n"); 
+                   remove(temporaryName);
+                }
+               
+            }
+        }
+    }
+
     for(int i = 0; i< NUMBER_INGREDIENTS ; i ++){
        free(LIST_INGREDIENTS[i]);
     }
@@ -94,54 +149,32 @@ void readAllIngredients()
     }
 }
 
-int addIngredient(char name[100], float salt, float sugar , float alcool, int idd)
+int addIngredient(char* name, float salt, float sugar , float strenght)
 {
-    FILE* ingredientFile=NULL;
-    puts("1");
-    ingredientFile = fopen("ingredients.txt", "a" );
-    if(ingredientFile!=NULL)
-    {
-        puts("2");
-        fputs("\n", ingredientFile);
-        puts("2.1");
-        fputs(name, ingredientFile);
-        puts("2.2");
-        char* charsalt=NULL;
-        puts("2.22");
-        sprintf(charsalt,"%f" ,salt);
-        puts("2.3");
-        fputs("\n", ingredientFile);
-        fputs(charsalt, ingredientFile);
-        char* charsugar=NULL;
-        sprintf(charsugar,"%.3f",sugar); 
-        fputs("\n", ingredientFile);
-        fputs(charsugar, ingredientFile);
-        char* charalcool=NULL;
-        sprintf(charalcool,"%.3f",alcool); 
-        fputs("\n", ingredientFile);
-        fputs(charalcool, ingredientFile);
-        char* charIDD=NULL;
-        sprintf(charIDD,"%d",idd); 
-        fputs("\n", ingredientFile);
-        fputs(charIDD, ingredientFile);
-        fclose(ingredientFile);
-        puts("3");//
-        INGREDIENT* listIngredients=NULL;
-        int nbIngredients = 0;
-        if ( ! initIngredientList()) return 0; 
-        readAllIngredients();
-        //
-        return 1 ;
-    }
-    else 
-    {
-        printf("erreur\n");
-        return 0;
-    }
-
-
-
-    return 1; 
+    extern INGREDIENT* LIST_INGREDIENTS;
+    extern int NUMBER_INGREDIENTS;
+   INGREDIENT* newIngredientList=realloc(LIST_INGREDIENTS,(NUMBER_INGREDIENTS+1)*sizeof(*LIST_INGREDIENTS)); 
+   if(newIngredientList==NULL) {
+       printf("error when reallocating space to new ingredient list\n");
+       return 0;
+   }
+   else{
+       LIST_INGREDIENTS=newIngredientList;
+       LIST_INGREDIENTS[NUMBER_INGREDIENTS]=calloc(1, sizeof(**LIST_INGREDIENTS));
+       if(LIST_INGREDIENTS[NUMBER_INGREDIENTS]== NULL){
+           printf("error when allocating space to new ingredient\n");
+           return 0 ;
+       }
+       else{
+           LIST_INGREDIENTS[NUMBER_INGREDIENTS]->name=strdup(name);
+           LIST_INGREDIENTS[NUMBER_INGREDIENTS]->salt= salt;
+           LIST_INGREDIENTS[NUMBER_INGREDIENTS]->salt= sugar;
+           LIST_INGREDIENTS[NUMBER_INGREDIENTS]->sugar=strenght;
+           LIST_INGREDIENTS[NUMBER_INGREDIENTS]->iddIngredient= NUMBER_INGREDIENTS;
+           NUMBER_INGREDIENTS++;
+           return 1 ;
+       } 
+   }
 }
 
 INGREDIENT ingredient(int iddIngredient){

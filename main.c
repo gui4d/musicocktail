@@ -23,5 +23,6 @@ int main()
     initRecipeList();
     printf("\n\nnombre de cocktails disponibles : %d \n",NUMBER_RECIPES);
     readAllRecipes();
-    //addIngredient("wisky", 3.12, 10.1 , 49.2, 3); ne marche pas 
+    addIngredient("wisky", 3.12, 10.1 , 49.2);
+    freeIngredientList(Save);
 }

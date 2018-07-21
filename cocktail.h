@@ -4,7 +4,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include<string.h>
+#include "constants.h"
 #include"ingredient.h"
+
 
 struct recipe{
     char* name;
