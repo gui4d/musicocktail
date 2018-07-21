@@ -5,21 +5,25 @@
 #include <stdio.h>
 #include<string.h>
 
-typedef struct {
+ struct ingredient{
     char* name; 
     float salt;
     float sugar; 
     float strenght; 
     int iddIngredient; 
 
-}INGREDIENT;
+};
 
+typedef struct ingredient * INGREDIENT ;
 
+int initNbIngredient(FILE* ingredientFile);
+int initIngredient(FILE* ingredientFile,int iddIngredient);
+int initIngredientList();
+void freeIngredientList();
 
-int readNbIngredient(FILE* ingredientFile);
-int readIngredient(FILE* ingredientFile, char** name, float* salt , float* sugar , float* strenght , int* iddIngredient);
-void readAllIngredients(INGREDIENT* listIngredient, int nbIngredient);
-int initIngredientList(INGREDIENT** ADDListIngredient,int* ADDnbIngredient);
+void readIngredient(INGREDIENT Ingredient,int verbose);
+void readAllIngredients();
 int addIngredient(char* name, float salt, float sugar , float alcool, int idd);
 
+INGREDIENT ingredient(int iddIngredient);
 #endif

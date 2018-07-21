@@ -1,78 +1,100 @@
 #include "ingredient.h"
 
-int readNbIngredient(FILE* ingredientFile)
+
+int initNbIngredient(FILE* ingredientFile)
 {
     char* charNbIngredient=NULL;  
     size_t charSize=0;
     getline( &charNbIngredient, &charSize , ingredientFile);
     int nbIngredients=atoi(charNbIngredient);
-    printf("nb ingredient :%d\n",nbIngredients);
     return nbIngredients;
 } 
 
-int readIngredient(FILE* ingredientFile, char** name, float* salt , float* sugar , float* strenght , int* iddIngredient)
+int initIngredient(FILE* ingredientFile,int iddIngredient)
 {
+    extern INGREDIENT* LIST_INGREDIENTS;
     char* line=NULL;
     size_t lineSize=0;
     getline( &line, &lineSize , ingredientFile);
-    *name= strdup(line);
-    
+    LIST_INGREDIENTS[iddIngredient]->name= strdup(line);  
     line=NULL;
     lineSize=0;
     getline( &line, &lineSize , ingredientFile);
-    *salt=atof(line);
-    
+    LIST_INGREDIENTS[iddIngredient]->salt=atof(line); 
     line=NULL;
     lineSize=0;
     getline( &line, &lineSize , ingredientFile);
-    *sugar=atof(line);
+    LIST_INGREDIENTS[iddIngredient]->sugar=atof(line);
 
     line=NULL;
     lineSize=0;
     getline( &line, &lineSize , ingredientFile);
-    *strenght=atof(line);
+    LIST_INGREDIENTS[iddIngredient]->strenght=atof(line);
 
     line=NULL;
     lineSize=0;
     getline( &line, &lineSize , ingredientFile);
-    *iddIngredient=atoi(line);
+    LIST_INGREDIENTS[iddIngredient]->iddIngredient=atoi(line);
 
     return 1;
 }
 
-void readAllIngredients(INGREDIENT* listIngredient, int nbIngredient)
+int initIngredientList()
 {
-    for( int i = 0; i < nbIngredient ; i ++){
-        printf("nom  : %s \nsel :%f \nsucre : %f \nalcool : %f \nidentifiant : %d \n", listIngredient[i].name , listIngredient[i].salt ,  listIngredient[i].sugar , listIngredient[i].strenght, listIngredient[i].iddIngredient); 
-    }
-}
-
-
-int initIngredientList(INGREDIENT** ADDListIngredient,int* ADDnbIngredient)
-{
-   
+    extern INGREDIENT* LIST_INGREDIENTS;
+    extern int NUMBER_INGREDIENTS;
     FILE* ingredientFile=NULL;
     ingredientFile = fopen("ingredients.txt", "r" );
     if(ingredientFile!=NULL)
     {
-        *ADDnbIngredient=readNbIngredient(ingredientFile);
-        *ADDListIngredient=calloc(*ADDnbIngredient,sizeof(**ADDListIngredient));
-        for(int i = 0 ; i < *ADDnbIngredient; i++){
-            readIngredient(ingredientFile,&((*ADDListIngredient)[i].name),&((*ADDListIngredient)[i].salt),&((*ADDListIngredient)[i].sugar), &((*ADDListIngredient)[i].strenght),&((*ADDListIngredient)[i].iddIngredient));
+        NUMBER_INGREDIENTS=initNbIngredient(ingredientFile);
+        LIST_INGREDIENTS=calloc(NUMBER_INGREDIENTS,sizeof(*LIST_INGREDIENTS));
+        for(int i = 0 ; i < NUMBER_INGREDIENTS; i++){
+            LIST_INGREDIENTS[i]=calloc(1,sizeof(*LIST_INGREDIENTS[i]));
+            initIngredient(ingredientFile, i );
         } 
         fclose(ingredientFile);
-        readAllIngredients(*ADDListIngredient, *ADDnbIngredient);
         return 1 ;
     }
     else 
     {
-        printf("erreur\n");
+        printf("error when reading database\n");
         return 0;
     }
 }
 
+void freeIngredientList()
+{
+    extern INGREDIENT* LIST_INGREDIENTS;
+    extern int NUMBER_INGREDIENTS;
+    for(int i = 0; i< NUMBER_INGREDIENTS ; i ++){
+       free(LIST_INGREDIENTS[i]);
+    }
+    free(LIST_INGREDIENTS);
+    LIST_INGREDIENTS=NULL;
+    NUMBER_INGREDIENTS=0;
+}
 
-int addIngredient(char* name, float salt, float sugar , float alcool, int idd)
+void readIngredient(INGREDIENT Ingredient,int verbose){
+    if(verbose ){
+        printf("/nom :%s /sel :%f /sucre :%f /alcool :%f /identifiant :%d", Ingredient->name , Ingredient->salt ,  Ingredient->sugar , Ingredient->strenght, Ingredient->iddIngredient); 
+    }
+    else{
+        printf("%s", Ingredient->name); 
+    }
+}
+
+void readAllIngredients()
+{
+    extern INGREDIENT* LIST_INGREDIENTS;
+    extern int NUMBER_INGREDIENTS;
+    for( int i = 0; i < NUMBER_INGREDIENTS ; i ++){
+        readIngredient(LIST_INGREDIENTS[i], 1 ); 
+        printf("\n"); 
+    }
+}
+
+int addIngredient(char name[100], float salt, float sugar , float alcool, int idd)
 {
     FILE* ingredientFile=NULL;
     puts("1");
@@ -106,8 +128,8 @@ int addIngredient(char* name, float salt, float sugar , float alcool, int idd)
         puts("3");//
         INGREDIENT* listIngredients=NULL;
         int nbIngredients = 0;
-        if ( ! initIngredientList(&listIngredients,&nbIngredients)) return 0; 
-        readAllIngredients(listIngredients,nbIngredients);
+        if ( ! initIngredientList()) return 0; 
+        readAllIngredients();
         //
         return 1 ;
     }
@@ -120,4 +142,15 @@ int addIngredient(char* name, float salt, float sugar , float alcool, int idd)
 
 
     return 1; 
+}
+
+INGREDIENT ingredient(int iddIngredient){
+    extern INGREDIENT* LIST_INGREDIENTS;
+    extern int NUMBER_INGREDIENTS;
+
+    if(iddIngredient>=0 || NUMBER_INGREDIENTS>iddIngredient || LIST_INGREDIENTS!=NULL){
+        return LIST_INGREDIENTS[iddIngredient];
+    }
+    else return NULL; 
+
 }

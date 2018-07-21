@@ -1,11 +1,26 @@
-2 /nom/salt/sugar/strenght/iddingredient//
-rhumr blanc exotic 
-3.14
-0.
-60.2
-0
+5                           /nom/salt/sugar/strenght/iddingredient//
+rhum blanc exotic 
+3.14                        /salt
+0.                          /sugar
+60.2                        /strenght
+0                           /iddingredient
 rhum brun exotic 
 3.14
 1.
 60.2
 1
+jus d orange
+0
+20
+0
+2
+jus d ananas
+0
+20
+0
+3
+sirop de sucre de canne 
+0
+100
+0
+4       puts("new ingredients");
