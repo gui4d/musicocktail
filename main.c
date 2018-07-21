@@ -5,9 +5,12 @@
 
 
 INGREDIENT* LIST_INGREDIENTS=NULL;
-int NUMBER_INGREDIENTS=0;
+int NUMBER_INGREDIENTS = 0;
+int LIST_INGREDIENTS_CHANGED = 0; 
 RECIPE* LIST_RECIPES=NULL; 
 int NUMBER_RECIPES=0;
+int LIST_RECIPES_CHANGED = 0; 
+
 
 
 int main() 
@@ -20,9 +23,13 @@ int main()
     initIngredientList();
     printf("\n\nnombre d'ingrédient disponibles : %d \n",NUMBER_INGREDIENTS);
     readAllIngredients();
+    
     initRecipeList();
     printf("\n\nnombre de cocktails disponibles : %d \n",NUMBER_RECIPES);
     readAllRecipes();
-    addIngredient("wisky", 3.12, 10.1 , 49.2);
+    //addIngredient("wisky", 3.12, 10.1 , 49.2); déja présent 
+    //addRecipe() : créer une fonction plus UX. 
+    freeRecipeList(Save);
     freeIngredientList(Save);
+    
 }

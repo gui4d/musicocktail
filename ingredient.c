@@ -95,39 +95,29 @@ void freeIngredientList(int saveNewIngredients)
 {
     extern INGREDIENT* LIST_INGREDIENTS;
     extern int NUMBER_INGREDIENTS;
-    if(saveNewIngredients){
-        FILE* ingredientsFile= NULL;
-        ingredientsFile= fopen(INGREDIENTSFILE,"r");
-        if(ingredientsFile==NULL){
-            printf("error when  opening ingredient file , new ingredients can't be saved \n");
+    extern int LIST_INGREDIENTS_CHANGED;
+    if(saveNewIngredients && LIST_INGREDIENTS_CHANGED)
+    {
+        char * temporaryName="temporaryIngredients.txt";
+        if( writeIngredientList(temporaryName))
+        {
+            remove(INGREDIENTSFILE);
+            rename( temporaryName,INGREDIENTSFILE);
         }
-        else{
-            int previousNumberIngredient = initNbIngredient(ingredientsFile);
-            fclose(ingredientsFile);
-            if(previousNumberIngredient< NUMBER_INGREDIENTS){
-                char * temporaryName="temporaryIngredients.txt";
-                if( writeIngredientList(temporaryName))
-                {
-                    remove(RECIPESFILE);
-                    rename(temporaryName,RECIPESFILE);
-                }
-                
-                else
-                {
-                   printf("error when writing ingredients list in a new file \n"); 
-                   remove(temporaryName);
-                }
+        else
+        {
+            printf("error when writing ingredients list in a new file \n"); 
+            remove(temporaryName);
+        }
                
-            }
-        }
     }
-
     for(int i = 0; i< NUMBER_INGREDIENTS ; i ++){
        free(LIST_INGREDIENTS[i]);
     }
     free(LIST_INGREDIENTS);
     LIST_INGREDIENTS=NULL;
     NUMBER_INGREDIENTS=0;
+    LIST_INGREDIENTS_CHANGED=0;
 }
 
 void readIngredient(INGREDIENT Ingredient,int verbose){
@@ -153,6 +143,7 @@ int addIngredient(char* name, float salt, float sugar , float strenght)
 {
     extern INGREDIENT* LIST_INGREDIENTS;
     extern int NUMBER_INGREDIENTS;
+    extern int LIST_INGREDIENTS_CHANGED;
    INGREDIENT* newIngredientList=realloc(LIST_INGREDIENTS,(NUMBER_INGREDIENTS+1)*sizeof(*LIST_INGREDIENTS)); 
    if(newIngredientList==NULL) {
        printf("error when reallocating space to new ingredient list\n");
@@ -172,6 +163,7 @@ int addIngredient(char* name, float salt, float sugar , float strenght)
            LIST_INGREDIENTS[NUMBER_INGREDIENTS]->sugar=strenght;
            LIST_INGREDIENTS[NUMBER_INGREDIENTS]->iddIngredient= NUMBER_INGREDIENTS;
            NUMBER_INGREDIENTS++;
+           LIST_INGREDIENTS_CHANGED++;
            return 1 ;
        } 
    }

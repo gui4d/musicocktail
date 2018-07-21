@@ -4,7 +4,7 @@ install :
 	make programme.exe
 	make clean 
 programme.exe : main.o ingredient.o cocktail.o
-	gcc $^ -o programme.exe $(CFLAGS)
+	gcc $^ -o musicocktail.exe $(CFLAGS)
 
 %.o :%.c
 	gcc -c $^ $(CFLAGS) -lm
