@@ -1,4 +1,4 @@
-6                          -name - salt - sugar - strenght - iddingredient 
+7                           -name - salt - sugar - strenght - iddingredient 
 rhum blanc exotic 
 3.140000---------------salt
 0.000000---------------sugar
@@ -29,4 +29,8 @@ wisky
 49.200001---------------sugar
 0.000000---------------strenght
 5---------------idd ingredient
-
+vermouth
+23.540001---------------salt
+80.000000---------------sugar
+0.000000---------------strenght
+6---------------idd ingredient

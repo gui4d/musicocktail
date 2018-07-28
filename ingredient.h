@@ -1,6 +1,10 @@
 #ifndef _INGREDIENT
-
 #define _INGREDIENT
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include<string.h>
@@ -26,8 +30,15 @@ int writeIngredientList(char * IngrdientFileName);
 void freeIngredientList(int saveNewIngredients);
 
 void readIngredient(INGREDIENT Ingredient,int verbose);
-void readAllIngredients();
+void readAllIngredients(int verbose);
 int addIngredient(char* name, float salt, float sugar , float alcool);
+int addIngredientThroughtTerminal();
 
 INGREDIENT ingredient(int iddIngredient);
+
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

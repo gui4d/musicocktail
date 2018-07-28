@@ -122,19 +122,19 @@ void freeIngredientList(int saveNewIngredients)
 
 void readIngredient(INGREDIENT Ingredient,int verbose){
     if(verbose ){
-        printf("/nom :%s /sel :%f /sucre :%f /alcool :%f /identifiant :%d", Ingredient->name , Ingredient->salt ,  Ingredient->sugar , Ingredient->strenght, Ingredient->iddIngredient); 
+        printf("/nom :%s /sel :%f /sucre :%f /alcool :%f /numero :%d", Ingredient->name , Ingredient->salt ,  Ingredient->sugar , Ingredient->strenght, Ingredient->iddIngredient); 
     }
     else{
         printf("%s", Ingredient->name); 
     }
 }
 
-void readAllIngredients()
+void readAllIngredients(int verbose)
 {
     extern INGREDIENT* LIST_INGREDIENTS;
     extern int NUMBER_INGREDIENTS;
     for( int i = 0; i < NUMBER_INGREDIENTS ; i ++){
-        readIngredient(LIST_INGREDIENTS[i], 1 ); 
+        readIngredient(LIST_INGREDIENTS[i], verbose ); 
         printf("\n"); 
     }
 }
@@ -167,6 +167,26 @@ int addIngredient(char* name, float salt, float sugar , float strenght)
            return 1 ;
        } 
    }
+}
+
+
+int addIngredientThroughtTerminal(){
+    char name[100];
+    float salt;
+    float sugar;
+    float strenght;
+    printf("nouvel ingredient :");
+    clean_stdin();
+    printf("donnez le nom de votre ingredient :\n ");
+    fgets(name,99,stdin);
+    name[strcspn(name, "\n")] = 0;
+    printf(" %s donner sa tenneur en sel:",name);
+    scanf("%f",&salt);
+    printf(" %s donner sa tenneur en sucre:",name);
+    scanf("%f",&sugar);
+    printf(" %s donner sa tenneur en alcool:",name);
+    scanf("%f",&strenght);
+    return addIngredient( name, salt,  sugar ,strenght);
 }
 
 INGREDIENT ingredient(int iddIngredient){

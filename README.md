@@ -27,3 +27,8 @@ int main()
 
 
 to compile : you just have to write "make install" in your teminal and then run the programe. 
+
+
+next modifications :
+add servomoteur idd parameter for ingredients
+add presence parameter for ingredients

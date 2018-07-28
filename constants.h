@@ -10,13 +10,20 @@
 #define Save 1
 #define Nsave 0
 
-#define Verbose 1
-#define Nverbose 0
+#define VERBOSE 1
+#define NVERBOSE 0
 
 #define RECIPESFILE "recipes.txt"
 #define INGREDIENTSFILE "ingredients.txt"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
+void clean_stdin(void) ;
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif
