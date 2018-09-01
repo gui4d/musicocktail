@@ -33,43 +33,38 @@ unsigned long convertToTimeMs( int newServo , int newQuantite ){
 }
 
 void UpdateServoState(){
-  String newBuffer=Serial.readString();
-  while(newBuffer !=""){
-    long newLine = (newBuffer.substring(0,6)).toInt();
-    if( newBuffer.length()>6 ){
-      newBuffer=newBuffer.substring(7);
-    }
-    else{
-      newBuffer="";
-    }
-    int newServo = newLine/10000;
-    int newQuantite = newLine % 10000;
-    /*
-    Serial.print("infomation recu :");
-    Serial.println(newBuffer);
-    Serial.print("ligne de commande :");
-    Serial.println(newLine);
-    */
-    if( newServo < NUMBER_SERVO && newServo >= 0 ){
-      unsigned long newTime = convertToTimeMs( newServo , newQuantite );
-      openServo( newServo );
-      if( timeStampList[newServo]== 0){
-        timeStampList[newServo]= millis()+ newTime ;
+  if(Serial.available()){
+    String newBuffer=Serial.readString();
+    while(newBuffer !=""){
+      long newLine = (newBuffer.substring(0,6)).toInt();
+      if( newBuffer.length()>6 ){
+        newBuffer=newBuffer.substring(7);
       }
       else{
-        timeStampList[newServo] += newTime ;
+        newBuffer="";
       }
-      
-      Serial.print("servo ");
-      Serial.print(newServo);
-      Serial.print(" open during ");
-      Serial.print(newTime);
-      Serial.print(" ms, for pouring ");
-      Serial.print(newQuantite);
-      Serial.println("mL");
-      Serial.print("->timeStamp: ");
-      Serial.println(timeStampList[newServo]);     
+      int newServo = newLine/10000;
+      int newQuantite = newLine % 10000;
+      if( newServo < NUMBER_SERVO && newServo >= 0 ){
+        unsigned long newTime = convertToTimeMs( newServo , newQuantite );
+        openServo( newServo );
+        if( timeStampList[newServo]== 0){
+          timeStampList[newServo]= millis()+ newTime ;
+        }
+        else{
+          timeStampList[newServo] += newTime ;
+        }
+        Serial.print("servo ");
+        Serial.print(newServo);
+        Serial.print(" open during ");
+        Serial.print(newTime);
+        Serial.print(" ms, for pouring ");
+        Serial.print(newQuantite);
+        Serial.println("mL");
+        Serial.print("->timeStamp: ");
+        Serial.println(timeStampList[newServo]);     
     }  
+  }
   }
   int servo; 
   unsigned long actualTime= millis();
