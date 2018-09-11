@@ -16,6 +16,8 @@
 #define RECIPESFILE "recipes.txt"
 #define INGREDIENTSFILE "ingredients.txt"
 
+#define ARDUINOADRESS "/dev/ttyUSB0"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

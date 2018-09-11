@@ -18,11 +18,13 @@ int initIngredient(FILE* ingredientFile,int iddIngredient)
     size_t lineSize=0;
     getline( &line, &lineSize , ingredientFile);
     line[strcspn(line, "\n")] = 0;
-    LIST_INGREDIENTS[iddIngredient]->name= strdup(line);  
+    LIST_INGREDIENTS[iddIngredient]->name= strdup(line); 
+
     line=NULL;
     lineSize=0;
     getline( &line, &lineSize , ingredientFile);
     LIST_INGREDIENTS[iddIngredient]->salt=atof(line); 
+
     line=NULL;
     lineSize=0;
     getline( &line, &lineSize , ingredientFile);
@@ -37,6 +39,12 @@ int initIngredient(FILE* ingredientFile,int iddIngredient)
     lineSize=0;
     getline( &line, &lineSize , ingredientFile);
     LIST_INGREDIENTS[iddIngredient]->iddIngredient=atoi(line);
+
+    line=NULL;
+    lineSize=0;
+    getline( &line, &lineSize , ingredientFile);
+    line[strcspn(line, "\n")] = 0;
+    LIST_INGREDIENTS[iddIngredient]->servoAdress= strdup(line); 
 
     return 1;
 }
@@ -83,7 +91,9 @@ int writeIngredientList(char * IngrdientFileName)
           fprintf(ingredientFile,"%f---------------salt\n", LIST_INGREDIENTS[i]->salt);
           fprintf(ingredientFile,"%f---------------sugar\n", LIST_INGREDIENTS[i]->sugar);
           fprintf(ingredientFile,"%f---------------strenght\n", LIST_INGREDIENTS[i]->strenght);
-          fprintf(ingredientFile,"%d---------------idd ingredient\n", LIST_INGREDIENTS[i]->iddIngredient);    
+          fprintf(ingredientFile,"%d---------------idd ingredient\n", LIST_INGREDIENTS[i]->iddIngredient);
+          fprintf(ingredientFile,"%d---------------adress servo\n", LIST_INGREDIENTS[i]->servoAdress);
+
         }
         fclose(ingredientFile);
     }
@@ -122,7 +132,7 @@ void freeIngredientList(int saveNewIngredients)
 
 void readIngredient(INGREDIENT Ingredient,int verbose){
     if(verbose ){
-        printf("/nom :%s /sel :%f /sucre :%f /alcool :%f /numero :%d", Ingredient->name , Ingredient->salt ,  Ingredient->sugar , Ingredient->strenght, Ingredient->iddIngredient); 
+        printf("/nom :%s /sel :%f /sucre :%f /alcool :%f /numero :%d /servoAdress :%d", Ingredient->name , Ingredient->salt ,  Ingredient->sugar , Ingredient->strenght, Ingredient->iddIngredient, Ingredient->servoAdress); 
     }
     else{
         printf("%s", Ingredient->name); 
@@ -139,7 +149,7 @@ void readAllIngredients(int verbose)
     }
 }
 
-int addIngredient(char* name, float salt, float sugar , float strenght)
+int addIngredient(char* name, float salt, float sugar , float strenght, int servoAdress)
 {
     extern INGREDIENT* LIST_INGREDIENTS;
     extern int NUMBER_INGREDIENTS;
@@ -162,6 +172,7 @@ int addIngredient(char* name, float salt, float sugar , float strenght)
            LIST_INGREDIENTS[NUMBER_INGREDIENTS]->salt= sugar;
            LIST_INGREDIENTS[NUMBER_INGREDIENTS]->sugar=strenght;
            LIST_INGREDIENTS[NUMBER_INGREDIENTS]->iddIngredient= NUMBER_INGREDIENTS;
+           LIST_INGREDIENTS[NUMBER_INGREDIENTS]->servoAdress = servoAdress;
            NUMBER_INGREDIENTS++;
            LIST_INGREDIENTS_CHANGED++;
            return 1 ;
@@ -175,6 +186,7 @@ int addIngredientThroughtTerminal(){
     float salt;
     float sugar;
     float strenght;
+    int servoAdress;
     printf("nouvel ingredient :");
     clean_stdin();
     printf("donnez le nom de votre ingredient :\n ");
@@ -186,7 +198,9 @@ int addIngredientThroughtTerminal(){
     scanf("%f",&sugar);
     printf(" %s donner sa tenneur en alcool:",name);
     scanf("%f",&strenght);
-    return addIngredient( name, salt,  sugar ,strenght);
+    printf(" %s donner son emplacement dans le bar (-1 si il n'en a pas ):",name);
+    scanf("%d",&servoAdress);
+    return addIngredient( name, salt,  sugar ,strenght, servoAdress);
 }
 
 INGREDIENT ingredient(int iddIngredient){
