@@ -34,7 +34,8 @@ int initRecipe(FILE* recipeFile,int iddRecipe )
     LIST_RECIPES[iddRecipe]->listIddIngredients=calloc(nbIngredient,sizeof(*(LIST_RECIPES[iddRecipe]->listIddIngredients)));
     LIST_RECIPES[iddRecipe]->listAmount=calloc(nbIngredient,sizeof(*(LIST_RECIPES[iddRecipe]->listAmount)));
     
-    for( int i =0 ; i < nbIngredient;i++)
+    int i;
+    for(i =0 ; i < nbIngredient;i++)
     {
         line=NULL;
         lineSize=0;
@@ -63,7 +64,8 @@ int initRecipeList()
     {
         NUMBER_RECIPES=initNbIngredient(recipeFile);
         LIST_RECIPES=calloc(NUMBER_RECIPES,sizeof(*LIST_RECIPES));
-        for(int i = 0 ; i < NUMBER_RECIPES; i++){
+        int i;
+        for(i = 0 ; i < NUMBER_RECIPES; i++){
             LIST_RECIPES[i]=calloc(1,sizeof(*LIST_RECIPES[i]));
             initRecipe(recipeFile, i );
         } 
@@ -90,13 +92,15 @@ int writeRecipeList(char* recipesFileName){
     else 
     {
         fprintf(recipesFile, "%d                     - name - iddRecipe -nbingredients - list ingredient - liste amount - idd similar recipe\n", NUMBER_RECIPES);
-        for( int i = 0 ; i < NUMBER_RECIPES ; i ++)
+        int i;
+        for( i = 0 ; i < NUMBER_RECIPES ; i ++)
         {
             printf("%s \n", LIST_RECIPES[i]->name);
             fprintf(recipesFile,"%s\n", LIST_RECIPES[i]->name);
             fprintf(recipesFile,"%d---------------idd recipe\n", LIST_RECIPES[i]->iddRecipe);
             fprintf(recipesFile,"%d---------------nb ingredients\n", LIST_RECIPES[i]->nbIngredients);
-            for( int j = 0 ; j < LIST_RECIPES[i]->nbIngredients; j++)
+            int j ;
+            for( j = 0 ; j < LIST_RECIPES[i]->nbIngredients; j++)
             {
                 fprintf(recipesFile, "%d---------------%s\n" , (LIST_RECIPES[i]->listIddIngredients)[j], ingredient((LIST_RECIPES[i]->listIddIngredients)[j])->name ); 
                 fprintf(recipesFile, "%f---------------ml\n" , (LIST_RECIPES[i]->listAmount)[j]); 
@@ -135,7 +139,8 @@ void freeRecipeList(int saveNewRecipes ){
             remove(temporaryName);
         }
     }
-    for (int i = 0 ; i < NUMBER_RECIPES ; i++){
+    int i;
+    for (i = 0 ; i < NUMBER_RECIPES ; i++){
         free(LIST_RECIPES[i]->listAmount);
         free(LIST_RECIPES[i]->listIddIngredients);
         free(LIST_RECIPES[i]); 
@@ -146,7 +151,8 @@ void freeRecipeList(int saveNewRecipes ){
 void readRecipe(RECIPE Recipe, int verbose){
     if( verbose){
         printf("name :%s /identifiant :%d  /nb ingredients : %d /idd similar recipe : %d \n",Recipe->name, Recipe->iddRecipe, Recipe->nbIngredients,Recipe->iddSimilarRecipe );
-        for( int i = 0; i < Recipe->nbIngredients ; i++ ){
+         int i;
+        for(i = 0; i < Recipe->nbIngredients ; i++ ){
             printf("    -");
             readIngredient( ingredient((Recipe->listIddIngredients)[i]), NVERBOSE); 
             printf("\n"); 
@@ -160,7 +166,8 @@ void readRecipe(RECIPE Recipe, int verbose){
 void readAllRecipes(int verbose){
     extern RECIPE* LIST_RECIPES; 
     extern int NUMBER_RECIPES;
-    for( int i = 0; i <NUMBER_RECIPES ; i++){
+    int i;
+    for( i = 0; i <NUMBER_RECIPES ; i++){
         if(verbose) printf("%d :",i);
         readRecipe(LIST_RECIPES[i],verbose);
     }
@@ -218,7 +225,8 @@ int addRecipeThroughtTerminal(){
     scanf("%d",&nbIngredients);
     listAmount =calloc(nbIngredients, sizeof(*listAmount));
     listIngredients = calloc(nbIngredients, sizeof(*listIngredients)); 
-    for( int i = 0 ; i<nbIngredients ; i++){
+    int i;
+    for( i = 0 ; i<nbIngredients ; i++){
         printf("---------------------------\n--liste des ingredients--\n");
         readAllIngredients(VERBOSE);
         printf(" %d° ingredient , donner son numero : ", i+1);

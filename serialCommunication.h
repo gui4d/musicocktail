@@ -7,9 +7,20 @@ extern "C" {
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <errno.h>
+#include <fcntl.h> 
+#include <string.h>
+#include <termios.h>
+#include <unistd.h>
 #include"ingredient.h"
+#include "recipes.h"
 
-int sendNewOrder(INGREDIENT Ingredient, float quantitee);
+int set_interface_attribs (int fd, int speed, int parity);
+void set_blocking (int fd, int should_block);
+int initSerial();
+int readSerial(int fd);
+int sendNewOrder(INGREDIENT Ingredient, float quantitee,int fd);
+int executeRecipe(RECIPE Recipe , int fd );
 
 #ifdef __cplusplus
 }

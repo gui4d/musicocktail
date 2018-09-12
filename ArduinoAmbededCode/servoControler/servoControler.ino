@@ -7,6 +7,7 @@ Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 #define FREQUENCY 50
 #define NUMBER_SERVO 10
 
+
 unsigned long timeStampList[NUMBER_SERVO];
 
 
@@ -32,12 +33,16 @@ unsigned long convertToTimeMs( int newServo , int newQuantite ){
   return correspondingTime;
 }
 
-void UpdateServoState(){
-  if(Serial.available()){
+void UpdateServoState()
+{
+  if(Serial.available())
+  {
     String newBuffer=Serial.readString();
-    while(newBuffer !=""){
+    while(newBuffer !="")
+    {
       long newLine = (newBuffer.substring(0,6)).toInt();
-      if( newBuffer.length()>6 ){
+      if( newBuffer.length()>6 )
+      {
         newBuffer=newBuffer.substring(7);
       }
       else{
@@ -45,13 +50,16 @@ void UpdateServoState(){
       }
       int newServo = newLine/10000;
       int newQuantite = newLine % 10000;
-      if( newServo < NUMBER_SERVO && newServo >= 0 ){
+      if( newServo < NUMBER_SERVO && newServo >= 0 )
+      {
         unsigned long newTime = convertToTimeMs( newServo , newQuantite );
         openServo( newServo );
-        if( timeStampList[newServo]== 0){
+        if( timeStampList[newServo]== 0)
+        {
           timeStampList[newServo]= millis()+ newTime ;
         }
-        else{
+        else
+        {
           timeStampList[newServo] += newTime ;
         }
         Serial.print("servo ");
@@ -63,8 +71,8 @@ void UpdateServoState(){
         Serial.println("mL");
         Serial.print("->timeStamp: ");
         Serial.println(timeStampList[newServo]);     
-    }  
-  }
+      }
+    }
   }
   int servo; 
   unsigned long actualTime= millis();
@@ -81,17 +89,18 @@ void UpdateServoState(){
 
 void setup() {
   Serial.begin(9600);
-  Serial.println("16 channel Servo test!");
   pwm.begin();
   pwm.setPWMFreq(FREQUENCY);
   int i; 
   for( i = 0 ; i < 10 ; i++){
     timeStampList[i]=0;
+    closeServo(i)
   } 
 }
 
 
 void loop() {
-  Serial.println(millis());
   UpdateServoState();
+  Serial.println(millis());
+  
 }

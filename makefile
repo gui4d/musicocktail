@@ -3,7 +3,7 @@ CFLAGS=-W -Wall -g
 install : 
 	make programme.exe
 	make clean 
-programme.exe :  constants.o ingredient.o recipes.o cocktail.o music.o main.o 
+programme.exe :  constants.o ingredient.o recipes.o serialCommunication.o cocktail.o music.o main.o 
 	gcc $^ -o musicocktail.exe $(CFLAGS)
 
 constants.o :constants.c
@@ -13,6 +13,9 @@ ingredient.o :ingredient.c
 	gcc -c $^ $(CFLAGS) -lm
 
 recipes.o :recipes.c
+	gcc -c $^ $(CFLAGS) -lm
+
+serialCommunication.o: serialCommunication.c
 	gcc -c $^ $(CFLAGS) -lm
 
 cocktail.o :cocktail.c

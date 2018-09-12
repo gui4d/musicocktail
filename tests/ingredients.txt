@@ -4,40 +4,40 @@ rhum blanc exotic
 0.000000---------------sugar
 60.200001---------------strenght
 0---------------idd ingredient
-1
+0---------------adress servo
 rhum brun exotic 
 3.140000---------------salt
 1.000000---------------sugar
 60.200001---------------strenght
 1---------------idd ingredient
-2
+1---------------adress servo
 jus d orange
 0.000000---------------salt
 20.000000---------------sugar
 0.000000---------------strenght
 2---------------idd ingredient
-3
+2---------------adress servo
 jus d ananas
 0.000000---------------salt
 20.000000---------------sugar
 0.000000---------------strenght
 3---------------idd ingredient
-4
+3---------------adress servo
 sirop de sucre de canne 
 0.000000---------------salt
 100.000000---------------sugar
 0.000000---------------strenght
 4---------------idd ingredient
--1
+4---------------adress servo
 wisky
 10.100000---------------salt
 49.200001---------------sugar
 0.000000---------------strenght
 5---------------idd ingredient
--1
+5---------------adress servo
 vermouth
 23.540001---------------salt
 80.000000---------------sugar
 0.000000---------------strenght
 6---------------idd ingredient
--1
+6---------------adress servo

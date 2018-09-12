@@ -43,8 +43,7 @@ int initIngredient(FILE* ingredientFile,int iddIngredient)
     line=NULL;
     lineSize=0;
     getline( &line, &lineSize , ingredientFile);
-    line[strcspn(line, "\n")] = 0;
-    LIST_INGREDIENTS[iddIngredient]->servoAdress= strdup(line); 
+    LIST_INGREDIENTS[iddIngredient]->servoAdress= atoi(line); 
 
     return 1;
 }
@@ -59,7 +58,8 @@ int initIngredientList()
     {
         NUMBER_INGREDIENTS=initNbIngredient(ingredientFile);
         LIST_INGREDIENTS=calloc(NUMBER_INGREDIENTS,sizeof(*LIST_INGREDIENTS));
-        for(int i = 0 ; i < NUMBER_INGREDIENTS; i++){
+        int i;
+        for(i = 0 ; i < NUMBER_INGREDIENTS; i++){
             LIST_INGREDIENTS[i]=calloc(1,sizeof(*LIST_INGREDIENTS[i]));
             initIngredient(ingredientFile, i );
         } 
@@ -85,7 +85,8 @@ int writeIngredientList(char * IngrdientFileName)
     }
     else{
         fprintf(ingredientFile,"%d                           -name - salt - sugar - strenght - iddingredient \n",NUMBER_INGREDIENTS);
-        for( int i = 0 ; i < NUMBER_INGREDIENTS ; i++)
+        int i;
+        for(i  = 0 ; i < NUMBER_INGREDIENTS ; i++)
         {
           fprintf(ingredientFile,"%s\n", LIST_INGREDIENTS[i]->name); 
           fprintf(ingredientFile,"%f---------------salt\n", LIST_INGREDIENTS[i]->salt);
@@ -121,7 +122,8 @@ void freeIngredientList(int saveNewIngredients)
         }
                
     }
-    for(int i = 0; i< NUMBER_INGREDIENTS ; i ++){
+    int i ;
+    for(i = 0; i< NUMBER_INGREDIENTS ; i ++){
        free(LIST_INGREDIENTS[i]);
     }
     free(LIST_INGREDIENTS);
@@ -143,7 +145,8 @@ void readAllIngredients(int verbose)
 {
     extern INGREDIENT* LIST_INGREDIENTS;
     extern int NUMBER_INGREDIENTS;
-    for( int i = 0; i < NUMBER_INGREDIENTS ; i ++){
+    int i;
+    for(i = 0; i < NUMBER_INGREDIENTS ; i ++){
         readIngredient(LIST_INGREDIENTS[i], verbose ); 
         printf("\n"); 
     }
