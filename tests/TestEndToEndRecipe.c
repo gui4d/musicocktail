@@ -23,7 +23,7 @@ int main(){
     printf("\n\nnombre de cocktails disponibles : %d \n",NUMBER_RECIPES);
     readAllRecipes(NVERBOSE);
     int fd = initSerial();
-    executeRecipe(LIST_RECIPES[0],fd );
+    executeRecipe(LIST_RECIPES[0],fd);
     int i;
     for (i = 0 ; i<100; i ++){
     readSerial(fd);

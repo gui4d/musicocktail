@@ -112,6 +112,18 @@ int sendNewOrder(INGREDIENT Ingredient, float amount, int fd)
                 case 15: Data[0]='1';Data[1]='5';break;
                 default :  return 0;
         }
+        switch((int)amount/1000%10){
+                case 0: break;
+                case 1: Data[2]='1';break;
+                case 2: Data[2]='2';break;
+                case 3: Data[2]='3';break;
+                case 4: Data[2]='4';break;
+                case 5: Data[2]='5';break;
+                case 6: Data[2]='6';break;
+                case 7: Data[2]='7';break;
+                case 8: Data[2]='8';break;
+                case 9: Data[2]='9';break;
+        }
         switch((int)amount/100%10){
                 case 0: break;
                 case 1: Data[3]='1';break;

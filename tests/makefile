@@ -4,7 +4,7 @@ communication : constants.o ingredient.o serialCommunication.o testCommunication
 	gcc $^ -o testCommunication.exe $(CFLAGS)
 	rm -rf *.o
 
-firstRecipe : constants.o ingredient.o serialCommunication.o TestEndToEndRecipe.o
+firstRecipe : constants.o ingredient.o recipes.o serialCommunication.o TestEndToEndRecipe.o
 	gcc $^ -o testEndToEndRecipe.exe $(CFLAGS)
 	rm -rf *.o
 
