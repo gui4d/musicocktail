@@ -20,7 +20,7 @@ recipes.o :../recipes.c
 serialCommunication.o: ../serialCommunication.c
 	gcc -c $^ $(CFLAGS) -lm
 
-cocktail.o :../cocktail.c
+demo.o :../demo.c
 	gcc -c $^ $(CFLAGS) -lm
 
 music.o :../music.cpp
@@ -41,3 +41,5 @@ clean :
 
 cleanall:
 	rm -f *.o *.exe 
+
+//change tis makefile dependant from the original one  in order to avoid redondance 

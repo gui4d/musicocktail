@@ -18,6 +18,9 @@
 
 #define ARDUINOADRESS "/dev/ttyUSB0"
 
+#define HEIGHT 600
+#define WIDTH 400
+
 #ifdef __cplusplus
 extern "C" {
 #endif
