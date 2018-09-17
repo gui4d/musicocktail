@@ -1,7 +1,7 @@
 #ifndef _INTERFACE
 #define _INTERFACE
 
-
+#include <string.h>
 #include<gtkmm/main.h>
 #include<gtkmm/window.h>
 #include<gtkmm/button.h>
@@ -20,13 +20,23 @@
 #include "recipes.h"
 #include "music.h"
 
+class AddIngredient : public Gtk::VBox{
+    public: 
+        AddIngredient();
+    private: 
+
+
+
+};
+
 class MainNotebook : public Gtk::Notebook {
 
     public: 
         MainNotebook();
 
     private:
-        //int addNEwPAge( int type );
+        void  addIngredientThroughtInterface();
+        void  addRecipeThroughtInterface(int numPage );
         
 
 };
@@ -41,6 +51,8 @@ class MainWindow : public Gtk::Window {
 
 
 };
+
+
 
 
 
