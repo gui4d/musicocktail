@@ -37,8 +37,13 @@ class MainNotebook : public Gtk::Notebook {
     private:
         void  addIngredientThroughtInterface();
         void  addRecipeThroughtInterface(int numPage );
-        
-
+        int newIngredientPage=0;
+        int newIngredientPageNumber=1;
+        Gtk::Entry newIngredientName;
+        Gtk::SpinButton saltEntry;
+        Gtk::SpinButton sugarEntry;
+        Gtk::SpinButton strenghtEntry;
+        Gtk::SpinButton servoEntry;
 };
 
 class MainWindow : public Gtk::Window {

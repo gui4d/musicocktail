@@ -79,20 +79,103 @@ MainWindow::MainWindow(){
 
 
 void MainNotebook::addIngredientThroughtInterface(){
-    int numPage = this->get_n_pages();
-        Gtk::VButtonBox* pnewBox=Gtk::manage(new Gtk::VButtonBox(Gtk::BUTTONBOX_START,10));
+    if( newIngredientPage==0){
+        newIngredientPage=1;
+        Gtk::VBox* pnewBox=Gtk::manage(new Gtk::VBox(Gtk::BUTTONBOX_START,10));
         pnewBox->set_border_width(10);
-    this->insert_page(*pnewBox, "Nouvel ingrédient",  numPage);
-    this->show_all();
-    this->set_current_page(numPage);
+
+            Gtk::Label* ptitleLabel= Gtk::manage(new Gtk::Label("Nouvel ingrédient : création de la fiche"));
+            ptitleLabel->set_justify(Gtk::JUSTIFY_CENTER);
+            ptitleLabel->set_line_wrap();
+            ptitleLabel->set_can_focus(false);
+        pnewBox->pack_start(*ptitleLabel);
+
+            Gtk::HBox* pnameBox = Gtk::manage( new Gtk::HBox(false,10));
+            pnameBox->set_can_focus(false);
+                Gtk::Label* pnameLabel=Gtk::manage( new Gtk::Label("nom :"));
+                pnameLabel->set_can_focus(false);
+            pnameBox->pack_start(*pnameLabel);
+                newIngredientName.set_text("rentrer le nom");
+                newIngredientName.set_max_length(100);
+            pnameBox->pack_start(newIngredientName);
+        pnewBox->pack_start(*pnameBox);
+
+            Gtk::HBox* psaltBox= Gtk::manage(new Gtk::HBox(false,10));
+            psaltBox->set_can_focus(false);
+                Gtk::Label* psaltLabel= Gtk::manage(new Gtk::Label("taux de sel en g/L :"));
+                psaltLabel->set_can_focus(false);
+            psaltBox->pack_start(*psaltLabel);
+                Glib::RefPtr<Gtk::Adjustment> ajustementsalt = Gtk::Adjustment::create(0, 0, 100, 1);
+                saltEntry.set_adjustment(ajustementsalt);
+                saltEntry.set_numeric();
+            psaltBox->pack_start(saltEntry);
+        pnewBox->pack_start(*psaltBox);
+
+            Gtk::HBox* psugarBox= Gtk::manage(new Gtk::HBox(false,10));
+            psugarBox->set_can_focus(false);
+                Gtk::Label* psugarLabel= Gtk::manage(new Gtk::Label("taux de sucre en g/L :"));
+                psugarLabel->set_can_focus(false);
+            psugarBox->pack_start(*psugarLabel);
+                Glib::RefPtr<Gtk::Adjustment> ajustementSugar = Gtk::Adjustment::create(0, 0, 100, 1);
+                sugarEntry.set_adjustment(ajustementSugar);
+                sugarEntry.set_numeric();
+            psugarBox->pack_start(sugarEntry);
+        pnewBox->pack_start(*psugarBox);
+
+            Gtk::HBox* pstrenghtBox= Gtk::manage( new Gtk:: HBox(false,10));
+            pstrenghtBox->set_can_focus(false);
+                Gtk::Label* pstrenghtLabel= Gtk::manage( new Gtk::Label("taux d'alcoolémie en % :"));
+                pstrenghtLabel->set_can_focus(false);
+            pstrenghtBox->pack_start(*pstrenghtLabel);
+                Glib::RefPtr<Gtk::Adjustment> ajustementStrenght = Gtk::Adjustment::create(0, 0, 100, 1);
+                strenghtEntry.set_adjustment(ajustementStrenght);
+                strenghtEntry.set_numeric();
+            pstrenghtBox->pack_start(strenghtEntry);
+        pnewBox->pack_start(*pstrenghtBox);
+
+            Gtk::HBox* pservoBox = Gtk::manage( new Gtk::HBox(false,10));
+            pservoBox->set_can_focus(false);
+                Gtk::Label* pservoLabel= Gtk::manage( new Gtk::Label("numero sur le bar (-1 si il n'est pas sur le bar ):"));
+                pservoLabel->set_can_focus(false);
+            pservoBox->pack_start(*pservoLabel);
+                Glib::RefPtr<Gtk::Adjustment> ajustementServo = Gtk::Adjustment::create(-1, -1, 15, 1);
+                servoEntry.set_adjustment(ajustementServo);
+                servoEntry.set_numeric();
+            pservoBox->pack_start(servoEntry);
+        pnewBox->pack_start(*pservoBox);
+
+            Gtk::HBox* pactionBox = Gtk::manage( new Gtk::HBox(false,10));
+            pactionBox->set_can_focus(false);
+                Gtk::Button* psaveButton= Gtk::manage( new Gtk::Button(Gtk::Stock::SAVE));
+                //saveButton.signal_clicked().connect(sigc::bind<std::string,int,int,int,int>(sigc::ptr_fun(&saveNewIngredientThroughtInterface),nameEntry.get_text(),saltEntry.get_value_as_int(), sugarEntry.get_value_as_int(), strenghtEntry.get_value_as_int(),servoEntry.get_value_as_int() ));
+            pactionBox->pack_start(*psaveButton);
+                Gtk::Button* pquitButton = Gtk::manage( new Gtk::Button(Gtk::Stock::CANCEL));
+            pactionBox->pack_start(*pquitButton);
+        
+        pnewBox->pack_end(*pactionBox);
+
+        int numPage = this->get_n_pages();
+        newIngredientPageNumber=numPage;
+        this->insert_page(*pnewBox, "Nouvel ingrédient",  numPage);
+        this->show_all();
+        this->set_current_page(numPage);
+    }
+    else{
+        this->show_all();
+        this->set_current_page(newIngredientPageNumber);
+
+    }
 }
 
 
-void MainNotebook::addRecipeThroughtInterface(int numPage ){
-        Gtk::VButtonBox* pnewBox=Gtk::manage(new Gtk::VButtonBox(Gtk::BUTTONBOX_START,10));
+void MainNotebook::addRecipeThroughtInterface(int numPage /*changer ça*/ ){
+    
+        Gtk::VBox* pnewBox = Gtk::manage(new Gtk::VBox(Gtk::BUTTONBOX_START,10));
         pnewBox->set_border_width(10);
-    insert_page(*pnewBox, "Nouveau cocktail",  numPage+1);
-    show_all();
+    numPage = this->get_n_pages();//
+    this->insert_page(*pnewBox, "Nouveau cocktail",  numPage);
+    this->show_all();
+    this->set_current_page(numPage);
 }
 
 
