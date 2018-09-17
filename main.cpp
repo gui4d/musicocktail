@@ -31,13 +31,6 @@ int NUMBER_RECIPES=0;
 int LIST_RECIPES_CHANGED = 0;
 
 
-void close_appli(){
-
-    freeRecipeList(Save);
-    freeIngredientList(Save);
-    Gtk::Main::quit();
-}
-
 
 int main(int argc, char* argv[]){
 

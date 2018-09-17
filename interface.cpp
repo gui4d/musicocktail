@@ -1,10 +1,6 @@
 #include "interface.h"
 
 
-AddIngredient::AddIngredient(){
-
-}
-
 MainNotebook::MainNotebook(){
     extern INGREDIENT* LIST_INGREDIENTS;
     extern int NUMBER_INGREDIENTS;
@@ -12,16 +8,16 @@ MainNotebook::MainNotebook(){
     extern int NUMBER_RECIPES;
 
     set_scrollable();
-        Gtk::VButtonBox* pwelcomBox=Gtk::manage(new Gtk::VButtonBox(Gtk::BUTTONBOX_START,10));
+        pwelcomBox=Gtk::manage(new Gtk::VButtonBox(Gtk::BUTTONBOX_START,10));
     append_page(*pwelcomBox, "accueil");
         pwelcomBox->set_border_width(10);
         
 
-        Gtk::VButtonBox* pingredientsBox = Gtk::manage( new Gtk::VButtonBox(Gtk::BUTTONBOX_START,10));
+        pingredientsBox = Gtk::manage( new Gtk::VButtonBox(Gtk::BUTTONBOX_START,10));
     append_page(*pingredientsBox,"ingrédients");
         pingredientsBox->set_border_width(10);
             Gtk::Button* paddIngredient = Gtk::manage(new Gtk::Button("_Ajouter un ingrédient ", true));
-            paddIngredient->signal_clicked().connect(sigc::mem_fun(*this,&MainNotebook:: addIngredientThroughtInterface));
+            paddIngredient->signal_clicked().connect(sigc::mem_fun(*this,&MainNotebook:: initAddIngredientThroughtInterface));
         pingredientsBox->pack_end(*paddIngredient);
         pingredientsBox->set_child_secondary(*paddIngredient);
             int i ;
@@ -32,7 +28,7 @@ MainNotebook::MainNotebook(){
             }
     
 
-        Gtk::VButtonBox* precipesBox = Gtk::manage( new Gtk::VButtonBox(Gtk::BUTTONBOX_START,10));
+        precipesBox = Gtk::manage( new Gtk::VButtonBox(Gtk::BUTTONBOX_START,10));
     append_page(*precipesBox, "recettes");
         precipesBox->set_border_width(10);
             Gtk::Button* paddRecipe = Gtk::manage(new Gtk::Button("_Ajouter un cocktail ", true));
@@ -45,7 +41,7 @@ MainNotebook::MainNotebook(){
             }
     
 
-        Gtk::VButtonBox* pmusicsBox = Gtk::manage(new Gtk::VButtonBox(Gtk::BUTTONBOX_START,10));
+        pmusicsBox = Gtk::manage(new Gtk::VButtonBox(Gtk::BUTTONBOX_START,10));
     append_page(*pmusicsBox, "musique");
         pmusicsBox->set_border_width(10);
         
@@ -66,7 +62,7 @@ MainWindow::MainWindow(){
         Gtk::Alignment* pquitBox= Gtk::manage(new Gtk::Alignment(Gtk::ALIGN_END, Gtk::ALIGN_END,0,0));
         
             Gtk::Button*  pquitButton = Gtk::manage(new Gtk::Button(Gtk::Stock::QUIT));
-            //pquitButton->signal_clicked().connect(sigc::ptr_fun(&close_appli)); //à revoir 
+            pquitButton->signal_clicked().connect(sigc::mem_fun(*this,&MainWindow::closeMainWindow));
         
         pquitBox->add(*pquitButton);
     
@@ -77,8 +73,50 @@ MainWindow::MainWindow(){
 
 }
 
+void MainWindow::closeMainWindow(){
 
-void MainNotebook::addIngredientThroughtInterface(){
+    freeRecipeList(Save);
+    freeIngredientList(Save);
+    Gtk::Main::quit();
+}
+
+void MainNotebook::closeAddIngredientThroughtInterface(int save){
+    
+    extern INGREDIENT* LIST_INGREDIENTS;
+    extern int NUMBER_INGREDIENTS;
+    
+    if(save)
+    {
+        //créer une sécuritée dans les entrées
+        std::string Sname = newIngredientName.get_text();
+        float salt = (float)(saltEntry.get_value_as_int());
+        float sugar = (float)(sugarEntry.get_value_as_int());
+        float strenght = (float)(strenghtEntry.get_value_as_int());
+        int servoAdress = servoEntry.get_value_as_int();
+        char name[Sname.size()+1];
+        std::copy(Sname.begin(),Sname.end(), name);
+        name[Sname.size()]='\0';
+        if(addIngredient(name,salt, sugar, strenght, servoAdress))
+        {
+            Gtk::Button* pButton = Gtk::manage(new Gtk::Button(LIST_INGREDIENTS[NUMBER_INGREDIENTS-1]->name));
+            this->pingredientsBox->pack_start(*pButton);
+        }
+        else
+        {
+            //metre une boite de dialogue si l'enregistrement s'est mal passé
+        }
+    }
+    if(newIngredientPageNumber!=1){
+        this->remove_page(newIngredientPageNumber);
+        newIngredientPageNumber=1;
+        newIngredientPage=0;
+        this->show_all();
+        this->set_current_page(1);
+    }    
+}
+
+
+void MainNotebook::initAddIngredientThroughtInterface(){
     if( newIngredientPage==0){
         newIngredientPage=1;
         Gtk::VBox* pnewBox=Gtk::manage(new Gtk::VBox(Gtk::BUTTONBOX_START,10));
@@ -147,10 +185,11 @@ void MainNotebook::addIngredientThroughtInterface(){
             Gtk::HBox* pactionBox = Gtk::manage( new Gtk::HBox(false,10));
             pactionBox->set_can_focus(false);
                 Gtk::Button* psaveButton= Gtk::manage( new Gtk::Button(Gtk::Stock::SAVE));
-                //saveButton.signal_clicked().connect(sigc::bind<std::string,int,int,int,int>(sigc::ptr_fun(&saveNewIngredientThroughtInterface),nameEntry.get_text(),saltEntry.get_value_as_int(), sugarEntry.get_value_as_int(), strenghtEntry.get_value_as_int(),servoEntry.get_value_as_int() ));
+                psaveButton->signal_clicked().connect(sigc::bind<int>(sigc::mem_fun(*this,&MainNotebook::closeAddIngredientThroughtInterface),1));
             pactionBox->pack_start(*psaveButton);
-                Gtk::Button* pquitButton = Gtk::manage( new Gtk::Button(Gtk::Stock::CANCEL));
-            pactionBox->pack_start(*pquitButton);
+                Gtk::Button* pcancelButton = Gtk::manage( new Gtk::Button(Gtk::Stock::CANCEL));
+                pcancelButton->signal_clicked().connect(sigc::bind<int>(sigc::mem_fun(*this,&MainNotebook::closeAddIngredientThroughtInterface),0));
+            pactionBox->pack_start(*pcancelButton);
         
         pnewBox->pack_end(*pactionBox);
 
@@ -180,93 +219,9 @@ void MainNotebook::addRecipeThroughtInterface(int numPage /*changer ça*/ ){
 
 
 /*
-extern INGREDIENT* LIST_INGREDIENTS;
-    extern int NUMBER_INGREDIENTS;
-    
-    addIngredientWindow.set_default_size(WIDTH, HEIGHT);
-    addIngredientWindow.set_border_width(10);
-    addIngredientWindow.set_title("Musicocktail: ajouter un ingredient");
-    addIngredientWindow.set_icon_from_file("icone.png");
-        Gtk::VBox addIngredientBox(false,10);
-            Gtk::Label titleLabel("Nouvel ingrédient : création de la fiche");
-            titleLabel.set_justify(Gtk::JUSTIFY_CENTER);
-            titleLabel.set_line_wrap();
-            titleLabel.set_can_focus(false);
-        addIngredientBox.pack_start(titleLabel);
-
-            Gtk::HBox nameBox(false,10);
-            nameBox.set_can_focus(false);
-                Gtk::Label nameLabel("nom :");
-                nameLabel.set_can_focus(false);
-            nameBox.pack_start(nameLabel);
-                Gtk::Entry nameEntry;
-                nameEntry.set_text("rentrer le nom");
-                nameEntry.set_max_length(100);
-            nameBox.pack_start(nameEntry);
-        addIngredientBox.pack_start(nameBox);
-
-            Gtk::HBox saltBox(false,10);
-            saltBox.set_can_focus(false);
-                Gtk::Label saltLabel("taux de sel en g/L :");
-                saltLabel.set_can_focus(false);
-            saltBox.pack_start(saltLabel);
-                Glib::RefPtr<Gtk::Adjustment> ajustementsalt = Gtk::Adjustment::create(0, 0, 100, 1);
-                Gtk::SpinButton saltEntry(ajustementsalt);
-                saltEntry.set_numeric();
-            saltBox.pack_start(saltEntry);
-        addIngredientBox.pack_start(saltBox);
-
-            Gtk::HBox sugarBox(false,10);
-            sugarBox.set_can_focus(false);
-                Gtk::Label sugarLabel("taux de sucre en g/L :");
-                sugarLabel.set_can_focus(false);
-            sugarBox.pack_start(sugarLabel);
-                Glib::RefPtr<Gtk::Adjustment> ajustementSugar = Gtk::Adjustment::create(0, 0, 100, 1);
-                Gtk::SpinButton sugarEntry(ajustementSugar);
-                sugarEntry.set_numeric();
-            sugarBox.pack_start(sugarEntry);
-        addIngredientBox.pack_start(sugarBox);
-
-            Gtk::HBox strenghtBox(false,10);
-            strenghtBox.set_can_focus(false);
-                Gtk::Label strenghtLabel("taux d'alcoolémie en % :");
-                strenghtLabel.set_can_focus(false);
-            strenghtBox.pack_start(strenghtLabel);
-                Glib::RefPtr<Gtk::Adjustment> ajustementStrenght = Gtk::Adjustment::create(0, 0, 100, 1);
-                Gtk::SpinButton strenghtEntry(ajustementStrenght);
-                strenghtEntry.set_numeric();
-            strenghtBox.pack_start(strenghtEntry);
-        addIngredientBox.pack_start(strenghtBox);
-
-            Gtk::HBox servoBox(false,10);
-            servoBox.set_can_focus(false);
-                Gtk::Label servoLabel("numero sur le bar (-1 si il n'est pas sur le bar ):");
-                servoLabel.set_can_focus(false);
-            servoBox.pack_start(servoLabel);
-                Glib::RefPtr<Gtk::Adjustment> ajustementServo = Gtk::Adjustment::create(-1, -1, 15, 1);
-                Gtk::SpinButton servoEntry(ajustementServo);
-                servoEntry.set_numeric();
-            servoBox.pack_start(servoEntry);
-        addIngredientBox.pack_start(servoBox);
-
-            Gtk::HBox actionBox(false,10);
-            actionBox.set_can_focus(false);
-                Gtk::Button saveButton(Gtk::Stock::SAVE);
-                saveButton.signal_clicked().connect(sigc::bind<std::string,int,int,int,int>(sigc::ptr_fun(&saveNewIngredientThroughtInterface),nameEntry.get_text(),saltEntry.get_value_as_int(), sugarEntry.get_value_as_int(), strenghtEntry.get_value_as_int(),servoEntry.get_value_as_int() ));
-            actionBox.pack_start(saveButton);
-                Gtk::Button quitButton(Gtk::Stock::QUIT);
-            actionBox.pack_start(quitButton);
-
-        addIngredientBox.pack_end(actionBox);
-    
-    addIngredientWindow.add(addIngredientBox);
-    addIngredientWindow.show_all();
-
-    */
-
-/*
    void saveNewIngredientThroughtInterface(std::string Sname, int salt, int sugar , int strenght, int servoAdress){
 
+    sigc::bind<std::string,int,int,int,int>(sigc::ptr_fun(&saveNewIngredientThroughtInterface),nameEntry.get_text(),saltEntry.get_value_as_int(), sugarEntry.get_value_as_int(), strenghtEntry.get_value_as_int(),servoEntry.get_value_as_int() ));
     char name[Sname.size()+1];
     std::copy(Sname.begin(),Sname.end(), name);
     addIngredient(name,(float)(salt), (float) (sugar) , (float) (strenght), servoAdress);

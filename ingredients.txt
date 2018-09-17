@@ -1,4 +1,4 @@
-9                           -name - salt - sugar - strenght - iddingredient 
+10                           -name - salt - sugar - strenght - iddingredient 
 rhum blanc exotic 
 3,000000---------------salt
 0,000000---------------sugar
@@ -47,9 +47,15 @@ jus de papaille
 0,000000---------------strenght
 7---------------idd ingredient
 -1---------------adress servo
-rentrer le nom
-0,000000---------------salt
+Coca Cola
+60,000000---------------salt
 0,000000---------------sugar
 0,000000---------------strenght
 8---------------idd ingredient
+-1---------------adress servo
+Orangina
+60,000000---------------salt
+0,000000---------------sugar
+0,000000---------------strenght
+9---------------idd ingredient
 -1---------------adress servo

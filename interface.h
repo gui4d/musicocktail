@@ -20,14 +20,6 @@
 #include "recipes.h"
 #include "music.h"
 
-class AddIngredient : public Gtk::VBox{
-    public: 
-        AddIngredient();
-    private: 
-
-
-
-};
 
 class MainNotebook : public Gtk::Notebook {
 
@@ -35,8 +27,13 @@ class MainNotebook : public Gtk::Notebook {
         MainNotebook();
 
     private:
-        void  addIngredientThroughtInterface();
+        void  initAddIngredientThroughtInterface();
+        void  closeAddIngredientThroughtInterface(int save);
         void  addRecipeThroughtInterface(int numPage );
+
+        Gtk::VButtonBox* pwelcomBox;
+
+        Gtk::VButtonBox* pingredientsBox;
         int newIngredientPage=0;
         int newIngredientPageNumber=1;
         Gtk::Entry newIngredientName;
@@ -44,6 +41,10 @@ class MainNotebook : public Gtk::Notebook {
         Gtk::SpinButton sugarEntry;
         Gtk::SpinButton strenghtEntry;
         Gtk::SpinButton servoEntry;
+
+        Gtk::VButtonBox* precipesBox;
+
+        Gtk::VButtonBox* pmusicsBox;
 };
 
 class MainWindow : public Gtk::Window {
@@ -53,6 +54,7 @@ class MainWindow : public Gtk::Window {
 
     private:
         MainNotebook mainNotebook;
+        void closeMainWindow();
 
 
 };
