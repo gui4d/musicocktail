@@ -8,7 +8,7 @@ install :
 demo : constants.o ingredient.o recipes.o serialCommunication.o music.o demo.o 
 	g++ $^ -o musicocktail.exe $(CFLAGS) $(GRAPHICS)
 
-programme.exe :  constants.o ingredient.o recipes.o serialCommunication.o music.o main.o 
+programme.exe :  constants.o ingredient.o recipes.o serialCommunication.o music.o interface.o main.o 
 	g++ $^ -o musicocktail.exe $(CFLAGS) $(GRAPHICS)
 
 constants.o :constants.c
@@ -30,6 +30,9 @@ music.o :music.cpp
 	g++ -c $^ $(CFLAGS) -lm
 
 main.o : main.cpp
+	g++ -c $^  $(CFLAGS) -lm $(GRAPHICS)
+
+interface.o : interface.cpp
 	g++ -c $^  $(CFLAGS) -lm $(GRAPHICS)
 
 clean : 

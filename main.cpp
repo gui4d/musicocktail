@@ -13,14 +13,15 @@
 #include <gtkmm/adjustment.h>
 #include <gtkmm/spinbutton.h>
 
+
+#include "constants.h"
 #include"ingredient.h"
 #include"recipes.h"
-#include "constants.h"
-#include "ingredient.h"
-#include "demo.h"
 #include "music.h"
+#include "interface.h"
+#include "demo.h"
 
-//need to create a bunch of objects in order to  make better interactions between widgets
+
 
 INGREDIENT* LIST_INGREDIENTS=NULL;
 int NUMBER_INGREDIENTS = 0;
@@ -153,10 +154,7 @@ void addRecipeThroughtInterface(){
 
 int main(int argc, char* argv[]){
 
-    extern INGREDIENT* LIST_INGREDIENTS;
-    extern int NUMBER_INGREDIENTS;
-    extern RECIPE* LIST_RECIPES; 
-    extern int NUMBER_RECIPES;
+
 
     initIngredientList();
     readAllIngredients(VERBOSE);
@@ -164,7 +162,11 @@ int main(int argc, char* argv[]){
     readAllRecipes(NVERBOSE);
 
     Gtk::Main app(argc, argv);
-    Gtk::Window mainWindow;
+    MainWindow mainWindow;
+    Gtk::Main::run(mainWindow);
+
+    /*Gtk::Window mainWindow;
+
     mainWindow.set_default_size(WIDTH,HEIGHT);
     mainWindow.set_border_width(10);
     mainWindow.set_title("Musicocktail");
@@ -224,10 +226,12 @@ int main(int argc, char* argv[]){
         quitBox.add(quitButton);
     
     mainVbox.pack_end(quitBox);
-
+    
     mainWindow.add(mainVbox);
     mainWindow.show_all();    
     Gtk::Main::run(mainWindow);
+    */
+
 
 
 
