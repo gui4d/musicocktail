@@ -100,19 +100,21 @@ void MainNotebook::closeAddIngredientThroughtInterface(int save){
         {
             Gtk::Button* pButton = Gtk::manage(new Gtk::Button(LIST_INGREDIENTS[NUMBER_INGREDIENTS-1]->name));
             this->pingredientsBox->pack_start(*pButton);
+            if( ! saveIngredientList() ){
+                //metre une boite de dialogue si l'enregistrement s'est mal passé
+            }
         }
         else
         {
             //metre une boite de dialogue si l'enregistrement s'est mal passé
         }
     }
-    if(newIngredientPageNumber!=1){
-        this->remove_page(newIngredientPageNumber);
-        newIngredientPageNumber=1;
-        newIngredientPage=0;
-        this->show_all();
-        this->set_current_page(1);
-    }    
+    this->remove_page(newIngredientPageNumber);
+    newIngredientPageNumber=1;
+    newIngredientPage=0;
+    this->show_all();
+    this->set_current_page(1);
+  
 }
 
 

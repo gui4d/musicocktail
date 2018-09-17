@@ -28,7 +28,9 @@ int initIngredient(FILE* ingredientFile,int iddIngredient);
 int initIngredientList();
 
 int writeIngredientList(char * IngrdientFileName);
+int saveIngredientList();
 void freeIngredientList(int saveNewIngredients);
+
 
 void readIngredient(INGREDIENT Ingredient,int verbose);
 void readAllIngredients(int verbose);

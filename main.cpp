@@ -37,10 +37,8 @@ int main(int argc, char* argv[]){
 
 
     initIngredientList();
-    readAllIngredients(VERBOSE);
     initRecipeList();
-    readAllRecipes(NVERBOSE);
-
+    
     Gtk::Main app(argc, argv);
     MainWindow mainWindow;
     Gtk::Main::run(mainWindow);

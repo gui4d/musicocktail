@@ -1,4 +1,4 @@
-10                           -name - salt - sugar - strenght - iddingredient 
+14                           -name - salt - sugar - strenght - iddingredient 
 rhum blanc exotic 
 3,000000---------------salt
 0,000000---------------sugar
@@ -58,4 +58,28 @@ Orangina
 0,000000---------------sugar
 0,000000---------------strenght
 9---------------idd ingredient
+-1---------------adress servo
+jus de citron
+0,000000---------------salt
+0,000000---------------sugar
+0,000000---------------strenght
+10---------------idd ingredient
+-1---------------adress servo
+jus de goyave
+30,000000---------------salt
+0,000000---------------sugar
+0,000000---------------strenght
+11---------------idd ingredient
+-1---------------adress servo
+sirop de menthe
+100,000000---------------salt
+0,000000---------------sugar
+0,000000---------------strenght
+12---------------idd ingredient
+-1---------------adress servo
+sirop de fruit de la passion
+100,000000---------------salt
+0,000000---------------sugar
+0,000000---------------strenght
+13---------------idd ingredient
 -1---------------adress servo

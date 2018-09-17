@@ -101,27 +101,37 @@ int writeIngredientList(char * IngrdientFileName)
     return 1;
 }
 
-
-void freeIngredientList(int saveNewIngredients)
+int saveIngredientList()
 {
     extern INGREDIENT* LIST_INGREDIENTS;
     extern int NUMBER_INGREDIENTS;
     extern int LIST_INGREDIENTS_CHANGED;
-    if(saveNewIngredients && LIST_INGREDIENTS_CHANGED)
+    if(LIST_INGREDIENTS_CHANGED)
     {
         char * temporaryName="temporaryIngredients.txt";
         if( writeIngredientList(temporaryName))
         {
             remove(INGREDIENTSFILE);
             rename( temporaryName,INGREDIENTSFILE);
+            LIST_INGREDIENTS_CHANGED=0;
+            return 1;
         }
         else
         {
             printf("error when writing ingredients list in a new file \n"); 
             remove(temporaryName);
-        }
-               
+            return 0;
+        }           
     }
+}
+
+
+void freeIngredientList(int saveNewIngredients)
+{
+    extern INGREDIENT* LIST_INGREDIENTS;
+    extern int NUMBER_INGREDIENTS;
+    extern int LIST_INGREDIENTS_CHANGED;
+    if (saveNewIngredients) saveIngredientList(saveNewIngredients);
     int i ;
     for(i = 0; i< NUMBER_INGREDIENTS ; i ++){
        free(LIST_INGREDIENTS[i]);
@@ -129,8 +139,9 @@ void freeIngredientList(int saveNewIngredients)
     free(LIST_INGREDIENTS);
     LIST_INGREDIENTS=NULL;
     NUMBER_INGREDIENTS=0;
-    LIST_INGREDIENTS_CHANGED=0;
 }
+
+
 
 void readIngredient(INGREDIENT Ingredient,int verbose){
     if(verbose ){
