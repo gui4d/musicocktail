@@ -12,6 +12,8 @@
 #include <gtkmm/entry.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/spinbutton.h>
+#include <gtkmm/scrolledwindow.h>
+#include <gtkmm/comboboxtext.h>
 
 
 #include "constants.h"

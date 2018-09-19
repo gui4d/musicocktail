@@ -2,6 +2,7 @@
 #define _INTERFACE
 
 #include <string.h>
+#include <vector>
 #include<gtkmm/main.h>
 #include<gtkmm/window.h>
 #include<gtkmm/button.h>
@@ -14,12 +15,28 @@
 #include <gtkmm/entry.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/spinbutton.h>
+#include <gtkmm/scrolledwindow.h>
+#include <gtkmm/comboboxtext.h>
 
 #include "constants.h"
 #include "ingredient.h"
 #include "recipes.h"
 #include "music.h"
 
+class RecipeElement : public Gtk::HBox {
+
+    public:
+        RecipeElement();
+        int getIddIngredient();
+        int getAmountIngredient();
+    private:
+        Gtk::Label ingredient;
+        Gtk::Label amount;
+        Gtk::ComboBoxText ingredientName;
+        Gtk::SpinButton ingredientAmount;
+
+
+};
 
 class MainNotebook : public Gtk::Notebook {
 
@@ -29,11 +46,11 @@ class MainNotebook : public Gtk::Notebook {
     private:
         void  initAddIngredientThroughtInterface();
         void  closeAddIngredientThroughtInterface(int save);
-        void  addRecipeThroughtInterface(int numPage );
+        
 
         Gtk::VButtonBox* pwelcomBox;
 
-        Gtk::VButtonBox* pingredientsBox;
+        Gtk::VButtonBox* pingredientsList;
         int newIngredientPage=0;
         int newIngredientPageNumber=1;
         Gtk::Entry newIngredientName;
@@ -43,6 +60,17 @@ class MainNotebook : public Gtk::Notebook {
         Gtk::SpinButton servoEntry;
 
         Gtk::VButtonBox* precipesBox;
+        int newRecipePage=0;
+        int newRecipePageNumber=2;
+        Gtk::Entry newRecipeName;
+        Gtk::SpinButton NumberIngredientsEntry;
+        int lastNumberIngredientsRecorded=1;
+        std::vector<RecipeElement*> tabpRecipeElement;
+        Gtk::ComboBoxText iddSimilarRecipe;
+
+        void initAddRecipeThroughtInterface();
+        void closeAddRecipeThroughtInterface(int save);
+        //void actuateNumberIngredients();
 
         Gtk::VButtonBox* pmusicsBox;
 };
