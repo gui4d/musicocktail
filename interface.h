@@ -23,7 +23,7 @@
 #include "recipes.h"
 #include "music.h"
 
-class RecipeElement : public Gtk::HBox {
+/*class RecipeElement : public Gtk::HBox {
 
     public:
         RecipeElement();
@@ -36,7 +36,7 @@ class RecipeElement : public Gtk::HBox {
         Gtk::SpinButton ingredientAmount;
 
 
-};
+};*/
 
 class MainNotebook : public Gtk::Notebook {
 
@@ -51,6 +51,7 @@ class MainNotebook : public Gtk::Notebook {
         Gtk::VButtonBox* pwelcomBox;
 
         Gtk::VButtonBox* pingredientsList;
+
         int newIngredientPage=0;
         int newIngredientPageNumber=1;
         Gtk::Entry newIngredientName;
@@ -59,18 +60,22 @@ class MainNotebook : public Gtk::Notebook {
         Gtk::SpinButton strenghtEntry;
         Gtk::SpinButton servoEntry;
 
-        Gtk::VButtonBox* precipesBox;
+        Gtk::VButtonBox* precipesList;
+
         int newRecipePage=0;
         int newRecipePageNumber=2;
         Gtk::Entry newRecipeName;
         Gtk::SpinButton NumberIngredientsEntry;
-        int lastNumberIngredientsRecorded=1;
-        std::vector<RecipeElement*> tabpRecipeElement;
+        Gtk::ComboBoxText* psimilareRecipeEntry;
+        Gtk::VBox* pRecipeElementsList;
+        std::vector <Gtk::HBox*> tabpRecipeElement;
+        std::vector <Gtk::ComboBoxText*> tabpIngredients;
+        std::vector <Gtk::SpinButton*> tabpAmount;
         Gtk::ComboBoxText iddSimilarRecipe;
 
         void initAddRecipeThroughtInterface();
         void closeAddRecipeThroughtInterface(int save);
-        //void actuateNumberIngredients();
+        void actuateNumberIngredients();
 
         Gtk::VButtonBox* pmusicsBox;
 };

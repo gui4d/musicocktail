@@ -121,23 +121,36 @@ int writeRecipeList(char* recipesFileName){
     return 0;    
 }
 
-void freeRecipeList(int saveNewRecipes ){
-    extern RECIPE* LIST_RECIPES; 
-    extern int NUMBER_RECIPES;
+int saveRecipeList(){
     extern int LIST_RECIPES_CHANGED;
-    if( saveNewRecipes || LIST_RECIPES_CHANGED )
-    {
+    if(LIST_RECIPES_CHANGED){
         char * temporaryName="temporaryRecipes.txt";
         if( writeRecipeList(temporaryName))
         {
             remove(RECIPESFILE);
             rename( temporaryName,RECIPESFILE);
+            LIST_RECIPES_CHANGED = 0;
+            return 1;
+
         }
         else
         {
             printf("error when writing recipes list in a new file \n"); 
             remove(temporaryName);
+            return 0;
         }
+    } 
+    else return 1; 
+}
+
+void freeRecipeList(int saveNewRecipes ){
+    
+    extern RECIPE* LIST_RECIPES; 
+    extern int NUMBER_RECIPES;
+    
+    if( saveNewRecipes )
+    {
+        saveRecipeList();
     }
     int i;
     for (i = 0 ; i < NUMBER_RECIPES ; i++){
@@ -146,6 +159,8 @@ void freeRecipeList(int saveNewRecipes ){
         free(LIST_RECIPES[i]); 
     }
     free(LIST_RECIPES);
+    NUMBER_RECIPES = 0;
+    LIST_RECIPES = NULL;
 }
 
 void readRecipe(RECIPE Recipe, int verbose){

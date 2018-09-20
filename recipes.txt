@@ -1,1 +1,11 @@
-0                     - name - iddRecipe -nbingredients - list ingredient - liste amount - idd similar recipe
+1                     - name - iddRecipe -nbingredients - list ingredient - liste amount - idd similar recipe
+punch
+0---------------idd recipe
+3---------------nb ingredients
+0---------------rhum blanc exotic 
+5.000000---------------ml
+15---------------sirop de fructose
+7.000000---------------ml
+3---------------jus d ananas
+20.000000---------------ml
+-1--------------- original recipe 

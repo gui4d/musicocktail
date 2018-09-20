@@ -27,7 +27,9 @@ typedef struct recipe  * RECIPE;
 int initNbRecipe(FILE* recipeFile);
 int initRecipe(FILE* recipeFile,int iddRecipe );
 int initRecipeList();
+
 int writeRecipeList(char* recipesFileName);
+int saveRecipeList();
 void freeRecipeList(int saveNewRecipes);
 
 void readRecipe(RECIPE Recipe, int verbose);
