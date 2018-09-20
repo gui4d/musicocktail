@@ -19,51 +19,44 @@
 #include <gtkmm/comboboxtext.h>
 
 #include "constants.h"
-#include "ingredient.h"
-#include "recipes.h"
+#include"ingredient.h"
+#include"recipes.h"
 #include "music.h"
-
-/*class RecipeElement : public Gtk::HBox {
-
-    public:
-        RecipeElement();
-        int getIddIngredient();
-        int getAmountIngredient();
-    private:
-        Gtk::Label ingredient;
-        Gtk::Label amount;
-        Gtk::ComboBoxText ingredientName;
-        Gtk::SpinButton ingredientAmount;
-
-
-};*/
+#include "music.h"
+#include "serialCommunication.h"
 
 class MainNotebook : public Gtk::Notebook {
 
     public: 
         MainNotebook();
 
-    private:
-        void  initAddIngredientThroughtInterface();
-        void  closeAddIngredientThroughtInterface(int save);
-        
+    private:        
 
         Gtk::VButtonBox* pwelcomBox;
 
         Gtk::VButtonBox* pingredientsList;
-
-        int newIngredientPage=0;
-        int newIngredientPageNumber=1;
+        void  initAddIngredientThroughtInterface();
+        void  closeAddIngredientThroughtInterface(int save);
+        int newIngredientPage;
+        int newIngredientPageNumber;
         Gtk::Entry newIngredientName;
         Gtk::SpinButton saltEntry;
         Gtk::SpinButton sugarEntry;
         Gtk::SpinButton strenghtEntry;
         Gtk::SpinButton servoEntry;
 
+        void openIngredientParameter(int iddIngredient);
+        void closeIngredientParameter();
+        int paramIngredientPage;
+        int paramIngredientPageNumber;
+
         Gtk::VButtonBox* precipesList;
 
-        int newRecipePage=0;
-        int newRecipePageNumber=2;
+        void initAddRecipeThroughtInterface();
+        void closeAddRecipeThroughtInterface(int save);
+        void actuateNumberIngredients();
+        int newRecipePage;
+        int newRecipePageNumber;
         Gtk::Entry newRecipeName;
         Gtk::SpinButton NumberIngredientsEntry;
         Gtk::ComboBoxText* psimilareRecipeEntry;
@@ -73,11 +66,18 @@ class MainNotebook : public Gtk::Notebook {
         std::vector <Gtk::SpinButton*> tabpAmount;
         Gtk::ComboBoxText iddSimilarRecipe;
 
-        void initAddRecipeThroughtInterface();
-        void closeAddRecipeThroughtInterface(int save);
-        void actuateNumberIngredients();
+        void openRecipeParameter(int iddRecipe);
+        void runRecipe(int iddRecipe);
+        void closeRecipeParameter();
+        int paramRecipePage;
+        int paramRecipePageNumber;
 
         Gtk::VButtonBox* pmusicsBox;
+
+        int ArduinoPort;
+        int ArduinoFailed;
+
+        void updatePageNumerotation( int numberPageRemoved);
 };
 
 class MainWindow : public Gtk::Window {

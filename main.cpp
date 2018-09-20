@@ -21,7 +21,8 @@
 #include"recipes.h"
 #include "music.h"
 #include "interface.h"
-#include "demo.h"
+#include "music.h"
+#include "serialCommunication.h"
 
 
 
@@ -40,7 +41,6 @@ int main(int argc, char* argv[]){
 
     initIngredientList();
     initRecipeList();
-    
     Gtk::Main app(argc, argv);
     MainWindow mainWindow;
     Gtk::Main::run(mainWindow);

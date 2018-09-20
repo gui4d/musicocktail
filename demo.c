@@ -13,7 +13,7 @@ int LIST_RECIPES_CHANGED = 0;
 
 
 
-int cocktailDemo() 
+int main() 
 {
     //extern INGREDIENT* LIST_INGREDIENTS;
     extern int NUMBER_INGREDIENTS;
@@ -25,7 +25,7 @@ int cocktailDemo()
     readAllIngredients(VERBOSE);
     initRecipeList();
     printf("\n\nnombre de cocktails disponibles : %d \n",NUMBER_RECIPES);
-    readAllRecipes(NVERBOSE);
+    readAllRecipes(VERBOSE);
     if (addIngredientThroughtTerminal()){
         readAllIngredients(NVERBOSE);
     }

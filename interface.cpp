@@ -1,40 +1,21 @@
 #include "interface.h"
 
-/*RecipeElement::RecipeElement(){
-    extern INGREDIENT* LIST_INGREDIENTS;
-    extern int NUMBER_INGREDIENTS;
-
-    pack_start(ingredient);
-    pack_start(ingredientName);
-    pack_start(amount);
-    pack_start(ingredientAmount);
-    ingredient.set_text("choisissez un ingredient");
-    amount.set_text("quantité en ml :");
-    set_border_width(10);
-    set_can_focus(false);
-     
-    int i;
-    for (i = 0 ; i < NUMBER_INGREDIENTS ; i ++){
-        ingredientName.append(LIST_INGREDIENTS[i]->name);
-    }
-
-
-}
-
-int RecipeElement::getIddIngredient(){
-    return ingredientName.get_active_row_number();
-}
-
-int RecipeElement::getAmountIngredient(){
-    return ingredientAmount.get_value_as_int(); 
-}*/
-
-
 MainNotebook::MainNotebook(){
     extern INGREDIENT* LIST_INGREDIENTS;
     extern int NUMBER_INGREDIENTS;
     extern RECIPE* LIST_RECIPES; 
     extern int NUMBER_RECIPES;
+
+    newIngredientPage=0;
+    newIngredientPageNumber=1;
+    paramIngredientPage= 0;
+    paramIngredientPageNumber=1;
+    newRecipePage=0;
+    newRecipePageNumber=2;
+    paramRecipePage= 0;
+    paramRecipePageNumber=2;
+    ArduinoPort= 0;
+    ArduinoFailed= 0;
 
     set_scrollable();
         pwelcomBox=Gtk::manage(new Gtk::VButtonBox(Gtk::BUTTONBOX_START,10));
@@ -68,6 +49,7 @@ MainNotebook::MainNotebook(){
                 Gtk::Button* pButton;
                 for( i = 0 ; i < NUMBER_INGREDIENTS ; i ++){
                     pButton = Gtk::manage(new Gtk::Button(LIST_INGREDIENTS[i]->name));
+                    pButton->signal_clicked().connect(sigc::bind<int>(sigc::mem_fun(*this,&MainNotebook::openIngredientParameter),i));
                     pingredientsList->pack_start(*pButton);
                 }
             Gtk::Button* paddIngredient = Gtk::manage(new Gtk::Button("_Ajouter un ingrédient ", true));
@@ -85,6 +67,7 @@ MainNotebook::MainNotebook(){
                 pscrolledRecipes->add(*precipesList);
                 for( i = 0 ; i < NUMBER_RECIPES ; i ++){
                     pButton = Gtk::manage(new Gtk::Button(LIST_RECIPES[i]->name));
+                    pButton->signal_clicked().connect(sigc::bind<int>(sigc::mem_fun(*this,&MainNotebook::openRecipeParameter),i));
                     precipesList->pack_start(*pButton);
                 }
             Gtk::Button* paddRecipe = Gtk::manage(new Gtk::Button("_Ajouter un cocktail ", true));
@@ -134,44 +117,6 @@ void MainWindow::closeMainWindow(){
     freeIngredientList(Save);
     Gtk::Main::quit();
 }
-
-void MainNotebook::closeAddIngredientThroughtInterface(int save){
-    
-    extern INGREDIENT* LIST_INGREDIENTS;
-    extern int NUMBER_INGREDIENTS;
-    
-    if(save)
-    {
-        //créer une sécuritée dans les entrées
-        std::string Sname = newIngredientName.get_text();
-        float salt = (float)(saltEntry.get_value_as_int());
-        float sugar = (float)(sugarEntry.get_value_as_int());
-        float strenght = (float)(strenghtEntry.get_value_as_int());
-        int servoAdress = servoEntry.get_value_as_int();
-        char name[Sname.size()+1];
-        std::copy(Sname.begin(),Sname.end(), name);
-        name[Sname.size()]='\0';
-        if(addIngredient(name,salt, sugar, strenght, servoAdress))
-        {
-            Gtk::Button* pButton = Gtk::manage(new Gtk::Button(LIST_INGREDIENTS[NUMBER_INGREDIENTS-1]->name));
-            this->pingredientsList->pack_start(*pButton);
-            if( ! saveIngredientList() ){
-                //metre une boite de dialogue si l'enregistrement s'est mal passé
-            }
-        }
-        else
-        {
-            //metre une boite de dialogue si l'enregistrement s'est mal passé
-        }
-    }
-    this->remove_page(newIngredientPageNumber);
-    newIngredientPageNumber=1;
-    newIngredientPage=0;
-    this->show_all();
-    this->set_current_page(1);
-  
-}
-
 
 void MainNotebook::initAddIngredientThroughtInterface(){
     if( newIngredientPage==0){
@@ -263,33 +208,28 @@ void MainNotebook::initAddIngredientThroughtInterface(){
     }
 }
 
-void MainNotebook::closeAddRecipeThroughtInterface(int save){
+void MainNotebook::closeAddIngredientThroughtInterface(int save){
     
-    extern RECIPE* LIST_RECIPES; 
-    extern int NUMBER_RECIPES;
+    extern INGREDIENT* LIST_INGREDIENTS;
+    extern int NUMBER_INGREDIENTS;
     
     if(save)
     {
         //créer une sécuritée dans les entrées
-        std::string Sname = newRecipeName.get_text();
+        std::string Sname = newIngredientName.get_text();
+        float salt = (float)(saltEntry.get_value_as_int());
+        float sugar = (float)(sugarEntry.get_value_as_int());
+        float strenght = (float)(strenghtEntry.get_value_as_int());
+        int servoAdress = servoEntry.get_value_as_int();
         char name[Sname.size()+1];
         std::copy(Sname.begin(),Sname.end(), name);
         name[Sname.size()]='\0';
-        int nbIngredients = NumberIngredientsEntry.get_value_as_int();
-        int  listIngredients[20];
-        float listAmount[20];
-        int i ;
-        for (i = 0 ; i < nbIngredients ; i ++){
-            listIngredients[i]= tabpIngredients[i]->get_active_row_number();
-            listAmount[i] = (float)(tabpAmount[i]->get_value_as_int()); 
-        }
-        int iddSimilarRecipe = -1;
-
-        if( addRecipe( name,  nbIngredients ,   listIngredients,  listAmount, iddSimilarRecipe ))
+        if(addIngredient(name,salt, sugar, strenght, servoAdress))
         {
-            Gtk::Button* pButton = Gtk::manage(new Gtk::Button(LIST_RECIPES[NUMBER_RECIPES-1]->name));
-            this->precipesList->pack_start(*pButton);
-            if( ! saveRecipeList() ){
+            Gtk::Button* pButton = Gtk::manage(new Gtk::Button(LIST_INGREDIENTS[NUMBER_INGREDIENTS-1]->name));
+            pButton->signal_clicked().connect(sigc::bind<int>(sigc::mem_fun(*this,&MainNotebook::openIngredientParameter),NUMBER_INGREDIENTS-1));
+            this->pingredientsList->pack_start(*pButton);
+            if( ! saveIngredientList() ){
                 //metre une boite de dialogue si l'enregistrement s'est mal passé
             }
         }
@@ -298,78 +238,14 @@ void MainNotebook::closeAddRecipeThroughtInterface(int save){
             //metre une boite de dialogue si l'enregistrement s'est mal passé
         }
     }
-    int NumberIngredient=tabpRecipeElement.size();
-    int j;
-    for( j = NumberIngredient-1 ; j >-1 ; j-- ){
-        pRecipeElementsList->remove(*tabpRecipeElement[j]);
-        tabpRecipeElement.pop_back();
-        tabpIngredients.pop_back();
-        tabpAmount.pop_back();
-    }
-    this->remove_page(newRecipePageNumber);
-    newRecipePageNumber=2;
-    newRecipePage=0;
+    this->remove_page(newIngredientPageNumber);
+    this->updatePageNumerotation(newIngredientPageNumber);
+    newIngredientPageNumber=1;
+    newIngredientPage=0;
     this->show_all();
-    this->set_current_page(2);
+    this->set_current_page(1);
   
 }
-
-
- void MainNotebook::actuateNumberIngredients(){
-
-
-    extern INGREDIENT* LIST_INGREDIENTS;
-    extern int NUMBER_INGREDIENTS;
-
-     int newNumberIngredient = NumberIngredientsEntry.get_value_as_int();
-     int oldNumberIngredient = tabpRecipeElement.size();
-     int j;
-     if( oldNumberIngredient < newNumberIngredient){
-         Gtk::HBox* pnewRecipeElement;
-         Gtk::ComboBoxText* pnewRecipeIngredient;
-         Gtk::Label* pnewRecipeElementLabel;
-         Gtk::SpinButton* pnewRecipeAmount;
-         Glib::RefPtr<Gtk::Adjustment> ajustementAmount;
-         for( j = oldNumberIngredient; j < newNumberIngredient; j++){
-            pnewRecipeElement =Gtk::manage( new Gtk::HBox(false,10));
-            pRecipeElementsList->pack_start(*pnewRecipeElement,Gtk::PACK_SHRINK);
-            tabpRecipeElement.push_back(pnewRecipeElement);
-                pnewRecipeIngredient = Gtk::manage( new Gtk::ComboBoxText());
-                int i;
-                for (i = 0 ; i < NUMBER_INGREDIENTS ; i ++){
-                    pnewRecipeIngredient->append(LIST_INGREDIENTS[i]->name);
-                }
-                pnewRecipeElement->pack_start(*pnewRecipeIngredient,Gtk::PACK_SHRINK);
-                tabpIngredients.push_back(pnewRecipeIngredient);
-
-                pnewRecipeElementLabel = Gtk::manage( new Gtk::Label());
-                pnewRecipeElementLabel->set_text("ml:");
-                pnewRecipeElementLabel->set_can_focus(false);
-                pnewRecipeElement->pack_start(*pnewRecipeElementLabel,Gtk::PACK_SHRINK);
-
-                pnewRecipeAmount =Gtk::manage ( new Gtk::SpinButton);
-                pnewRecipeAmount->set_numeric();
-                ajustementAmount = Gtk::Adjustment::create(0, 0, 100, 1);
-                pnewRecipeAmount->set_adjustment(ajustementAmount);
-                pnewRecipeElement->pack_start(*pnewRecipeAmount,Gtk::PACK_SHRINK);
-                tabpAmount.push_back(pnewRecipeAmount);
-
-         }
-         pRecipeElementsList->show_all();
-
-
-     }
-     if( oldNumberIngredient > newNumberIngredient){
-        for( j = oldNumberIngredient-1 ; j > newNumberIngredient-1 ; j-- ){
-            pRecipeElementsList->remove(*tabpRecipeElement[j]);
-            tabpRecipeElement.pop_back();
-            tabpIngredients.pop_back();
-            tabpAmount.pop_back();
-
-        }
-        pRecipeElementsList->show_all();
-     }
- }
 
 void MainNotebook::initAddRecipeThroughtInterface(){
     
@@ -460,17 +336,334 @@ void MainNotebook::initAddRecipeThroughtInterface(){
     }
     else{
         this->show_all();
-        this->set_current_page(newIngredientPageNumber);
+        this->set_current_page(newRecipePageNumber);
 
     }
 }
-/*
-   void saveNewIngredientThroughtInterface(std::string Sname, int salt, int sugar , int strenght, int servoAdress){
 
-    sigc::bind<std::string,int,int,int,int>(sigc::ptr_fun(&saveNewIngredientThroughtInterface),nameEntry.get_text(),saltEntry.get_value_as_int(), sugarEntry.get_value_as_int(), strenghtEntry.get_value_as_int(),servoEntry.get_value_as_int() ));
-    char name[Sname.size()+1];
-    std::copy(Sname.begin(),Sname.end(), name);
-    addIngredient(name,(float)(salt), (float) (sugar) , (float) (strenght), servoAdress);
-    //metre une boite de dialogue si l'enregistrement s'est mal passé
+void MainNotebook::actuateNumberIngredients(){
+
+
+    extern INGREDIENT* LIST_INGREDIENTS;
+    extern int NUMBER_INGREDIENTS;
+
+     int newNumberIngredient = NumberIngredientsEntry.get_value_as_int();
+     int oldNumberIngredient = tabpRecipeElement.size();
+     int j;
+     if( oldNumberIngredient < newNumberIngredient){
+         Gtk::HBox* pnewRecipeElement;
+         Gtk::ComboBoxText* pnewRecipeIngredient;
+         Gtk::Label* pnewRecipeElementLabel;
+         Gtk::SpinButton* pnewRecipeAmount;
+         Glib::RefPtr<Gtk::Adjustment> ajustementAmount;
+         for( j = oldNumberIngredient; j < newNumberIngredient; j++){
+            pnewRecipeElement =Gtk::manage( new Gtk::HBox(false,10));
+            pRecipeElementsList->pack_start(*pnewRecipeElement,Gtk::PACK_SHRINK);
+            tabpRecipeElement.push_back(pnewRecipeElement);
+                pnewRecipeIngredient = Gtk::manage( new Gtk::ComboBoxText());
+                int i;
+                for (i = 0 ; i < NUMBER_INGREDIENTS ; i ++){
+                    pnewRecipeIngredient->append(LIST_INGREDIENTS[i]->name);
+                }
+                pnewRecipeElement->pack_start(*pnewRecipeIngredient,Gtk::PACK_SHRINK);
+                tabpIngredients.push_back(pnewRecipeIngredient);
+
+                pnewRecipeElementLabel = Gtk::manage( new Gtk::Label());
+                pnewRecipeElementLabel->set_text("ml:");
+                pnewRecipeElementLabel->set_can_focus(false);
+                pnewRecipeElement->pack_start(*pnewRecipeElementLabel,Gtk::PACK_SHRINK);
+
+                pnewRecipeAmount =Gtk::manage ( new Gtk::SpinButton);
+                pnewRecipeAmount->set_numeric();
+                ajustementAmount = Gtk::Adjustment::create(0, 0, 100, 1);
+                pnewRecipeAmount->set_adjustment(ajustementAmount);
+                pnewRecipeElement->pack_start(*pnewRecipeAmount,Gtk::PACK_SHRINK);
+                tabpAmount.push_back(pnewRecipeAmount);
+
+         }
+         pRecipeElementsList->show_all();
+
+
+     }
+     if( oldNumberIngredient > newNumberIngredient){
+        for( j = oldNumberIngredient-1 ; j > newNumberIngredient-1 ; j-- ){
+            pRecipeElementsList->remove(*tabpRecipeElement[j]);
+            tabpRecipeElement.pop_back();
+            tabpIngredients.pop_back();
+            tabpAmount.pop_back();
+
+        }
+        pRecipeElementsList->show_all();
+    }
 }
-*/
+
+void MainNotebook::closeAddRecipeThroughtInterface(int save){
+    
+    extern RECIPE* LIST_RECIPES; 
+    extern int NUMBER_RECIPES;
+    
+    if(save)
+    {
+        //créer une sécuritée dans les entrées
+        std::string Sname = newRecipeName.get_text();
+        char name[Sname.size()+1];
+        std::copy(Sname.begin(),Sname.end(), name);
+        name[Sname.size()]='\0';
+        int nbIngredients = NumberIngredientsEntry.get_value_as_int();
+        int  listIngredients[20];
+        float listAmount[20];
+        int i ;
+        for (i = 0 ; i < nbIngredients ; i ++){
+            listIngredients[i]= tabpIngredients[i]->get_active_row_number();
+            listAmount[i] = (float)(tabpAmount[i]->get_value_as_int()); 
+        }
+        int iddSimilarRecipe = -1;
+
+        if( addRecipe( name,  nbIngredients ,   listIngredients,  listAmount, iddSimilarRecipe ))
+        {
+            Gtk::Button* pButton = Gtk::manage(new Gtk::Button(LIST_RECIPES[NUMBER_RECIPES-1]->name));
+            pButton->signal_clicked().connect(sigc::bind<int>(sigc::mem_fun(*this,&MainNotebook::openRecipeParameter),NUMBER_RECIPES-1));
+            this->precipesList->pack_start(*pButton);
+            if( ! saveRecipeList() ){
+                //metre une boite de dialogue si l'enregistrement s'est mal passé
+            }
+        }
+        else
+        {
+            //metre une boite de dialogue si l'enregistrement s'est mal passé
+        }
+    }
+    int NumberIngredient=tabpRecipeElement.size();
+    int j;
+    for( j = NumberIngredient-1 ; j >-1 ; j-- ){
+        pRecipeElementsList->remove(*tabpRecipeElement[j]);
+        tabpRecipeElement.pop_back();
+        tabpIngredients.pop_back();
+        tabpAmount.pop_back();
+    }
+    this->remove_page(newRecipePageNumber);
+    this->updatePageNumerotation(newRecipePageNumber);
+    newRecipePageNumber=2;
+    newRecipePage=0;
+    this->show_all();
+    this->set_current_page(2);
+  
+}
+
+void MainNotebook::openIngredientParameter(int iddIngredient){
+    extern INGREDIENT* LIST_INGREDIENTS;
+
+    if( paramIngredientPage==0){
+        paramIngredientPage=1;
+        Gtk::VBox* pnewBox=Gtk::manage(new Gtk::VBox(false,10));
+
+            Gtk::Label* ptitleLabel= Gtk::manage(new Gtk::Label(LIST_INGREDIENTS[iddIngredient]->name));
+            ptitleLabel->set_justify(Gtk::JUSTIFY_CENTER);
+            ptitleLabel->set_line_wrap();
+            ptitleLabel->set_can_focus(false);
+            pnewBox->pack_start(*ptitleLabel);
+
+            Gtk::HBox* psaltBox = Gtk::manage( new Gtk::HBox(false,10));
+            psaltBox->set_can_focus(false);
+            pnewBox->pack_start(*psaltBox);
+                Gtk::Label* psaltLabel=Gtk::manage( new Gtk::Label("taux de sel (g/l):"));
+                psaltLabel->set_can_focus(false);
+                psaltBox->pack_start(*psaltLabel);
+
+                char saltValue[10];
+                sprintf(saltValue, "%f", LIST_INGREDIENTS[iddIngredient]->salt);
+                psaltLabel=Gtk::manage( new Gtk::Label());
+                psaltLabel->set_text(saltValue);
+                psaltLabel->set_can_focus(false);
+                psaltBox->pack_start(*psaltLabel);
+            
+            Gtk::HBox* psugarBox = Gtk::manage( new Gtk::HBox(false,10));
+            psugarBox->set_can_focus(false);
+            pnewBox->pack_start(*psugarBox);
+                Gtk::Label* psugarLabel=Gtk::manage( new Gtk::Label("taux de sucre (g/l):"));
+                psugarLabel->set_can_focus(false);
+                psugarBox->pack_start(*psugarLabel);
+
+                char sugarValue[10];
+                sprintf(sugarValue, "%f", LIST_INGREDIENTS[iddIngredient]->sugar);
+                psugarLabel=Gtk::manage( new Gtk::Label(sugarValue));
+                psugarLabel->set_can_focus(false);
+                psugarBox->pack_start(*psugarLabel);
+            
+            Gtk::HBox* pstrenghtBox = Gtk::manage( new Gtk::HBox(false,10));
+            pstrenghtBox->set_can_focus(false);
+            pnewBox->pack_start(*pstrenghtBox);
+                Gtk::Label* pstrenghtLabel=Gtk::manage( new Gtk::Label("taux alcoolémique (%):"));
+                pstrenghtLabel->set_can_focus(false);
+                pstrenghtBox->pack_start(*pstrenghtLabel);
+
+                char strenghtValue[10];
+                sprintf(strenghtValue, "%f", LIST_INGREDIENTS[iddIngredient]->strenght);
+                pstrenghtLabel=Gtk::manage( new Gtk::Label(strenghtValue));
+                pstrenghtLabel->set_can_focus(false);
+                pstrenghtBox->pack_start(*pstrenghtLabel);
+
+            Gtk::HBox* pservoBox = Gtk::manage( new Gtk::HBox(false,10));
+            pservoBox->set_can_focus(false);
+            pnewBox->pack_start(*pservoBox);
+                if ( LIST_INGREDIENTS[iddIngredient]->servoAdress==-1){
+                    Gtk::Label* pservoLabel=Gtk::manage( new Gtk::Label("n'est pas placé sur le bar"));
+                    pservoLabel->set_can_focus(false);
+                    pservoBox->pack_start(*pservoLabel);
+
+                }
+                else{
+                    Gtk::Label* pservoLabel=Gtk::manage( new Gtk::Label("emplacement sur l'armoire :"));
+                    pservoLabel->set_can_focus(false);
+                    pservoBox->pack_start(*pservoLabel);
+
+                    char servoValue[3];
+                    sprintf(servoValue, "%d", LIST_INGREDIENTS[iddIngredient]->servoAdress);
+                    pservoLabel=Gtk::manage( new Gtk::Label(servoValue));
+                    pservoLabel->set_can_focus(false);
+                    pservoBox->pack_start(*pservoLabel);
+
+                }
+
+        
+            Gtk::HBox* pactionBox = Gtk::manage( new Gtk::HBox(false,10));
+            pactionBox->set_can_focus(false);
+            pnewBox->pack_end(*pactionBox,Gtk::PACK_SHRINK);
+                Gtk::Button* psaveButton= Gtk::manage( new Gtk::Button(Gtk::Stock::EDIT));
+                //psaveButton->signal_clicked().connect(sigc::bind<int>(sigc::mem_fun(*this,&MainNotebook::closeAddIngredientThroughtInterface),1));
+                pactionBox->pack_start(*psaveButton);
+                
+                Gtk::Button* pcancelButton = Gtk::manage( new Gtk::Button(Gtk::Stock::CLOSE));
+                pcancelButton->signal_clicked().connect(sigc::mem_fun(*this,&MainNotebook::closeIngredientParameter));
+                pactionBox->pack_start(*pcancelButton);
+        
+        
+
+        int numPage = this->get_n_pages();
+        paramIngredientPageNumber=numPage;
+        this->insert_page(*pnewBox, LIST_INGREDIENTS[iddIngredient]->name,  numPage);
+        this->show_all();
+        this->set_current_page(numPage);
+    }
+    else{
+
+        this->show_all();
+        this->set_current_page(paramIngredientPageNumber);
+        closeIngredientParameter();
+        openIngredientParameter(iddIngredient);
+
+    }
+}
+
+
+void MainNotebook::closeIngredientParameter(){
+
+    this->remove_page(paramIngredientPageNumber);
+    this->updatePageNumerotation(paramIngredientPageNumber);
+    paramIngredientPageNumber=1;
+    paramIngredientPage=0;
+    this->show_all();
+    this->set_current_page(1);  
+}
+
+void MainNotebook::openRecipeParameter(int RecipeNumber){
+    extern RECIPE* LIST_RECIPES;
+
+    if( paramRecipePage==0){
+        paramRecipePage=1;
+        Gtk::VBox* pnewBox=Gtk::manage(new Gtk::VBox(false,10));
+
+            Gtk::Label* ptitleLabel= Gtk::manage(new Gtk::Label(LIST_RECIPES[RecipeNumber]->name));
+            ptitleLabel->set_justify(Gtk::JUSTIFY_CENTER);
+            ptitleLabel->set_line_wrap();
+            ptitleLabel->set_can_focus(false);
+            pnewBox->pack_start(*ptitleLabel);
+            
+            int i;
+            Gtk::HBox* pelementBox;
+            Gtk::Label* pelementLabel;
+            char elementValue[10];
+            for( i= 0 ; i < LIST_RECIPES[RecipeNumber]->nbIngredients; i ++){
+                pelementBox= Gtk::manage( new Gtk::HBox(false,10));
+                pelementBox->set_can_focus(false);
+                pnewBox->pack_start(*pelementBox);
+                    pelementLabel=Gtk::manage( new Gtk::Label(ingredient(((LIST_RECIPES[RecipeNumber])->listIddIngredients)[i])->name));
+                    pelementLabel->set_can_focus(false);
+                    pelementBox->pack_start(*pelementLabel);
+
+                    sprintf(elementValue, "%f", ((LIST_RECIPES[RecipeNumber])->listAmount)[i]);
+                    pelementLabel=Gtk::manage( new Gtk::Label());
+                    pelementLabel->set_text(elementValue);
+                    pelementLabel->set_can_focus(false);
+                    pelementBox->pack_start(*pelementLabel);
+                    
+                    pelementLabel=Gtk::manage( new Gtk::Label("ml"));
+                    pelementLabel->set_can_focus(false);
+                    pelementBox->pack_start(*pelementLabel);
+            }
+
+            Gtk::HBox* pactionBox = Gtk::manage( new Gtk::HBox(false,10));
+            pactionBox->set_can_focus(false);
+            pnewBox->pack_end(*pactionBox,Gtk::PACK_SHRINK);
+                Gtk::Button* psaveButton= Gtk::manage( new Gtk::Button(Gtk::Stock::EDIT));
+                //psaveButton->signal_clicked().connect(sigc::bind<int>(sigc::mem_fun(*this,&MainNotebook::closeAddRecipeThroughtInterface),1));
+                pactionBox->pack_start(*psaveButton);
+
+                Gtk::Button* prunButton= Gtk::manage( new Gtk::Button(Gtk::Stock::EXECUTE));
+                prunButton->signal_clicked().connect(sigc::bind<int>(sigc::mem_fun(*this,&MainNotebook::runRecipe),RecipeNumber));
+                pactionBox->pack_start(*prunButton);
+                
+                Gtk::Button* pcancelButton = Gtk::manage( new Gtk::Button(Gtk::Stock::CLOSE));
+                pcancelButton->signal_clicked().connect(sigc::mem_fun(*this,&MainNotebook::closeRecipeParameter));
+                pactionBox->pack_start(*pcancelButton);
+        
+        
+        int numPage = this->get_n_pages();
+        paramRecipePageNumber=numPage;
+        this->insert_page(*pnewBox, LIST_RECIPES[RecipeNumber]->name,  numPage);
+        this->show_all();
+        this->set_current_page(numPage);
+    }
+    else{
+
+        this->show_all();
+        this->set_current_page(paramRecipePageNumber);
+        closeRecipeParameter();
+        openRecipeParameter(RecipeNumber);
+    }
+}
+
+void MainNotebook::runRecipe(int recipeNumber){
+    if( ArduinoFailed) {
+        return;
+    }
+    if((!ArduinoPort) || (! (ArduinoPort = initSerial())) )
+    {
+        ArduinoFailed = 1;
+        return;
+    }
+    RECIPE newrecipe= recipe(recipeNumber);
+    executeRecipe(newrecipe,ArduinoPort);
+}
+
+
+void MainNotebook::closeRecipeParameter(){
+
+    this->remove_page(paramRecipePageNumber);
+    this->updatePageNumerotation(paramRecipePageNumber);
+    paramRecipePageNumber=2;
+    paramRecipePage=0;
+    this->show_all();
+    this->set_current_page(2);  
+}
+
+
+
+
+void MainNotebook::updatePageNumerotation( int numberPageRemoved){
+
+    if( paramRecipePageNumber>numberPageRemoved) paramRecipePageNumber--;
+    if( newRecipePageNumber>numberPageRemoved) newRecipePageNumber--;
+    if( paramIngredientPageNumber>numberPageRemoved) paramIngredientPageNumber--;
+    if( newIngredientPageNumber>numberPageRemoved) newIngredientPageNumber--;
+}

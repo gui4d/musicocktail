@@ -1,4 +1,4 @@
-16                           -name - salt - sugar - strenght - iddingredient 
+17                           -name - salt - sugar - strenght - iddingredient 
 rhum blanc exotic 
 3.000000---------------salt
 0.000000---------------sugar
@@ -94,4 +94,10 @@ sirop de fructose
 0.000000---------------sugar
 0.000000---------------strenght
 15---------------idd ingredient
+-1---------------adress servo
+Aperol
+10.000000---------------salt
+12.000000---------------sugar
+0.000000---------------strenght
+16---------------idd ingredient
 -1---------------adress servo

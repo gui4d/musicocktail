@@ -4,7 +4,7 @@ int initSerial(){
         int fd = open (ARDUINOADRESS, O_RDWR | O_NOCTTY | O_SYNC);
         if (fd < 0)
         {
-                printf("error %d opening %s: %s", errno, ARDUINOADRESS, strerror (errno));
+                printf("error %d opening %s: %s\n", errno, ARDUINOADRESS, strerror (errno));
                 return 0;
         }
         set_interface_attribs (fd, B9600, 0);  // set speed to 115,200 bps, 8n1 (no parity)
@@ -89,7 +89,7 @@ int sendNewOrder(INGREDIENT Ingredient, float amount, int fd)
 {
     if(Ingredient->servoAdress > -1 && Ingredient->servoAdress < 16 ){
         char Data[7];
-        int i;
+        unsigned int i;
         for (i = 0 ; i< sizeof(Data); i++){
                 Data[i]='0';
         }
