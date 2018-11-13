@@ -145,7 +145,7 @@ void MainNotebook::initAddIngredientThroughtInterface(){
                 Gtk::Label* psaltLabel= Gtk::manage(new Gtk::Label("taux de sel en g/L :"));
                 psaltLabel->set_can_focus(false);
             psaltBox->pack_start(*psaltLabel);
-                Glib::RefPtr<Gtk::Adjustment> ajustementsalt = Gtk::Adjustment::create(0, 0, 100, 1);
+                Glib::RefPtr<Gtk::Adjustment> ajustementsalt = Gtk::Adjustment::create(0, 0, MAXSALT, 1);
                 saltEntry.set_adjustment(ajustementsalt);
                 saltEntry.set_numeric();
             psaltBox->pack_start(saltEntry);
@@ -158,7 +158,7 @@ void MainNotebook::initAddIngredientThroughtInterface(){
                 psugarLabel->set_can_focus(false);
             psugarBox->pack_start(*psugarLabel);
 
-                Glib::RefPtr<Gtk::Adjustment> ajustementSugar = Gtk::Adjustment::create(0, 0, 100, 1);
+                Glib::RefPtr<Gtk::Adjustment> ajustementSugar = Gtk::Adjustment::create(0, 0, MAXSUGAR, 1);
                 sugarEntry.set_adjustment(ajustementSugar);
                 sugarEntry.set_numeric();
             psugarBox->pack_start(sugarEntry);
@@ -169,7 +169,7 @@ void MainNotebook::initAddIngredientThroughtInterface(){
                 Gtk::Label* pstrenghtLabel= Gtk::manage( new Gtk::Label("taux d'alcoolémie en % :"));
                 pstrenghtLabel->set_can_focus(false);
             pstrenghtBox->pack_start(*pstrenghtLabel);
-                Glib::RefPtr<Gtk::Adjustment> ajustementStrenght = Gtk::Adjustment::create(0, 0, 100, 1);
+                Glib::RefPtr<Gtk::Adjustment> ajustementStrenght = Gtk::Adjustment::create(0, 0, MAXSTRENGHT, 1);
                 strenghtEntry.set_adjustment(ajustementStrenght);
                 strenghtEntry.set_numeric();
             pstrenghtBox->pack_start(strenghtEntry);
@@ -180,7 +180,7 @@ void MainNotebook::initAddIngredientThroughtInterface(){
                 Gtk::Label* pservoLabel= Gtk::manage( new Gtk::Label("numero sur le bar (-1 si il n'est pas sur le bar ):"));
                 pservoLabel->set_can_focus(false);
             pservoBox->pack_start(*pservoLabel);
-                Glib::RefPtr<Gtk::Adjustment> ajustementServo = Gtk::Adjustment::create(-1, -1, 15, 1);
+                Glib::RefPtr<Gtk::Adjustment> ajustementServo = Gtk::Adjustment::create(-1, -1,SERVOSLOTNUMBER-1, 1);
                 servoEntry.set_adjustment(ajustementServo);
                 servoEntry.set_numeric();
             pservoBox->pack_start(servoEntry);
@@ -473,7 +473,7 @@ void MainNotebook::openIngredientParameter(int iddIngredient){
                 psaltLabel->set_can_focus(false);
                 psaltBox->pack_start(*psaltLabel);
 
-                Glib::RefPtr<Gtk::Adjustment> ajustementsalt = Gtk::Adjustment::create(LIST_INGREDIENTS[iddIngredient]->salt, 0, 100, 1);
+                Glib::RefPtr<Gtk::Adjustment> ajustementsalt = Gtk::Adjustment::create(LIST_INGREDIENTS[iddIngredient]->salt, 0, MAXSALT, 1);
                 Gtk::SpinButton* psaltEntry=Gtk::manage( new Gtk::SpinButton());
                 psaltEntry->set_adjustment(ajustementsalt);
                 psaltEntry->set_numeric();
@@ -486,7 +486,7 @@ void MainNotebook::openIngredientParameter(int iddIngredient){
                 psugarLabel->set_can_focus(false);
                 psugarBox->pack_start(*psugarLabel);
 
-                Glib::RefPtr<Gtk::Adjustment> ajustementsugar = Gtk::Adjustment::create(LIST_INGREDIENTS[iddIngredient]->sugar, 0, 100, 1);
+                Glib::RefPtr<Gtk::Adjustment> ajustementsugar = Gtk::Adjustment::create(LIST_INGREDIENTS[iddIngredient]->sugar, 0,MAXSUGAR, 1);
                 Gtk::SpinButton* psugarEntry=Gtk::manage( new Gtk::SpinButton());
                 psugarEntry->set_adjustment(ajustementsugar);
                 psugarEntry->set_numeric();
@@ -499,7 +499,7 @@ void MainNotebook::openIngredientParameter(int iddIngredient){
                 pstrenghtLabel->set_can_focus(false);
                 pstrenghtBox->pack_start(*pstrenghtLabel);
 
-                Glib::RefPtr<Gtk::Adjustment> ajustementstrenght = Gtk::Adjustment::create(LIST_INGREDIENTS[iddIngredient]->strenght, 0, 100, 1);
+                Glib::RefPtr<Gtk::Adjustment> ajustementstrenght = Gtk::Adjustment::create(LIST_INGREDIENTS[iddIngredient]->strenght, 0, MAXSTRENGHT, 1);
                 Gtk::SpinButton* pstrenghtEntry=Gtk::manage( new Gtk::SpinButton());
                 pstrenghtEntry->set_adjustment(ajustementstrenght);
                 pstrenghtEntry->set_numeric();
