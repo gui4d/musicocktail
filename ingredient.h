@@ -36,6 +36,7 @@ void readIngredient(INGREDIENT Ingredient,int verbose);
 void readAllIngredients(int verbose);
 int addIngredient(char* name, float salt, float sugar , float alcool , int servoAdress);
 int addIngredientThroughtTerminal();
+int editIngredient( float salt, float sugar , float strenght, int servoAdress, int iddIngredient);
 
 INGREDIENT ingredient(int iddIngredient);
 

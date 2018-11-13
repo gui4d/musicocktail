@@ -46,6 +46,7 @@ class MainNotebook : public Gtk::Notebook {
         Gtk::SpinButton servoEntry;
 
         void openIngredientParameter(int iddIngredient);
+        void editIngredientParameter(int iddIngredient, Gtk::SpinButton* psaltEntry, Gtk::SpinButton* psugarEntry, Gtk::SpinButton* pstrenghtEntry , Gtk::SpinButton* pservoEntry);
         void closeIngredientParameter();
         int paramIngredientPage;
         int paramIngredientPageNumber;

@@ -184,8 +184,8 @@ int addIngredient(char* name, float salt, float sugar , float strenght, int serv
        else{
            LIST_INGREDIENTS[NUMBER_INGREDIENTS]->name=strdup(name);
            LIST_INGREDIENTS[NUMBER_INGREDIENTS]->salt= salt;
-           LIST_INGREDIENTS[NUMBER_INGREDIENTS]->salt= sugar;
-           LIST_INGREDIENTS[NUMBER_INGREDIENTS]->sugar=strenght;
+           LIST_INGREDIENTS[NUMBER_INGREDIENTS]->sugar= sugar;
+           LIST_INGREDIENTS[NUMBER_INGREDIENTS]->strenght=strenght;
            LIST_INGREDIENTS[NUMBER_INGREDIENTS]->iddIngredient= NUMBER_INGREDIENTS;
            LIST_INGREDIENTS[NUMBER_INGREDIENTS]->servoAdress = servoAdress;
            NUMBER_INGREDIENTS++;
@@ -216,6 +216,26 @@ int addIngredientThroughtTerminal(){
     printf(" %s donner son emplacement dans le bar (-1 si il n'en a pas ):",name);
     scanf("%d",&servoAdress);
     return addIngredient( name, salt,  sugar ,strenght, servoAdress);
+}
+
+int editIngredient(float salt, float sugar , float strenght, int servoAdress, int iddIngredient)
+{
+    extern INGREDIENT* LIST_INGREDIENTS;
+    extern int NUMBER_INGREDIENTS;
+    extern int LIST_INGREDIENTS_CHANGED;
+    if(NUMBER_INGREDIENTS<=iddIngredient){
+       printf("error when modifying ingredient\n");
+       return 0;
+   }
+   else{
+        LIST_INGREDIENTS[iddIngredient]->salt= salt;
+        LIST_INGREDIENTS[iddIngredient]->sugar= sugar;
+        LIST_INGREDIENTS[iddIngredient]->strenght=strenght;
+        LIST_INGREDIENTS[iddIngredient]->servoAdress = servoAdress;
+        LIST_INGREDIENTS_CHANGED++;
+
+        return 1 ;
+   }
 }
 
 INGREDIENT ingredient(int iddIngredient){

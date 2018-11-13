@@ -1,8 +1,8 @@
 17                           -name - salt - sugar - strenght - iddingredient 
 rhum blanc exotic 
-3.000000---------------salt
-0.000000---------------sugar
-60.000000---------------strenght
+0.000000---------------salt
+60.000000---------------sugar
+50.000000---------------strenght
 0---------------idd ingredient
 1---------------adress servo
 rhum brun exotic 
@@ -30,8 +30,8 @@ sirop de sucre de canne
 4---------------idd ingredient
 -1---------------adress servo
 wisky
-10.000000---------------salt
-49.000000---------------sugar
+49.000000---------------salt
+0.000000---------------sugar
 0.000000---------------strenght
 5---------------idd ingredient
 -1---------------adress servo
@@ -94,7 +94,7 @@ sirop de fructose
 0.000000---------------sugar
 0.000000---------------strenght
 15---------------idd ingredient
--1---------------adress servo
+2---------------adress servo
 Aperol
 10.000000---------------salt
 12.000000---------------sugar

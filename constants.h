@@ -16,7 +16,13 @@
 #define RECIPESFILE "recipes.txt"
 #define INGREDIENTSFILE "ingredients.txt"
 
+#define MAXSALT 100 
+#define MAXSUGAR 100
+#define MAXSTRENGHT 100
+
 #define ARDUINOADRESS "/dev/ttyUSB0"
+
+#define SERVOSLOTNUMBER 16
 
 #define HEIGHT 600
 #define WIDTH 400
