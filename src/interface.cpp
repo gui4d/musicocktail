@@ -59,7 +59,7 @@ MainNotebook::MainNotebook(){
     pscrolledIngredients->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
     paddIngredient->signal_clicked().connect(sigc::mem_fun(*this,&MainNotebook:: initAddIngredientThroughtInterface));
     
-    Gtk::VBox* precipesBox = Gtk::manage ( new Gtk::VBox(false,10));
+        Gtk::VBox* precipesBox = Gtk::manage ( new Gtk::VBox(false,10));
         append_page(*precipesBox,"Cocktails");
             Gtk::ScrolledWindow* pscrolledRecipes = Gtk::manage( new Gtk::ScrolledWindow());
             precipesBox->pack_start(*pscrolledRecipes);
@@ -78,18 +78,34 @@ MainNotebook::MainNotebook(){
     paddRecipe->signal_clicked().connect(sigc::mem_fun(*this,&MainNotebook:: initAddRecipeThroughtInterface));
     
 
-        pmusicsBox = Gtk::manage(new Gtk::VButtonBox(Gtk::BUTTONBOX_START,10));
+        Gtk::VBox* pmusicsBox = Gtk::manage(new Gtk::VBox(false,10));
         append_page(*pmusicsBox, "musique");
+            
             Gtk::Label* pinstructionsLabel= Gtk::manage ( new Gtk::Label());
-            pmusicsBox->pack_start(*pinstructionsLabel);
+            pmusicsBox->pack_start(*pinstructionsLabel,Gtk::PACK_EXPAND_WIDGET);
 
-            Gtk::Button* popenMusicFile =Gtk:: manage( new Gtk::Button("Choisir musique"));
-            pmusicsBox->pack_start(*popenMusicFile);
-            popenMusicFile->signal_clicked().connect(sigc::mem_fun(*this,&MainNotebook::launchMusicFileDialog));
+            Gtk::ScrolledWindow* pscrolledResultMusic = Gtk::manage( new Gtk::ScrolledWindow());
+            pmusicsBox->pack_start(*pscrolledResultMusic,Gtk::PACK_EXPAND_WIDGET);
+                pAnalysisResultBox = Gtk:: manage( new Gtk::TextView());
+                pscrolledResultMusic->add(*pAnalysisResultBox);
+                pAnalysisResultBox->set_editable(False);
+            
 
-            Gtk::Button* plaunchMusicAnalysis =Gtk:: manage( new Gtk::Button("Analyser"));
-            pmusicsBox->pack_start(*plaunchMusicAnalysis);
-            plaunchMusicAnalysis->signal_clicked().connect(sigc::mem_fun(*this,&MainNotebook::launchMusicAnalysis));
+
+            Gtk::HButtonBox* pmusicButtonList = Gtk::manage( new Gtk::HButtonBox(Gtk::BUTTONBOX_START,10));
+            pmusicsBox->pack_end(*pmusicButtonList,Gtk::PACK_EXPAND_WIDGET);
+                Gtk::Button* popenMusicFile =Gtk:: manage( new Gtk::Button("Choisir musique"));
+                pmusicButtonList->pack_start(*popenMusicFile);
+                popenMusicFile->signal_clicked().connect(sigc::mem_fun(*this,&MainNotebook::launchMusicFileDialog));
+
+                Gtk::Button* plaunchMusicAnalysis =Gtk:: manage( new Gtk::Button("Analyser"));
+                pmusicButtonList->pack_start(*plaunchMusicAnalysis);
+                plaunchMusicAnalysis->signal_clicked().connect(sigc::mem_fun(*this,&MainNotebook::launchMusicAnalysis));
+
+            
+            pmusicsBox->set_border_width(10);
+            pscrolledResultMusic->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+            //pAnalysisResultText = Gtk:: manage( new Gtk::gtk_text_view_get_buffer (GTK_TEXT_VIEW (pAnalysisResultText)));
         
         pinstructionsLabel -> set_justify(Gtk::JUSTIFY_CENTER);
         pinstructionsLabel -> set_markup("<b><big>          Musicocktail        </big></b> \n\n  choisissez une musique à analyser et cliquer sur Analyser");
@@ -736,7 +752,16 @@ void MainNotebook::launchMusicAnalysis(){
     sMusicFilePath += MusicFilePath;
     audioAnalysisFromFile(sMusicFilePath, MUSICANALYSISRESULTSFILE, MUSICANALYSISPROFILEFILE );
     puts("musical analysis done") ;
+
+    std::fstream musicResultFile;
+    gchar* musicResultText;
+    musicResultFile.open (MUSICANALYSISPROFILEFILE, std::fstream::in | std::fstream::out | std::fstream::app);
+    musicResultFile.read(musicResultText,musicResultFile.gcount());
+    musicResultFile.close();
+    pAnalysisResultBox->get_buffer()->set_text(musicResultText);
     }
+    else 
+    puts("no music to analyse");
     
 }
 

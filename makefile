@@ -10,6 +10,12 @@ CFLAGS=-W -Wall -g
 install : 
 	make programme.exe
 	make clean 
+	echo done 
+
+run :
+	make programme.exe
+	echo done 
+
 
 demo : constants.o ingredient.o recipes.o serialCommunication.o music.o demo.o 
 	g++ $^ -o musicocktail.exe $(CFLAGS) $(GRAPHICS)

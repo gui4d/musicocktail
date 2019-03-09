@@ -18,6 +18,8 @@
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/dialog.h>
+#include <gtkmm/textview.h>
+#include <fstream> 
 
 #include "constants.h"
 #include "ingredient.h"
@@ -81,7 +83,9 @@ class MainNotebook : public Gtk::Notebook {
         void launchMusicAnalysis();
         void launchMusicFileDialog();
         char* MusicFilePath; 
-
+        Gtk::TextView * pAnalysisResultBox;
+        Gtk::TextBuffer * pAnalysisResultText;
+    
         int ArduinoPort;
         int ArduinoFailed;
 
