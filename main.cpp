@@ -16,13 +16,13 @@
 #include <gtkmm/comboboxtext.h>
 
 
-#include "constants.h"
-#include"ingredient.h"
-#include"recipes.h"
-#include "music.h"
-#include "interface.h"
-#include "music.h"
-#include "serialCommunication.h"
+#include "src/constants.h"
+#include"src/ingredient.h"
+#include"src/recipes.h"
+#include "src/music.h"
+#include "src/interface.h"
+#include "src/music.h"
+#include "src/serialCommunication.h"
 
 
 

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "ingredient.h"
-#include "recipes.h"
+#include "src/ingredient.h"
+#include "src/recipes.h"
 
 
 INGREDIENT* LIST_INGREDIENTS=NULL;
