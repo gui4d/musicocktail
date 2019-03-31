@@ -16,6 +16,7 @@
 #define RECIPESFILE "medias/recipes.txt"
 #define INGREDIENTSFILE "medias/ingredients.txt"
 #define ICONEFILE "medias/icone.png"
+#define RECIPEDESCRIPTORFILE "medias/recipeDescriptors.txt"
 
 #define MUSICANALYSISPROFILEFILE "src/musicAnalysis/profiles/all_config.yaml"
 #define MUSICANALYSISRESULTSFILE "results_last_music_analysis.yaml"
@@ -30,6 +31,7 @@
 
 #define HEIGHT 600
 #define WIDTH 400
+
 
 #ifdef __cplusplus
 extern "C" {

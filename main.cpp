@@ -32,15 +32,17 @@ int LIST_INGREDIENTS_CHANGED = 0;
 RECIPE* LIST_RECIPES=NULL; 
 int NUMBER_RECIPES=0;
 int LIST_RECIPES_CHANGED = 0;
+DESCRIPTOR* LIST_DESCRIPTORS=NULL;
+int NUMBER_DESCRIPTORS= 0;
+
 
 
 
 int main(int argc, char* argv[]){
 
-
-
     initIngredientList();
     initRecipeList();
+    initDescriptorsList();
     Gtk::Main app(argc, argv);
     MainWindow mainWindow;
     Gtk::Main::run(mainWindow);

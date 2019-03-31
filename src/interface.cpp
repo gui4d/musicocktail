@@ -89,6 +89,11 @@ MainNotebook::MainNotebook(){
                 pAnalysisResultBox = Gtk:: manage( new Gtk::TextView());
                 pscrolledResultMusic->add(*pAnalysisResultBox);
                 pAnalysisResultBox->set_editable(False);
+
+                musicPath.set_markup("choisir un fichier");
+                musicPath.set_justify(Gtk::JUSTIFY_CENTER);
+                musicPath.set_line_wrap();
+            pmusicsBox->pack_start(musicPath);
             
 
 
@@ -172,7 +177,7 @@ void MainNotebook::initAddIngredientThroughtInterface(){
             pnameBox->pack_start(newIngredientName);
         pnewBox->pack_start(*pnameBox);
 
-            Gtk::HBox* psaltBox= Gtk::manage(new Gtk::HBox(false,10));
+            /*Gtk::HBox* psaltBox= Gtk::manage(new Gtk::HBox(false,10));
             psaltBox->set_can_focus(false);
                 Gtk::Label* psaltLabel= Gtk::manage(new Gtk::Label("taux de sel en g/L :"));
                 psaltLabel->set_can_focus(false);
@@ -206,7 +211,7 @@ void MainNotebook::initAddIngredientThroughtInterface(){
                 strenghtEntry.set_numeric();
             pstrenghtBox->pack_start(strenghtEntry);
         pnewBox->pack_start(*pstrenghtBox);
-
+            */
             Gtk::HBox* pservoBox = Gtk::manage( new Gtk::HBox(false,10));
             pservoBox->set_can_focus(false);
                 Gtk::Label* pservoLabel= Gtk::manage( new Gtk::Label("numero sur le bar (-1 si il n'est pas sur le bar ):"));
@@ -251,14 +256,14 @@ void MainNotebook::closeAddIngredientThroughtInterface(int save){
     {
         //créer une sécuritée dans les entrées
         std::string Sname = newIngredientName.get_text();
-        float salt = (float)(saltEntry.get_value_as_int());
-        float sugar = (float)(sugarEntry.get_value_as_int());
-        float strenght = (float)(strenghtEntry.get_value_as_int());
+        //float salt = (float)(saltEntry.get_value_as_int());
+        //float sugar = (float)(sugarEntry.get_value_as_int());
+        //float strenght = (float)(strenghtEntry.get_value_as_int());
         int servoAdress = servoEntry.get_value_as_int();
         char name[Sname.size()+1];
         std::copy(Sname.begin(),Sname.end(), name);
         name[Sname.size()]='\0';
-        if(addIngredient(name,salt, sugar, strenght, servoAdress))
+        if(addIngredient(name,servoAdress))
         {
             Gtk::Button* pButton = Gtk::manage(new Gtk::Button(LIST_INGREDIENTS[NUMBER_INGREDIENTS-1]->name));
             pButton->signal_clicked().connect(sigc::bind<int>(sigc::mem_fun(*this,&MainNotebook::openIngredientParameter),NUMBER_INGREDIENTS-1));
@@ -453,7 +458,7 @@ void MainNotebook::closeAddRecipeThroughtInterface(int save){
         }
         int iddSimilarRecipe = -1;
 
-        if( addRecipe( name,  nbIngredients ,   listIngredients,  listAmount, iddSimilarRecipe ))
+        if( addRecipe( name,  nbIngredients ,   listIngredients,  listAmount, iddSimilarRecipe, 0 ))    //have to change the tag description 
         {
             Gtk::Button* pButton = Gtk::manage(new Gtk::Button(LIST_RECIPES[NUMBER_RECIPES-1]->name));
             pButton->signal_clicked().connect(sigc::bind<int>(sigc::mem_fun(*this,&MainNotebook::openRecipeParameter),NUMBER_RECIPES-1));
@@ -497,7 +502,28 @@ void MainNotebook::openIngredientParameter(int iddIngredient){
             ptitleLabel->set_can_focus(false);
             pnewBox->pack_start(*ptitleLabel);
 
-            Gtk::HBox* psaltBox = Gtk::manage( new Gtk::HBox(false,10));
+            Gtk::HBox* pservoBox = Gtk::manage( new Gtk::HBox(false,10));
+            pservoBox->set_can_focus(false);
+            pnewBox->pack_start(*pservoBox);
+                if ( LIST_INGREDIENTS[iddIngredient]->servoAdress==-1){
+                    Gtk::Label* pservoLabel=Gtk::manage( new Gtk::Label("emplacement (aucun pour l'instant) "));
+                    pservoLabel->set_can_focus(false);
+                    pservoBox->pack_start(*pservoLabel);
+                }
+
+                else{
+                    Gtk::Label* pservoLabel=Gtk::manage( new Gtk::Label("emplacement sur l'armoire :"));
+                    pservoLabel->set_can_focus(false);
+                    pservoBox->pack_start(*pservoLabel);
+                }
+                    
+                    Glib::RefPtr<Gtk::Adjustment> ajustementservo = Gtk::Adjustment::create(LIST_INGREDIENTS[iddIngredient]->servoAdress, -1, SERVOSLOTNUMBER-1, 1);
+                    Gtk::SpinButton* pservoEntry=Gtk::manage( new Gtk::SpinButton());
+                    pservoEntry->set_adjustment(ajustementservo);
+                    pservoEntry->set_numeric();
+                    pservoBox->pack_start(*pservoEntry);
+
+            /*Gtk::HBox* psaltBox = Gtk::manage( new Gtk::HBox(false,10));
             psaltBox->set_can_focus(false);
             pnewBox->pack_start(*psaltBox);
 
@@ -536,34 +562,12 @@ void MainNotebook::openIngredientParameter(int iddIngredient){
                 pstrenghtEntry->set_adjustment(ajustementstrenght);
                 pstrenghtEntry->set_numeric();
                 pstrenghtBox->pack_start(*pstrenghtEntry);
-
-            Gtk::HBox* pservoBox = Gtk::manage( new Gtk::HBox(false,10));
-            pservoBox->set_can_focus(false);
-            pnewBox->pack_start(*pservoBox);
-                if ( LIST_INGREDIENTS[iddIngredient]->servoAdress==-1){
-                    Gtk::Label* pservoLabel=Gtk::manage( new Gtk::Label("n'est pas placé sur le bar: emplacement"));
-                    pservoLabel->set_can_focus(false);
-                    pservoBox->pack_start(*pservoLabel);
-                }
-
-                else{
-                    Gtk::Label* pservoLabel=Gtk::manage( new Gtk::Label("emplacement sur l'armoire :"));
-                    pservoLabel->set_can_focus(false);
-                    pservoBox->pack_start(*pservoLabel);
-                }
-                    
-                    Glib::RefPtr<Gtk::Adjustment> ajustementservo = Gtk::Adjustment::create(LIST_INGREDIENTS[iddIngredient]->servoAdress, -1, SERVOSLOTNUMBER-1, 1);
-                    Gtk::SpinButton* pservoEntry=Gtk::manage( new Gtk::SpinButton());
-                    pservoEntry->set_adjustment(ajustementservo);
-                    pservoEntry->set_numeric();
-                    pservoBox->pack_start(*pservoEntry);
-
-        
+                */
             Gtk::HBox* pactionBox = Gtk::manage( new Gtk::HBox(false,10));
             pactionBox->set_can_focus(false);
             pnewBox->pack_end(*pactionBox,Gtk::PACK_SHRINK);
                 Gtk::Button* peditButton= Gtk::manage( new Gtk::Button(Gtk::Stock::EDIT));
-                peditButton->signal_clicked().connect(sigc::bind<int,Gtk::SpinButton*>(sigc::mem_fun(*this,&MainNotebook::editIngredientParameter),iddIngredient,psaltEntry,psugarEntry,pstrenghtEntry,pservoEntry));
+                peditButton->signal_clicked().connect(sigc::bind<int,Gtk::SpinButton*>(sigc::mem_fun(*this,&MainNotebook::editIngredientParameter),iddIngredient,pservoEntry));
                 pactionBox->pack_start(*peditButton);
                 
                 Gtk::Button* pcancelButton = Gtk::manage( new Gtk::Button(Gtk::Stock::CLOSE));
@@ -588,19 +592,19 @@ void MainNotebook::openIngredientParameter(int iddIngredient){
     }
 }
 
-void MainNotebook::editIngredientParameter(int iddIngredient, Gtk::SpinButton* psaltEntry, Gtk::SpinButton* psugarEntry, Gtk::SpinButton* pstrenghtEntry , Gtk::SpinButton* pservoEntry){
-    float salt = (float)(psaltEntry->get_value_as_int());
-    float sugar = (float)(psugarEntry->get_value_as_int());
-    float strenght = (float)(pstrenghtEntry->get_value_as_int());
+void MainNotebook::editIngredientParameter(int iddIngredient, Gtk::SpinButton* pservoEntry){
+    //float salt = (float)(psaltEntry->get_value_as_int());
+    //float sugar = (float)(psugarEntry->get_value_as_int());
+    //float strenght = (float)(pstrenghtEntry->get_value_as_int());
     int servoAdress = pservoEntry->get_value_as_int();
 
-    if(editIngredient(salt, sugar , strenght, servoAdress, iddIngredient)){
+    if(editIngredient(servoAdress, iddIngredient)){
         this->closeIngredientParameter();        
     }
     else{
-        psaltEntry->set_sensitive(false);
-        psugarEntry->set_sensitive(false);
-        pstrenghtEntry->set_sensitive(false);
+        //psaltEntry->set_sensitive(false);
+        //psugarEntry->set_sensitive(false);
+        //pstrenghtEntry->set_sensitive(false);
         pservoEntry->set_sensitive(false);
     }
 
@@ -652,9 +656,7 @@ void MainNotebook::openRecipeParameter(int RecipeNumber){
                     pelementLabel->set_can_focus(false);
                     pelementBox->pack_start(*pelementLabel);
                 
-                printf("servo %d\n",ingredient(((LIST_RECIPES[RecipeNumber])->listIddIngredients)[i])->servoAdress);
                 if (ingredient(((LIST_RECIPES[RecipeNumber])->listIddIngredients)[i])->servoAdress==-1){
-                    puts("unexecutable");
                     executable=0;
                 }
             }
@@ -670,11 +672,10 @@ void MainNotebook::openRecipeParameter(int RecipeNumber){
                 prunButton->signal_clicked().connect(sigc::bind<int>(sigc::mem_fun(*this,&MainNotebook::runRecipe),RecipeNumber));
                 pactionBox->pack_start(*prunButton);
                 if(!executable){
-                    puts("1");
+                    
                     prunButton->set_sensitive(false);
                 }
                 else{
-                    puts("2");
                     prunButton->set_sensitive(true);
                 }
 
@@ -724,41 +725,43 @@ void MainNotebook::closeRecipeParameter(){
 
 void MainNotebook::launchMusicFileDialog(){
     GtkWidget *dialog;
+    GtkFileFilter* filter = gtk_file_filter_new();
     GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
     gint res;
-    dialog = gtk_file_chooser_dialog_new ("Open File",
-                                      NULL,
-                                      action,
-                                      "_Cancel",
-                                      GTK_RESPONSE_CANCEL,
-                                      "_Open",
-                                      GTK_RESPONSE_ACCEPT,
-                                      NULL);
 
+    gtk_file_filter_add_pattern(GTK_FILE_FILTER(filter), "*.mp3");
+    gtk_file_filter_add_pattern(GTK_FILE_FILTER(filter), "*.wav");
+
+    dialog = gtk_file_chooser_dialog_new ("Open File",NULL,action, "_Cancel",GTK_RESPONSE_CANCEL,"_Open", GTK_RESPONSE_ACCEPT, NULL);
+    gtk_file_chooser_set_filter(GTK_FILE_CHOOSER(dialog), GTK_FILE_FILTER(filter));
     res = gtk_dialog_run (GTK_DIALOG (dialog));
 
     if (res == GTK_RESPONSE_ACCEPT)
     {
         GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
         MusicFilePath = gtk_file_chooser_get_filename (chooser);
+        musicPath.set_text(MusicFilePath);
     }
     gtk_widget_destroy (dialog);
 }
 
 void MainNotebook::launchMusicAnalysis(){
+    musicPath.set_markup("analysis.....");
     if(MusicFilePath)
-    {
+    { 
     std::string sMusicFilePath;
     sMusicFilePath += MusicFilePath;
     audioAnalysisFromFile(sMusicFilePath, MUSICANALYSISRESULTSFILE, MUSICANALYSISPROFILEFILE );
+    musicPath.set_markup("analysis Done");
     puts("musical analysis done") ;
 
-    std::fstream musicResultFile;
+    /*std::fstream musicResultFile;
     gchar* musicResultText;
     musicResultFile.open (MUSICANALYSISPROFILEFILE, std::fstream::in | std::fstream::out | std::fstream::app);
     musicResultFile.read(musicResultText,musicResultFile.gcount());
     musicResultFile.close();
     pAnalysisResultBox->get_buffer()->set_text(musicResultText);
+    */
     }
     else 
     puts("no music to analyse");

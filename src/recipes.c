@@ -1,7 +1,6 @@
 #include "recipes.h"
 
-
-int initNbRecipe(FILE* recipeFile)
+int initNb(FILE* recipeFile)
 {
     char* charNbRecipe=NULL;  
     size_t charSize=0;
@@ -51,6 +50,12 @@ int initRecipe(FILE* recipeFile,int iddRecipe )
     lineSize=0;
     getline( &line, &lineSize , recipeFile);
     LIST_RECIPES[iddRecipe]->iddSimilarRecipe=atoi(line);
+
+    line=NULL;
+    lineSize=0;
+    getline( &line, &lineSize , recipeFile);
+    int description = atoi(line);
+    LIST_RECIPES[iddRecipe]->recipeDescription=description;
     return 1;
 } 
 
@@ -62,7 +67,7 @@ int initRecipeList()
     recipeFile = fopen(RECIPESFILE, "r" );
     if(recipeFile!=NULL)
     {
-        NUMBER_RECIPES=initNbIngredient(recipeFile);
+        NUMBER_RECIPES=initNb(recipeFile);
         LIST_RECIPES=calloc(NUMBER_RECIPES,sizeof(*LIST_RECIPES));
         int i;
         for(i = 0 ; i < NUMBER_RECIPES; i++){
@@ -112,6 +117,7 @@ int writeRecipeList(char* recipesFileName){
                 fprintf(recipesFile,"%d--------------- original recipe \n", LIST_RECIPES[i]->iddSimilarRecipe);
 
             }
+            fprintf(recipesFile,"%d---------------Description tag \n", LIST_RECIPES[i]->recipeDescription);
            
             
         }
@@ -165,7 +171,7 @@ void freeRecipeList(int saveNewRecipes ){
 
 void readRecipe(RECIPE Recipe, int verbose){
     if( verbose){
-        printf("name :%s /identifiant :%d  /nb ingredients : %d /idd similar recipe : %d \n",Recipe->name, Recipe->iddRecipe, Recipe->nbIngredients,Recipe->iddSimilarRecipe );
+        printf("name :%s /identifiant :%d  /nb ingredients : %d /idd similar recipe : %d/ tag descrition : %d\n",Recipe->name, Recipe->iddRecipe, Recipe->nbIngredients,Recipe->iddSimilarRecipe,Recipe->recipeDescription );
          int i;
         for(i = 0; i < Recipe->nbIngredients ; i++ ){
             printf("    -");
@@ -188,7 +194,7 @@ void readAllRecipes(int verbose){
     }
 }
 
-int addRecipe(char* name,  int nbIngredients , int*  listIngredients, float* listAmount,int iddSimilarRecipe )
+int addRecipe(char* name,  int nbIngredients , int*  listIngredients, float* listAmount,int iddSimilarRecipe, int tagDescription )
 {
     extern RECIPE* LIST_RECIPES; 
     extern int NUMBER_RECIPES;
@@ -217,6 +223,7 @@ int addRecipe(char* name,  int nbIngredients , int*  listIngredients, float* lis
             LIST_RECIPES[NUMBER_RECIPES]->listAmount= listAmount;
             LIST_RECIPES[NUMBER_RECIPES]->listIddIngredients= listIngredients;
             LIST_RECIPES[NUMBER_RECIPES]->iddSimilarRecipe= iddSimilarRecipe;
+            LIST_RECIPES[NUMBER_RECIPES]->recipeDescription= tagDescription;
             NUMBER_RECIPES++;
             LIST_RECIPES_CHANGED++;
             return 1; 
@@ -231,6 +238,7 @@ int addRecipeThroughtTerminal(){
     int* listIngredients = NULL;
     float* listAmount = NULL;
     int iddSimilarRecipe;
+    int tagDescription;
     printf("nouveau cocktail :");
     clean_stdin();
     printf("donnez le nom de votre cocktail :\n ");
@@ -253,7 +261,10 @@ int addRecipeThroughtTerminal(){
     readAllRecipes(VERBOSE);
     printf("donner son numero (-1 s'il n'y en a pas ) :");
     scanf("%d",&iddSimilarRecipe);
-    return addRecipe(name,nbIngredients ,listIngredients,  listAmount, iddSimilarRecipe );
+    printf("----------------------------------\nce cocktail a t'il un tag de description ?\n ");
+    printf("donner son numero (0 s'il n'y en a pas ) :");
+    scanf("%d",&tagDescription);
+    return addRecipe(name,nbIngredients ,listIngredients,  listAmount, iddSimilarRecipe,tagDescription );
 }
 
 
@@ -268,3 +279,44 @@ RECIPE recipe( int iddRecipe){
         return NULL;
     }
 }
+
+int initDescriptor(FILE* descriptorFile, int i )
+{
+    
+    extern DESCRIPTOR * LIST_DESCRIPTORS; 
+    char* line;
+    size_t lineSize=0;
+    getline( &line, &lineSize , descriptorFile);
+    line[strcspn(line, "\n")] = 0;
+    LIST_DESCRIPTORS[i]->name = strdup(line);//here a segmentation fault
+    return 1;
+} 
+
+int initDescriptorsList()
+{
+    //problem of segmentation fault !!!!!!
+    DESCRIPTOR* LIST_DESCRIPTORS=NULL; 
+    extern int NUMBER_DESCRIPTORS;
+    FILE* descriptorFile=NULL;
+    descriptorFile = fopen(RECIPEDESCRIPTORFILE, "r" );
+    if(descriptorFile!=NULL)
+    {
+        NUMBER_DESCRIPTORS=initNb(descriptorFile);
+        printf("%d\n",NUMBER_DESCRIPTORS);
+        LIST_DESCRIPTORS=calloc(NUMBER_DESCRIPTORS,sizeof(*LIST_DESCRIPTORS));
+        
+        int i;
+        for (i = 0 ; i < NUMBER_DESCRIPTORS; i++){
+            LIST_DESCRIPTORS[i]=calloc(1,sizeof(*LIST_DESCRIPTORS[i]));
+            initDescriptor(descriptorFile,i);
+        } 
+        fclose(descriptorFile);
+        return 1 ;
+    }
+    else 
+    {
+        printf("error when reading descriptor database\n");
+        return 0;
+    }
+}
+

@@ -45,13 +45,13 @@ class MainNotebook : public Gtk::Notebook {
         int newIngredientPage;
         int newIngredientPageNumber;
         Gtk::Entry newIngredientName;
-        Gtk::SpinButton saltEntry;
-        Gtk::SpinButton sugarEntry;
-        Gtk::SpinButton strenghtEntry;
+        //Gtk::SpinButton saltEntry;
+        //Gtk::SpinButton sugarEntry;
+        //Gtk::SpinButton strenghtEntry;
         Gtk::SpinButton servoEntry;
 
         void openIngredientParameter(int iddIngredient);
-        void editIngredientParameter(int iddIngredient, Gtk::SpinButton* psaltEntry, Gtk::SpinButton* psugarEntry, Gtk::SpinButton* pstrenghtEntry , Gtk::SpinButton* pservoEntry);
+        void editIngredientParameter(int iddIngredient , Gtk::SpinButton* pservoEntry);
         void closeIngredientParameter();
         int paramIngredientPage;
         int paramIngredientPageNumber;
@@ -82,7 +82,8 @@ class MainNotebook : public Gtk::Notebook {
 
         void launchMusicAnalysis();
         void launchMusicFileDialog();
-        char* MusicFilePath; 
+        Gtk::Label musicPath;
+        char* MusicFilePath=NULL; 
         Gtk::TextView * pAnalysisResultBox;
         Gtk::TextBuffer * pAnalysisResultText;
     

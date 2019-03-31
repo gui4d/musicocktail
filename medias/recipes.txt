@@ -8,7 +8,8 @@ punch
 7.000000---------------ml
 3---------------jus d ananas
 20.000000---------------ml
--1--------------- original recipe 
+-1--------------- original recipe
+0-----------------no description
 jus de fruits
 1---------------idd recipe
 2---------------nb ingredients
@@ -16,4 +17,5 @@ jus de fruits
 30.000000---------------ml
 3---------------jus d ananas
 10.000000---------------ml
--1--------------- original recipe 
+-1--------------- original recipe
+0-----------------no description
