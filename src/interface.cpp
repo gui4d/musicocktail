@@ -378,7 +378,7 @@ void MainNotebook::initAddRecipeThroughtInterface(){
         this->set_current_page(newRecipePageNumber);
 
     }
-}
+}               
 
 void MainNotebook::actuateNumberIngredients(){
 
@@ -666,19 +666,16 @@ void MainNotebook::openRecipeParameter(int RecipeNumber){
             Gtk::HBox* pdescriptorBox=Gtk::manage( new Gtk::HBox(false,10));;
             pdescriptorBox->set_can_focus(false);
             pnewBox->pack_start(*pdescriptorBox,Gtk::PACK_SHRINK);
-                Gtk::Label* pdescriptorLabel;
+                Gtk::CheckButton* pdescriptorCheck;
                 int j;
                 int* descriptorList=descriptorTagtoList(LIST_RECIPES[RecipeNumber]->recipeDescription);
 
                 for( j= 0 ; j <NUMBER_DESCRIPTORS; j ++){
-                    if(descriptorList[j]){
-                        pdescriptorLabel=Gtk::manage( new Gtk::Label(LIST_DESCRIPTORS[j]->name));
-                        pdescriptorLabel->set_can_focus(false);
-                        pdescriptorBox->pack_start(*pdescriptorLabel);
-                    }
-
+                        pdescriptorCheck=Gtk::manage( new Gtk::CheckButton(LIST_DESCRIPTORS[j]->name));
+                        pdescriptorCheck->set_can_focus(false);
+                        pdescriptorBox->pack_start(*pdescriptorCheck);
+                        if(descriptorList[j]) pdescriptorCheck->set_active();
                 }
-
 
             Gtk::HBox* pactionBox = Gtk::manage( new Gtk::HBox(false,10));
             pactionBox->set_can_focus(false);
@@ -718,6 +715,8 @@ void MainNotebook::openRecipeParameter(int RecipeNumber){
         openRecipeParameter(RecipeNumber);
     }
 }
+
+
 
 void MainNotebook::runRecipe(int recipeNumber){
     if( ArduinoFailed) {

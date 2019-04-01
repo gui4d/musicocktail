@@ -300,7 +300,6 @@ int initDescriptorsList()
     if(descriptorFile!=NULL)
     {
         NUMBER_DESCRIPTORS=initNb(descriptorFile);
-        printf("%d descriptors\n",NUMBER_DESCRIPTORS);
         LIST_DESCRIPTORS=calloc(NUMBER_DESCRIPTORS,sizeof(*LIST_DESCRIPTORS));
         
         int i;
@@ -320,23 +319,18 @@ int initDescriptorsList()
 
 int* descriptorTagtoList(unsigned long tagDescriptor){
     //problem of conversion tag-> liste
-    puts("1");
     int* descriptorList = calloc(MAXNUMBERDESCRIPTOR,sizeof(*descriptorList));
     unsigned long currentTag=tagDescriptor;
     int i; 
-     puts("2");
     for(i =0; i<MAXNUMBERDESCRIPTOR; i++){
         if(!currentTag) break;
-        puts("55");
         descriptorList[i]=currentTag%2;
         currentTag=currentTag/2;
         
     }
-     puts("3");
     for(;i<MAXNUMBERDESCRIPTOR;i++){
         descriptorList[i]=0;
     }
-     puts("4");
     return descriptorList;
 }
 

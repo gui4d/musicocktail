@@ -19,6 +19,7 @@
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/dialog.h>
 #include <gtkmm/textview.h>
+#include <gtkmm/checkbutton.h>
 #include <fstream> 
 
 #include "constants.h"
