@@ -19,7 +19,7 @@ struct recipe{
     int * listIddIngredients; 
     float* listAmount;
     int iddSimilarRecipe;
-    int recipeDescription;
+    unsigned long recipeDescription;
 };
 typedef struct recipe  * RECIPE;  
 
@@ -41,11 +41,12 @@ void freeRecipeList(int saveNewRecipes);
 
 void readRecipe(RECIPE Recipe, int verbose);
 void readAllRecipes(int verbose);
-int addRecipe(char* name,  int nbIngredients , int*  listIngredients, float* listAmount,int iddSimilarRecipe, int tagDescription );
+int addRecipe(char* name,  int nbIngredients , int*  listIngredients, float* listAmount,int iddSimilarRecipe, unsigned long tagDescription );
 int addRecipeThroughtTerminal();
 RECIPE recipe( int iddRecipe);
 int initDescriptor(FILE* descriptorFile,int i );
 int initDescriptorsList();
+int* descriptorTagtoList(unsigned long tagDescriptor);
 
 #ifdef __cplusplus
 }

@@ -17,9 +17,11 @@
 #define INGREDIENTSFILE "medias/ingredients.txt"
 #define ICONEFILE "medias/icone.png"
 #define RECIPEDESCRIPTORFILE "medias/recipeDescriptors.txt"
+#define MAXNUMBERDESCRIPTOR 32
 
 #define MUSICANALYSISPROFILEFILE "src/musicAnalysis/profiles/all_config.yaml"
 #define MUSICANALYSISRESULTSFILE "results_last_music_analysis.yaml"
+
 
 #define MAXSALT 100 
 #define MAXSUGAR 100

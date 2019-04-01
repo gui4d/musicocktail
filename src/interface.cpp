@@ -622,6 +622,8 @@ void MainNotebook::closeIngredientParameter(){
 
 void MainNotebook::openRecipeParameter(int RecipeNumber){
     extern RECIPE* LIST_RECIPES;
+    extern DESCRIPTOR* LIST_DESCRIPTORS;
+    extern int NUMBER_DESCRIPTORS;
 
     if( paramRecipePage==0){
         paramRecipePage=1;
@@ -659,7 +661,24 @@ void MainNotebook::openRecipeParameter(int RecipeNumber){
                 if (ingredient(((LIST_RECIPES[RecipeNumber])->listIddIngredients)[i])->servoAdress==-1){
                     executable=0;
                 }
-            }
+            
+            }     
+            Gtk::HBox* pdescriptorBox=Gtk::manage( new Gtk::HBox(false,10));;
+            pdescriptorBox->set_can_focus(false);
+            pnewBox->pack_start(*pdescriptorBox,Gtk::PACK_SHRINK);
+                Gtk::Label* pdescriptorLabel;
+                int j;
+                int* descriptorList=descriptorTagtoList(LIST_RECIPES[RecipeNumber]->recipeDescription);
+
+                for( j= 0 ; j <NUMBER_DESCRIPTORS; j ++){
+                    if(descriptorList[j]){
+                        pdescriptorLabel=Gtk::manage( new Gtk::Label(LIST_DESCRIPTORS[j]->name));
+                        pdescriptorLabel->set_can_focus(false);
+                        pdescriptorBox->pack_start(*pdescriptorLabel);
+                    }
+
+                }
+
 
             Gtk::HBox* pactionBox = Gtk::manage( new Gtk::HBox(false,10));
             pactionBox->set_can_focus(false);

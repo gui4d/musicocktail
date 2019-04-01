@@ -117,7 +117,7 @@ int writeRecipeList(char* recipesFileName){
                 fprintf(recipesFile,"%d--------------- original recipe \n", LIST_RECIPES[i]->iddSimilarRecipe);
 
             }
-            fprintf(recipesFile,"%d---------------Description tag \n", LIST_RECIPES[i]->recipeDescription);
+            fprintf(recipesFile,"%ld---------------Description tag \n", LIST_RECIPES[i]->recipeDescription);
            
             
         }
@@ -171,7 +171,7 @@ void freeRecipeList(int saveNewRecipes ){
 
 void readRecipe(RECIPE Recipe, int verbose){
     if( verbose){
-        printf("name :%s /identifiant :%d  /nb ingredients : %d /idd similar recipe : %d/ tag descrition : %d\n",Recipe->name, Recipe->iddRecipe, Recipe->nbIngredients,Recipe->iddSimilarRecipe,Recipe->recipeDescription );
+        printf("name :%s /identifiant :%d  /nb ingredients : %d /idd similar recipe : %d/ tag descrition : %ld\n",Recipe->name, Recipe->iddRecipe, Recipe->nbIngredients,Recipe->iddSimilarRecipe,Recipe->recipeDescription );
          int i;
         for(i = 0; i < Recipe->nbIngredients ; i++ ){
             printf("    -");
@@ -194,7 +194,7 @@ void readAllRecipes(int verbose){
     }
 }
 
-int addRecipe(char* name,  int nbIngredients , int*  listIngredients, float* listAmount,int iddSimilarRecipe, int tagDescription )
+int addRecipe(char* name,  int nbIngredients , int*  listIngredients, float* listAmount,int iddSimilarRecipe, unsigned long tagDescription )
 {
     extern RECIPE* LIST_RECIPES; 
     extern int NUMBER_RECIPES;
@@ -280,8 +280,7 @@ RECIPE recipe( int iddRecipe){
     }
 }
 
-int initDescriptor(FILE* descriptorFile, int i )
-{
+int initDescriptor(FILE* descriptorFile, int i ){
     
     extern DESCRIPTOR * LIST_DESCRIPTORS; 
     char* line;
@@ -294,15 +293,14 @@ int initDescriptor(FILE* descriptorFile, int i )
 
 int initDescriptorsList()
 {
-    //problem of segmentation fault !!!!!!
-    DESCRIPTOR* LIST_DESCRIPTORS=NULL; 
+    extern DESCRIPTOR* LIST_DESCRIPTORS; 
     extern int NUMBER_DESCRIPTORS;
     FILE* descriptorFile=NULL;
     descriptorFile = fopen(RECIPEDESCRIPTORFILE, "r" );
     if(descriptorFile!=NULL)
     {
         NUMBER_DESCRIPTORS=initNb(descriptorFile);
-        printf("%d\n",NUMBER_DESCRIPTORS);
+        printf("%d descriptors\n",NUMBER_DESCRIPTORS);
         LIST_DESCRIPTORS=calloc(NUMBER_DESCRIPTORS,sizeof(*LIST_DESCRIPTORS));
         
         int i;
@@ -318,5 +316,27 @@ int initDescriptorsList()
         printf("error when reading descriptor database\n");
         return 0;
     }
+}
+
+int* descriptorTagtoList(unsigned long tagDescriptor){
+    //problem of conversion tag-> liste
+    puts("1");
+    int* descriptorList = calloc(MAXNUMBERDESCRIPTOR,sizeof(*descriptorList));
+    unsigned long currentTag=tagDescriptor;
+    int i; 
+     puts("2");
+    for(i =0; i<MAXNUMBERDESCRIPTOR; i++){
+        if(!currentTag) break;
+        puts("55");
+        descriptorList[i]=currentTag%2;
+        currentTag=currentTag/2;
+        
+    }
+     puts("3");
+    for(;i<MAXNUMBERDESCRIPTOR;i++){
+        descriptorList[i]=0;
+    }
+     puts("4");
+    return descriptorList;
 }
 
