@@ -318,19 +318,28 @@ int initDescriptorsList()
 }
 
 int* descriptorTagtoList(unsigned long tagDescriptor){
-    //problem of conversion tag-> liste
-    int* descriptorList = calloc(MAXNUMBERDESCRIPTOR,sizeof(*descriptorList));
+    extern int NUMBER_DESCRIPTORS;
+    int* descriptorList = calloc( NUMBER_DESCRIPTORS,sizeof(*descriptorList));
     unsigned long currentTag=tagDescriptor;
     int i; 
-    for(i =0; i<MAXNUMBERDESCRIPTOR; i++){
-        if(!currentTag) break;
+    for(i =0; i< NUMBER_DESCRIPTORS; i++){
         descriptorList[i]=currentTag%2;
-        currentTag=currentTag/2;
-        
-    }
-    for(;i<MAXNUMBERDESCRIPTOR;i++){
-        descriptorList[i]=0;
+        currentTag=currentTag/2;   
     }
     return descriptorList;
+}
+
+unsigned long descriptorListtoTag(int* descriptorList){
+    extern int NUMBER_DESCRIPTORS;
+    unsigned long descriptorTag= 0;
+    int i ;
+    unsigned long power2=1;
+    for(i=0;i<NUMBER_DESCRIPTORS;i++){
+        if(descriptorList[i]) descriptorTag+=power2;
+        power2*=2;
+    }
+    return descriptorTag;
+
+
 }
 

@@ -286,13 +286,16 @@ void MainNotebook::closeAddIngredientThroughtInterface(int save){
   
 }
 
-void MainNotebook::initAddRecipeThroughtInterface(){
-    
+void MainNotebook::initAddRecipeThroughtInterface(){//can't add recipe two time or open the recipe created!!!
+    puts("-1");
     extern INGREDIENT* LIST_INGREDIENTS;
     extern int NUMBER_INGREDIENTS;
-    
+    extern DESCRIPTOR* LIST_DESCRIPTORS;
+    extern int NUMBER_DESCRIPTORS;
+    puts("0");
     if( newRecipePage==0){
-        newRecipePage=1;
+        puts("1");
+        newRecipePage=2;
         Gtk::VBox* pnewBox=Gtk::manage(new Gtk::VBox(false,10));
 
             Gtk::Label* ptitleLabel= Gtk::manage(new Gtk::Label("Nouveau Coktail: création de la fiche"));
@@ -311,7 +314,7 @@ void MainNotebook::initAddRecipeThroughtInterface(){
                 newRecipeName.set_text("rentrer le nom");
                 newRecipeName.set_max_length(100);
                 pnameBox->pack_start(newRecipeName,Gtk::PACK_SHRINK);
-                
+               puts("1.5"); 
 
             Gtk::HBox* pNumberIngredientsBox= Gtk::manage(new Gtk::HBox(false,10));
             pNumberIngredientsBox->set_can_focus(false);
@@ -319,13 +322,17 @@ void MainNotebook::initAddRecipeThroughtInterface(){
                 Gtk::Label* pNumberIngredientsLabel= Gtk::manage(new Gtk::Label("Nombre d'ingrédients:"));
                 pNumberIngredientsLabel->set_can_focus(false);
                 pNumberIngredientsBox->pack_start(*pNumberIngredientsLabel,Gtk::PACK_SHRINK);
-                
+                puts("1.6");
                 Glib::RefPtr<Gtk::Adjustment> ajustementNumberIngredients = Gtk::Adjustment::create(1,1,20, 1);
+                puts("1.65");
                 NumberIngredientsEntry.set_adjustment(ajustementNumberIngredients);
+                puts("1.67");
                 NumberIngredientsEntry.set_numeric();
+                puts("1.68");
                 NumberIngredientsEntry.signal_value_changed().connect(sigc::mem_fun(*this,&MainNotebook::actuateNumberIngredients));
+                puts("1.7");
                 pNumberIngredientsBox->pack_start(NumberIngredientsEntry,Gtk::PACK_SHRINK);
-        
+        puts("2");
             Gtk::ScrolledWindow* pscrolledIngredients = Gtk::manage( new Gtk::ScrolledWindow());
             pscrolledIngredients->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
             pnewBox->pack_start(*pscrolledIngredients,Gtk::PACK_EXPAND_WIDGET );
@@ -354,6 +361,21 @@ void MainNotebook::initAddRecipeThroughtInterface(){
                         pnewRecipeElement->pack_start(*pnewRecipeAmount,Gtk::PACK_SHRINK);
                         tabpAmount.push_back(pnewRecipeAmount);
 
+            puts("3");
+            Gtk::HBox* pdescriptorBox=Gtk::manage( new Gtk::HBox(false,10));;
+            pdescriptorBox->set_can_focus(false);
+            pnewBox->pack_start(*pdescriptorBox,Gtk::PACK_SHRINK);
+
+                Gtk::CheckButton* pdescriptorCheck;
+                int j;
+                for( j= 0 ; j <NUMBER_DESCRIPTORS; j ++){
+                        pdescriptorCheck=Gtk::manage( new Gtk::CheckButton(LIST_DESCRIPTORS[j]->name));
+                        pdescriptorCheck->set_can_focus(false);
+                        pdescriptorBox->pack_start(*pdescriptorCheck);
+                        tabpdescriptorCheckNew.push_back(pdescriptorCheck);
+                }
+                //free(descriptorList);
+
             Gtk::HBox* pactionBox = Gtk::manage( new Gtk::HBox(false,10));
             pactionBox->set_can_focus(false);
             pnewBox->pack_end(*pactionBox,Gtk::PACK_SHRINK);
@@ -366,14 +388,18 @@ void MainNotebook::initAddRecipeThroughtInterface(){
                 pactionBox->pack_start(*pcancelButton);
         
         
-
+        puts("4");
         int numPage = this->get_n_pages();
         newRecipePageNumber=numPage;
+        puts("5");
         this->insert_page(*pnewBox, "Nouveau cocktail",  numPage);
         this->show_all();
+        puts("6");
         this->set_current_page(numPage);
+        puts("7");
     }
     else{
+        puts("8");
         this->show_all();
         this->set_current_page(newRecipePageNumber);
 
@@ -440,6 +466,7 @@ void MainNotebook::closeAddRecipeThroughtInterface(int save){
     
     extern RECIPE* LIST_RECIPES; 
     extern int NUMBER_RECIPES;
+    extern int NUMBER_DESCRIPTORS;
     
     if(save)
     {
@@ -457,8 +484,15 @@ void MainNotebook::closeAddRecipeThroughtInterface(int save){
             listAmount[i] = (float)(tabpAmount[i]->get_value_as_int()); 
         }
         int iddSimilarRecipe = -1;
+        int j;
+        int* descriptorList=(int*)calloc(NUMBER_DESCRIPTORS,sizeof(*descriptorList));
+        for(j=0; j<NUMBER_DESCRIPTORS;j++){
+            if(tabpdescriptorCheckNew[j]->get_active()) descriptorList[j]=1;
+            else descriptorList[j]=0;
+        }
+        int descriptorTag = descriptorListtoTag(descriptorList);
 
-        if( addRecipe( name,  nbIngredients ,   listIngredients,  listAmount, iddSimilarRecipe, 0 ))    //have to change the tag description 
+        if( addRecipe( name,  nbIngredients ,   listIngredients,  listAmount, iddSimilarRecipe, descriptorTag))
         {
             Gtk::Button* pButton = Gtk::manage(new Gtk::Button(LIST_RECIPES[NUMBER_RECIPES-1]->name));
             pButton->signal_clicked().connect(sigc::bind<int>(sigc::mem_fun(*this,&MainNotebook::openRecipeParameter),NUMBER_RECIPES-1));
@@ -473,12 +507,16 @@ void MainNotebook::closeAddRecipeThroughtInterface(int save){
         }
     }
     int NumberIngredient=tabpRecipeElement.size();
-    int j;
-    for( j = NumberIngredient-1 ; j >-1 ; j-- ){
-        pRecipeElementsList->remove(*tabpRecipeElement[j]);
+    int k;
+    for( k = NumberIngredient-1 ; k >-1 ; k-- ){
+        //pRecipeElementsList->remove(*tabpRecipeElement[k]);
         tabpRecipeElement.pop_back();
         tabpIngredients.pop_back();
         tabpAmount.pop_back();
+    }
+    int l; 
+    for(l = NUMBER_DESCRIPTORS-1;l>-1;l--){
+        tabpdescriptorCheckNew.pop_back();
     }
     this->remove_page(newRecipePageNumber);
     this->updatePageNumerotation(newRecipePageNumber);
@@ -666,6 +704,8 @@ void MainNotebook::openRecipeParameter(int RecipeNumber){
             Gtk::HBox* pdescriptorBox=Gtk::manage( new Gtk::HBox(false,10));;
             pdescriptorBox->set_can_focus(false);
             pnewBox->pack_start(*pdescriptorBox,Gtk::PACK_SHRINK);
+
+            //std::vector <Gtk::CheckButton*> tabpdescriptorCheckEdit;//ici!!!!
                 Gtk::CheckButton* pdescriptorCheck;
                 int j;
                 int* descriptorList=descriptorTagtoList(LIST_RECIPES[RecipeNumber]->recipeDescription);
@@ -676,6 +716,7 @@ void MainNotebook::openRecipeParameter(int RecipeNumber){
                         pdescriptorBox->pack_start(*pdescriptorCheck);
                         if(descriptorList[j]) pdescriptorCheck->set_active();
                 }
+                //free(descriptorList);
 
             Gtk::HBox* pactionBox = Gtk::manage( new Gtk::HBox(false,10));
             pactionBox->set_can_focus(false);

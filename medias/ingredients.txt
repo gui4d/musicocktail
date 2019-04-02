@@ -1,4 +1,4 @@
-21  -name - iddingredient 
+23  -name - iddingredient 
 rhum blanc exotic 
 0---------------idd ingredient
 -1---------------adress servo
@@ -61,4 +61,10 @@ eau pétillante
 -1---------------adress servo
 sirop de menthe
 20---------------idd ingredient
+-1---------------adress servo
+truc1
+21---------------idd ingredient
+-1---------------adress servo
+fez
+22---------------idd ingredient
 -1---------------adress servo

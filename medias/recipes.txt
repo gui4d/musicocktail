@@ -1,4 +1,4 @@
-5                     - name - iddRecipe -nbingredients - list ingredient - liste amount - idd similar recipe
+26                     - name - iddRecipe -nbingredients - list ingredient - liste amount - idd similar recipe
 punch
 0---------------idd recipe
 3---------------nb ingredients
@@ -54,3 +54,158 @@ Mojito
 3.000000---------------ml
 -1--------------- original recipe 
 4---------------Description tag 
+truc1
+5---------------idd recipe
+1---------------nb ingredients
+1---------------rhum brun exotic 
+0.000000---------------ml
+-1--------------- original recipe 
+0---------------Description tag 
+truc2
+6---------------idd recipe
+2---------------nb ingredients
+3---------------jus d ananas
+0.000000---------------ml
+4---------------sirop de sucre de canne 
+0.000000---------------ml
+-1--------------- original recipe 
+0---------------Description tag 
+truc4
+7---------------idd recipe
+2---------------nb ingredients
+6---------------vermouth
+10.000000---------------ml
+4---------------sirop de sucre de canne 
+3.000000---------------ml
+-1--------------- original recipe 
+3---------------Description tag 
+truc5
+8---------------idd recipe
+1---------------nb ingredients
+3---------------jus d ananas
+20.000000---------------ml
+-1--------------- original recipe 
+2---------------Description tag 
+truc6
+9---------------idd recipe
+2---------------nb ingredients
+3---------------jus d ananas
+60.000000---------------ml
+0---------------rhum blanc exotic 
+10.000000---------------ml
+-1--------------- original recipe 
+0---------------Description tag 
+truc89
+10---------------idd recipe
+1---------------nb ingredients
+3---------------jus d ananas
+20.000000---------------ml
+-1--------------- original recipe 
+0---------------Description tag 
+truc88
+11---------------idd recipe
+1---------------nb ingredients
+2---------------jus d'orange
+10.000000---------------ml
+-1--------------- original recipe 
+0---------------Description tag 
+truc87
+12---------------idd recipe
+1---------------nb ingredients
+6---------------vermouth
+10.000000---------------ml
+-1--------------- original recipe 
+1---------------Description tag 
+trfcd
+13---------------idd recipe
+1---------------nb ingredients
+7---------------jus de papaille
+10.000000---------------ml
+-1--------------- original recipe 
+1---------------Description tag 
+celuila
+14---------------idd recipe
+1---------------nb ingredients
+4---------------sirop de sucre de canne 
+10.000000---------------ml
+-1--------------- original recipe 
+0---------------Description tag 
+encore
+15---------------idd recipe
+1---------------nb ingredients
+6---------------vermouth
+20.000000---------------ml
+-1--------------- original recipe 
+0---------------Description tag 
+trxcdyufv
+16---------------idd recipe
+1---------------nb ingredients
+3---------------jus d ananas
+0.000000---------------ml
+-1--------------- original recipe 
+0---------------Description tag 
+trcx
+17---------------idd recipe
+1---------------nb ingredients
+3---------------jus d ananas
+0.000000---------------ml
+-1--------------- original recipe 
+0---------------Description tag 
+bgyugo
+18---------------idd recipe
+1---------------nb ingredients
+1---------------rhum brun exotic 
+0.000000---------------ml
+-1--------------- original recipe 
+0---------------Description tag 
+nlm,jôp*
+19---------------idd recipe
+1---------------nb ingredients
+1---------------rhum brun exotic 
+0.000000---------------ml
+-1--------------- original recipe 
+0---------------Description tag 
+nlmùnlkn
+20---------------idd recipe
+1---------------nb ingredients
+10---------------jus de citron
+1.000000---------------ml
+-1--------------- original recipe 
+0---------------Description tag 
+nklù
+21---------------idd recipe
+1---------------nb ingredients
+2---------------jus d'orange
+0.000000---------------ml
+-1--------------- original recipe 
+0---------------Description tag 
+,lkù,p
+22---------------idd recipe
+1---------------nb ingredients
+0---------------rhum blanc exotic 
+0.000000---------------ml
+-1--------------- original recipe 
+0---------------Description tag 
+njio
+23---------------idd recipe
+1---------------nb ingredients
+3---------------jus d ananas
+0.000000---------------ml
+-1--------------- original recipe 
+0---------------Description tag 
+n jkl
+24---------------idd recipe
+1---------------nb ingredients
+1---------------rhum brun exotic 
+0.000000---------------ml
+-1--------------- original recipe 
+0---------------Description tag 
+n kin
+25---------------idd recipe
+2---------------nb ingredients
+4---------------sirop de sucre de canne 
+0.000000---------------ml
+2---------------jus d'orange
+0.000000---------------ml
+-1--------------- original recipe 
+2---------------Description tag 

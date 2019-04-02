@@ -72,6 +72,8 @@ class MainNotebook : public Gtk::Notebook {
         std::vector <Gtk::ComboBoxText*> tabpIngredients;
         std::vector <Gtk::SpinButton*> tabpAmount;
         Gtk::ComboBoxText iddSimilarRecipe;
+        std::vector <Gtk::CheckButton*> tabpdescriptorCheckNew;
+        std::vector <Gtk::CheckButton*> tabpdescriptorCheckEdit;
 
         void openRecipeParameter(int iddRecipe);
         void runRecipe(int iddRecipe);

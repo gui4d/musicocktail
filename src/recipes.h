@@ -47,7 +47,7 @@ RECIPE recipe( int iddRecipe);
 int initDescriptor(FILE* descriptorFile,int i );
 int initDescriptorsList();
 int* descriptorTagtoList(unsigned long tagDescriptor);
-
+unsigned long descriptorListtoTag(int* descriptorList);
 #ifdef __cplusplus
 }
 #endif
