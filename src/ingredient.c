@@ -248,3 +248,31 @@ INGREDIENT ingredient(int iddIngredient){
     else return NULL; 
 
 }
+
+int* listUnplacedIngredients(){
+    extern INGREDIENT* LIST_INGREDIENTS;
+    extern int NUMBER_INGREDIENTS;
+    int i;
+    int* listUnplacedIngredient= calloc(NUMBER_INGREDIENTS,sizeof(*listUnplacedIngredient));
+    for(i = 0 ; i< NUMBER_INGREDIENTS; i++){
+        if ( LIST_INGREDIENTS[i]->servoAdress==-1) listUnplacedIngredient[i]=1;
+        else listUnplacedIngredient[i]=0;
+    }
+    return(listUnplacedIngredient);
+}
+
+int iddingredientofplace(int placement){
+    extern INGREDIENT* LIST_INGREDIENTS;
+    extern int NUMBER_INGREDIENTS;
+    int i;
+    int occurence=0;
+    int identity=-1;
+    for(i = 0 ; i< NUMBER_INGREDIENTS; i++){
+            if(LIST_INGREDIENTS[i]->servoAdress==placement){
+                identity=i;
+                occurence++;
+            }
+    }
+    if (identity!=-1 && occurence == 1) return identity;
+    else return(-1);
+}

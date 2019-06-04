@@ -37,6 +37,8 @@ void readAllIngredients(int verbose);
 int addIngredient(char* name, int servoAdress);
 int addIngredientThroughtTerminal();
 int editIngredient( int servoAdress, int iddIngredient);
+int*  listUnplacedIngredients();
+int iddingredientofplace(int placement);
 
 INGREDIENT ingredient(int iddIngredient);
 
