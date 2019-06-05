@@ -1,16 +1,16 @@
-23  -name - iddingredient 
+21  -name - iddingredient 
 rhum blanc exotic 
 0---------------idd ingredient
 -1---------------adress servo
 rhum brun exotic 
 1---------------idd ingredient
-2---------------adress servo
+-1---------------adress servo
 jus d'orange
 2---------------idd ingredient
-3---------------adress servo
+-1---------------adress servo
 jus d ananas
 3---------------idd ingredient
-4---------------adress servo
+-1---------------adress servo
 sirop de sucre de canne 
 4---------------idd ingredient
 -1---------------adress servo
@@ -25,7 +25,7 @@ jus de papaille
 -1---------------adress servo
 Coca Cola
 8---------------idd ingredient
--1---------------adress servo
+0---------------adress servo
 Orangina
 9---------------idd ingredient
 -1---------------adress servo
@@ -46,10 +46,10 @@ sirop de casis
 -1---------------adress servo
 sirop de fructose
 15---------------idd ingredient
-2---------------adress servo
+-1---------------adress servo
 Aperol
 16---------------idd ingredient
-5---------------adress servo
+-1---------------adress servo
 rhum clement
 17---------------idd ingredient
 -1---------------adress servo
@@ -61,10 +61,4 @@ eau pétillante
 -1---------------adress servo
 sirop de menthe
 20---------------idd ingredient
--1---------------adress servo
-truc1
-21---------------idd ingredient
--1---------------adress servo
-fez
-22---------------idd ingredient
 -1---------------adress servo

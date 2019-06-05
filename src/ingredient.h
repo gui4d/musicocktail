@@ -39,7 +39,7 @@ int addIngredientThroughtTerminal();
 int editIngredient( int servoAdress, int iddIngredient);
 int*  listUnplacedIngredients();
 int iddingredientofplace(int placement);
-
+void resetIngredientPlace(int place);
 INGREDIENT ingredient(int iddIngredient);
 
 

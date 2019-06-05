@@ -46,21 +46,45 @@ MainNotebook::MainNotebook(){
         pingredientsBox->pack_start(*psubingredientsBox1);
                 int i ;
                 int iddIngredient;
-                Gtk::Button* pButton;
                 Gtk::Label* pLabel;
                 Gtk::HBox* pHBox;
-                for (i=0 ; i< SERVOSLOTNUMBER;i++){
+                Gtk::ComboBoxText* pnewIngredientSelected;
+                for (i=0 ; i< SERVOSLOTNUMBER;i++)
+                {              
                     pHBox = Gtk::manage ( new Gtk::HBox(false,10));
                     psubingredientsBox1->pack_start(*pHBox);
-                    pLabel= Gtk::manage ( new Gtk::Label(std::to_string(i)));
-                    pHBox->pack_start(*pLabel);
                     iddIngredient=iddingredientofplace(i);
-                    if(iddIngredient!=-1){
-                        pButton = Gtk::manage(new Gtk::Button(LIST_INGREDIENTS[iddIngredient]->name));
-                        pButton->signal_clicked().connect(sigc::bind<int>(sigc::mem_fun(*this,&MainNotebook::openIngredientParameter),iddIngredient));
-                        pHBox->pack_start(*pButton);
+                    pLabel = Gtk::manage(new Gtk::Label(to_string(i)));
+                    pHBox->pack_start(*pLabel);
+                    Gtk::ComboBoxText* pnewIngredientSelected = Gtk::manage( new Gtk::ComboBoxText());
+                    pHBox->pack_start(*pnewIngredientSelected);
+                    tabPSelectedIngredients.push_back(pnewIngredientSelected);
+                    int j;
+                    for (j = 0 ; j < NUMBER_INGREDIENTS ; j ++)
+                    {
+                        pnewIngredientSelected->append(LIST_INGREDIENTS[j]->name);
                     }
+                    if(iddIngredient!=-1)
+                    {
+                        pnewIngredientSelected->set_active(iddIngredient);
+                    }
+                    pnewIngredientSelected->signal_changed().connect(sigc::bind<int,int>(sigc::mem_fun(*this,&MainNotebook::changeIngredientPlace),i,iddIngredient));
+                   
+
                 }
+                Gtk::HButtonBox* psetResetBox =  Gtk::manage( new Gtk::HButtonBox(Gtk::BUTTONBOX_START,10)); 
+                psubingredientsBox1->pack_end(*psetResetBox);
+                    Gtk::Button* pButton = Gtk::manage(new Gtk::Button(Gtk::Stock::SAVE));
+                    pButton->signal_clicked().connect(sigc::mem_fun(*this,&MainNotebook::_saveIngredientList));
+                    psetResetBox->pack_start(*pButton);
+                    pButton = Gtk::manage(new Gtk::Button(Gtk::Stock::DISCARD));
+                    pButton->signal_clicked().connect(sigc::bind<int>(sigc::mem_fun(*this,&MainNotebook::_resetIngredientPlace),-1));
+                   
+                    psetResetBox->pack_end(*pButton);
+                    
+                    
+
+
         Gtk::VBox* psubingredientsBox2 = Gtk::manage ( new Gtk::VBox(false,10));
         pingredientsBox->pack_start(*psubingredientsBox2);
             Gtk::ScrolledWindow* pscrolledIngredients = Gtk::manage( new Gtk::ScrolledWindow());
@@ -175,6 +199,41 @@ void MainWindow::closeMainWindow(){
     Gtk::Main::quit();
 }
 
+void MainNotebook::changeIngredientPlace(int setemplacement, int iddingredientprec){
+    extern INGREDIENT* LIST_INGREDIENTS;
+    extern int LIST_INGREDIENTS_CHANGED;
+    int iddnewingredient = tabPSelectedIngredients[setemplacement]->get_active_row_number();
+    int resetemplacement=-1;
+    if(iddnewingredient!=-1) resetemplacement = LIST_INGREDIENTS[iddnewingredient]->servoAdress;
+    if (resetemplacement!=-1)
+    {
+        tabPSelectedIngredients[resetemplacement]->set_active(-1);
+    }
+    if(iddnewingredient!=-1)
+    {
+    LIST_INGREDIENTS[iddnewingredient]->servoAdress=setemplacement;
+    LIST_INGREDIENTS_CHANGED ++;
+    }
+    if (iddingredientprec!=-1)
+    { 
+        LIST_INGREDIENTS[iddingredientprec]->servoAdress=-1;
+        LIST_INGREDIENTS_CHANGED ++;
+
+    }
+
+}
+
+void MainNotebook::_saveIngredientList(){
+    saveIngredientList();
+}
+void MainNotebook::_resetIngredientPlace(int place){
+    resetIngredientPlace(place);
+    int i; 
+    for ( i = 0; i <SERVOSLOTNUMBER ; i++){
+        tabPSelectedIngredients[i]->set_active(-1);
+    }
+
+}
 void MainNotebook::initAddIngredientThroughtInterface(){
     if( newIngredientPage==0){
         newIngredientPage=1;

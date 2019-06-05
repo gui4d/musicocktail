@@ -32,7 +32,7 @@
 #define SERVOSLOTNUMBER 16
 
 #define HEIGHT 600
-#define WIDTH 400
+#define WIDTH 600
 
 
 #ifdef __cplusplus
