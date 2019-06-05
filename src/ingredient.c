@@ -123,7 +123,7 @@ int saveIngredientList()
             return 0;
         }           
     }
-    printf("saving ingredients parameters");
+    printf("saving ingredients parameters\n");
     return 1;
 }
 
@@ -273,7 +273,7 @@ void resetIngredientPlace(int place){
     }
     else{
         for(i = 0 ; i< NUMBER_INGREDIENTS ; i++){
-                if(LIST_INGREDIENTS[i]->servoAdress=place)LIST_INGREDIENTS[i]->servoAdress=-1;
+                if(LIST_INGREDIENTS[i]->servoAdress==place) LIST_INGREDIENTS[i]->servoAdress=-1;
         }
 
     }

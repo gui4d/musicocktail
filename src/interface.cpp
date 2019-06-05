@@ -93,7 +93,8 @@ MainNotebook::MainNotebook(){
             pscrolledIngredients->add(*pingredientsList);
                 for( i = 0 ; i < NUMBER_INGREDIENTS ; i ++){
                     pButton = Gtk::manage(new Gtk::Button(LIST_INGREDIENTS[i]->name));
-                    pButton->signal_clicked().connect(sigc::bind<int>(sigc::mem_fun(*this,&MainNotebook::openIngredientParameter),i));
+                    //pButton->signal_clicked().connect(sigc::bind<int>(sigc::mem_fun(*this,&MainNotebook::openIngredientParameter),i));
+                    //there is no need to edit ingredients parameters, will be put back when the ingredient classwill be fournished with more elements
                     pingredientsList->pack_start(*pButton);
                 }
             Gtk::Button* paddIngredient = Gtk::manage(new Gtk::Button("_Ajouter un ingrédient ", true));
@@ -347,6 +348,10 @@ void MainNotebook::closeAddIngredientThroughtInterface(int save){
             Gtk::Button* pButton = Gtk::manage(new Gtk::Button(LIST_INGREDIENTS[NUMBER_INGREDIENTS-1]->name));
             pButton->signal_clicked().connect(sigc::bind<int>(sigc::mem_fun(*this,&MainNotebook::openIngredientParameter),NUMBER_INGREDIENTS-1));
             this->pingredientsList->pack_start(*pButton);
+            int i ;
+            for( i=0; i<SERVOSLOTNUMBER; i++){
+                tabPSelectedIngredients[i]->append(LIST_INGREDIENTS[NUMBER_INGREDIENTS-1]->name);
+            }
             if( ! saveIngredientList() ){
                 //metre une boite de dialogue si l'enregistrement s'est mal passé
             }

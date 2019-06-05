@@ -29,7 +29,7 @@
 
 #define ARDUINOADRESS "/dev/ttyUSB0"
 
-#define SERVOSLOTNUMBER 16
+#define SERVOSLOTNUMBER 10
 
 #define HEIGHT 600
 #define WIDTH 600
