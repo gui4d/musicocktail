@@ -781,6 +781,7 @@ void MainNotebook::openRecipeParameter(int RecipeNumber){
                     pelementBox->pack_start(*pelementLabel);
                 
                 if (ingredient(((LIST_RECIPES[RecipeNumber])->listIddIngredients)[i])->servoAdress==-1){
+                    printf("%s non place \n ",ingredient(((LIST_RECIPES[RecipeNumber])->listIddIngredients)[i])->name);
                     executable=0;
                 }
             
@@ -843,11 +844,14 @@ void MainNotebook::openRecipeParameter(int RecipeNumber){
 
 void MainNotebook::runRecipe(int recipeNumber){
     if( ArduinoFailed) {
+        printf("cant connect arduino\n");
+
         return;
     }
-    if((!ArduinoPort) || (! (ArduinoPort = initSerial())) )
+    if( !ArduinoPort && !(ArduinoPort = initSerial()) )
     {
         ArduinoFailed = 1;
+        printf("did not connect arduino\n");
         return;
     }
     RECIPE newrecipe= recipe(recipeNumber);

@@ -15,6 +15,7 @@
 
 #define RECIPESFILE "medias/recipes.txt"
 #define INGREDIENTSFILE "medias/ingredients.txt"
+#define FLOWFILE "medias/flows.txt"
 #define ICONEFILE "medias/icone.png"
 #define RECIPEDESCRIPTORFILE "medias/recipeDescriptors.txt"
 #define MAXNUMBERDESCRIPTOR 32
@@ -40,6 +41,12 @@ extern "C" {
 #endif
 
 void clean_stdin(void) ;
+
+
+int initFlowList();
+int saveFlowList();
+void readAllFlows();
+int editFlow( int servoAdress, int Flow);
 
 #ifdef __cplusplus
 }

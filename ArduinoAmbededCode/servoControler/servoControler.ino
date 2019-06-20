@@ -1,15 +1,15 @@
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
+
 #define MIN_PULSE_WIDTH 640
 #define MAX_PULSE_WIDTH 2350
 #define DEFAULT_PULSE_WIDTH 1500
 #define FREQUENCY 50
-#define NUMBER_SERVO 10
+#define NUMBER_SERVO 16
 
 
 unsigned long timeStampList[NUMBER_SERVO];
-
 
 int pulseWidth(int angle){
   int pulse_wide, analog_value;
@@ -27,12 +27,6 @@ void closeServo(int servonumber){
   pwm.setPWM(servonumber, 0, pulseWidth(180)); 
 }
 
-
-unsigned long convertToTimeMs( int newServo , int newQuantite ){
-  unsigned long correspondingTime=20*newQuantite; 
-  return correspondingTime;
-}
-
 void UpdateServoState()
 {
   if(Serial.available())
@@ -40,6 +34,7 @@ void UpdateServoState()
     String newBuffer=Serial.readString();
     while(newBuffer !="")
     {
+      
       long newLine = (newBuffer.substring(0,6)).toInt();
       if( newBuffer.length()>6 )
       {
@@ -49,10 +44,10 @@ void UpdateServoState()
         newBuffer="";
       }
       int newServo = newLine/10000;
-      int newQuantite = newLine % 10000;
+      unsigned long newQuantite = newLine % 10000;
       if( newServo < NUMBER_SERVO && newServo >= 0 )
       {
-        unsigned long newTime = convertToTimeMs( newServo , newQuantite );
+        unsigned long newTime = newQuantite*100;// the new time is in ms the quantity is in decisec
         openServo( newServo );
         if( timeStampList[newServo]== 0)
         {
@@ -66,9 +61,7 @@ void UpdateServoState()
         Serial.print(newServo);
         Serial.print(" open during ");
         Serial.print(newTime);
-        Serial.print(" ms, for pouring ");
-        Serial.print(newQuantite);
-        Serial.println("mL");
+        Serial.print(" ms");
         Serial.print("->timeStamp: ");
         Serial.println(timeStampList[newServo]);     
       }
@@ -94,13 +87,13 @@ void setup() {
   int i; 
   for( i = 0 ; i < 10 ; i++){
     timeStampList[i]=0;
-    closeServo(i)
+    closeServo(i);
   } 
 }
 
 
 void loop() {
   UpdateServoState();
-  Serial.println(millis());
+  //Serial.println(millis());
   
 }

@@ -243,7 +243,7 @@ INGREDIENT ingredient(int iddIngredient){
     extern INGREDIENT* LIST_INGREDIENTS;
     extern int NUMBER_INGREDIENTS;
 
-    if(iddIngredient>=0 || NUMBER_INGREDIENTS>iddIngredient || LIST_INGREDIENTS!=NULL){
+    if(iddIngredient>=0 &&  NUMBER_INGREDIENTS>iddIngredient && LIST_INGREDIENTS!=NULL){
         return LIST_INGREDIENTS[iddIngredient];
     }
     else return NULL; 
