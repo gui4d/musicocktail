@@ -1,16 +1,16 @@
 22  -name - iddingredient 
 rhum blanc exotic 
 0---------------idd ingredient
-0---------------adress servo
+-1---------------adress servo
 rhum brun exotic 
 1---------------idd ingredient
 -1---------------adress servo
 jus d'orange
 2---------------idd ingredient
-2---------------adress servo
+0---------------adress servo
 jus d ananas
 3---------------idd ingredient
-3---------------adress servo
+1---------------adress servo
 sirop de sucre de canne 
 4---------------idd ingredient
 -1---------------adress servo
@@ -46,7 +46,7 @@ sirop de casis
 -1---------------adress servo
 sirop de fructose
 15---------------idd ingredient
-1---------------adress servo
+-1---------------adress servo
 Aperol
 16---------------idd ingredient
 -1---------------adress servo
