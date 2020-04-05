@@ -286,6 +286,7 @@ int executeRecipe(RECIPE Recipe, int fd)
                 idServo = LIST_INGREDIENTS[iddIngredient]->servoAdress;
                 time = ConvertInDeciSec(amount, idServo);
                 sendNewOrder(iddIngredient, time, fd);
+                usleep(1000000);
         }
         printf("executing %s", Recipe->name);
         readRecipe(Recipe, False);

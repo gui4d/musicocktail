@@ -110,8 +110,9 @@ void setup() {
   Min_Pulse_Width[7]=640;
 for( i = 0 ; i < 10 ; i++)
 {
-  closeServo(i);
+  openServo(i);
   delay(300);
+  closeServo(i);
   }
 }
 

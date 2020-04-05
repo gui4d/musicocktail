@@ -78,7 +78,7 @@ void setup() {
   for(i = 0 ; i< NUMBER_SERVO ; i ++){
     pwm.setPWM(i, 0, analog_pulse(OpenPulse[i]));
     delay(300);
-    //pwm.setPWM(i, 0, analog_pulse(ClosePulse[i]));
+    pwm.setPWM(i, 0, analog_pulse(ClosePulse[i]));
   }
 }
 
