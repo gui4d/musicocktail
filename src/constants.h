@@ -15,6 +15,7 @@
 
 #define RECIPESFILE "medias/recipes.txt"
 #define INGREDIENTSFILE "medias/ingredients.txt"
+#define FLOWFILE "medias/flows.txt"
 #define ICONEFILE "medias/icone.png"
 #define RECIPEDESCRIPTORFILE "medias/recipeDescriptors.txt"
 #define MAXNUMBERDESCRIPTOR 32
@@ -29,10 +30,10 @@
 
 #define ARDUINOADRESS "/dev/ttyUSB0"
 
-#define SERVOSLOTNUMBER 16
+#define SERVOSLOTNUMBER 10
 
 #define HEIGHT 600
-#define WIDTH 400
+#define WIDTH 600
 
 
 #ifdef __cplusplus
@@ -40,6 +41,12 @@ extern "C" {
 #endif
 
 void clean_stdin(void) ;
+
+
+int initFlowList();
+int saveFlowList();
+void readAllFlows();
+int editFlow( int servoAdress, int Flow);
 
 #ifdef __cplusplus
 }

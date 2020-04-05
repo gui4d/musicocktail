@@ -1,6 +1,7 @@
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
+
 #define MIN_PULSE_WIDTH 640
 #define MAX_PULSE_WIDTH 2350
 #define DEFAULT_PULSE_WIDTH 1500
@@ -9,28 +10,22 @@ Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
 
 unsigned long timeStampList[NUMBER_SERVO];
+unsigned int Min_Pulse_Width[NUMBER_SERVO];
+unsigned int MAx_Pulse_width[NUMBER_SERVO];
 
-
-int pulseWidth(int angle){
+int pulseWidth(int angle, int servo){
   int pulse_wide, analog_value;
-  pulse_wide = map(angle, 0, 180, MIN_PULSE_WIDTH, MAX_PULSE_WIDTH);
+  pulse_wide = map(angle, 0, 180, Min_Pulse_Width[servo], MAx_Pulse_width[servo]);
   analog_value = int(float(pulse_wide) / 1000000 * FREQUENCY * 4096);
-  //Serial.println(analog_value);
   return analog_value;
 }
 
 void openServo(int servonumber){
-  pwm.setPWM(servonumber, 0, pulseWidth(0)); 
+  pwm.setPWM(servonumber, 0, pulseWidth(0,servonumber)); 
 }
 
 void closeServo(int servonumber){
-  pwm.setPWM(servonumber, 0, pulseWidth(180)); 
-}
-
-
-unsigned long convertToTimeMs( int newServo , int newQuantite ){
-  unsigned long correspondingTime=20*newQuantite; 
-  return correspondingTime;
+  pwm.setPWM(servonumber, 0, pulseWidth(180,servonumber)); 
 }
 
 void UpdateServoState()
@@ -40,6 +35,7 @@ void UpdateServoState()
     String newBuffer=Serial.readString();
     while(newBuffer !="")
     {
+      
       long newLine = (newBuffer.substring(0,6)).toInt();
       if( newBuffer.length()>6 )
       {
@@ -49,10 +45,10 @@ void UpdateServoState()
         newBuffer="";
       }
       int newServo = newLine/10000;
-      int newQuantite = newLine % 10000;
+      unsigned long newQuantite = newLine % 10000;
       if( newServo < NUMBER_SERVO && newServo >= 0 )
       {
-        unsigned long newTime = convertToTimeMs( newServo , newQuantite );
+        unsigned long newTime = newQuantite*100;// the new time is in ms the quantity is in decisec
         openServo( newServo );
         if( timeStampList[newServo]== 0)
         {
@@ -66,9 +62,7 @@ void UpdateServoState()
         Serial.print(newServo);
         Serial.print(" open during ");
         Serial.print(newTime);
-        Serial.print(" ms, for pouring ");
-        Serial.print(newQuantite);
-        Serial.println("mL");
+        Serial.print(" ms");
         Serial.print("->timeStamp: ");
         Serial.println(timeStampList[newServo]);     
       }
@@ -91,16 +85,38 @@ void setup() {
   Serial.begin(9600);
   pwm.begin();
   pwm.setPWMFreq(FREQUENCY);
-  int i; 
+  int i;
+   
   for( i = 0 ; i < 10 ; i++){
-    timeStampList[i]=0;
-    closeServo(i)
+    MAx_Pulse_width[i] = MAX_PULSE_WIDTH; //to do one by one after 
+    Min_Pulse_Width[i] = MIN_PULSE_WIDTH;
+    timeStampList[i]=0;   
   } 
+  MAx_Pulse_width[0]=2400;
+  MAx_Pulse_width[1]=2150;
+  MAx_Pulse_width[2]=2000;
+  MAx_Pulse_width[3]=2350;
+  MAx_Pulse_width[4]=2350;
+  MAx_Pulse_width[5]=1900;
+  MAx_Pulse_width[6]=2350;
+  MAx_Pulse_width[7]=2500;
+  Min_Pulse_Width[0]=640;
+  Min_Pulse_Width[1]=640;
+  Min_Pulse_Width[2]=640;
+  Min_Pulse_Width[3]=640;
+  Min_Pulse_Width[4]=640;
+  Min_Pulse_Width[5]=640;
+  Min_Pulse_Width[6]=640;
+  Min_Pulse_Width[7]=640;
+for( i = 0 ; i < 10 ; i++)
+{
+  openServo(i);
+  delay(300);
+  closeServo(i);
+  }
 }
 
 
 void loop() {
-  UpdateServoState();
-  Serial.println(millis());
-  
+  UpdateServoState();  
 }

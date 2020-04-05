@@ -175,7 +175,7 @@ void readRecipe(RECIPE Recipe, int verbose){
          int i;
         for(i = 0; i < Recipe->nbIngredients ; i++ ){
             printf("    -");
-            readIngredient( ingredient((Recipe->listIddIngredients)[i]), NVERBOSE); 
+            readIngredient( ingredient((Recipe->listIddIngredients)[i]), VERBOSE); 
             printf("\n"); 
         }
     }

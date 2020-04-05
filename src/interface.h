@@ -40,9 +40,14 @@ class MainNotebook : public Gtk::Notebook {
 
         Gtk::VButtonBox* pwelcomBox;
 
-        Gtk::VButtonBox* pingredientsList;
+        void changeIngredientPlace(int emplacement,int iddpreviousingredient);
+        std::vector <Gtk::ComboBoxText*> tabPSelectedIngredients;
+        void _saveIngredientList();
+        void _resetIngredientPlace(int place);
+
         void  initAddIngredientThroughtInterface();
         void  closeAddIngredientThroughtInterface(int save);
+        Gtk::VButtonBox* pingredientsList;
         int newIngredientPage;
         int newIngredientPageNumber;
         Gtk::Entry newIngredientName;
@@ -50,6 +55,7 @@ class MainNotebook : public Gtk::Notebook {
         //Gtk::SpinButton sugarEntry;
         //Gtk::SpinButton strenghtEntry;
         Gtk::SpinButton servoEntry;
+
 
         void openIngredientParameter(int iddIngredient);
         void editIngredientParameter(int iddIngredient , Gtk::SpinButton* pservoEntry);

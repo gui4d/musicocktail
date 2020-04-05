@@ -1,0 +1,11 @@
+--- the flow here is the time needed in sec to empty one liter
+100
+100
+100
+100
+100
+100
+100
+100
+100
+100

@@ -123,6 +123,7 @@ int saveIngredientList()
             return 0;
         }           
     }
+    printf("saving ingredients parameters\n");
     return 1;
 }
 
@@ -242,9 +243,55 @@ INGREDIENT ingredient(int iddIngredient){
     extern INGREDIENT* LIST_INGREDIENTS;
     extern int NUMBER_INGREDIENTS;
 
-    if(iddIngredient>=0 || NUMBER_INGREDIENTS>iddIngredient || LIST_INGREDIENTS!=NULL){
+    if(iddIngredient>=0 &&  NUMBER_INGREDIENTS>iddIngredient && LIST_INGREDIENTS!=NULL){
         return LIST_INGREDIENTS[iddIngredient];
     }
     else return NULL; 
 
+}
+
+int* listUnplacedIngredients(){
+    extern INGREDIENT* LIST_INGREDIENTS;
+    extern int NUMBER_INGREDIENTS;
+    int i;
+    int* listUnplacedIngredient= calloc(NUMBER_INGREDIENTS,sizeof(*listUnplacedIngredient));
+    for(i = 0 ; i< NUMBER_INGREDIENTS; i++){
+        if ( LIST_INGREDIENTS[i]->servoAdress==-1) listUnplacedIngredient[i]=1;
+        else listUnplacedIngredient[i]=0;
+    }
+    return(listUnplacedIngredient);
+}
+
+void resetIngredientPlace(int place){
+    extern INGREDIENT* LIST_INGREDIENTS;
+    extern int NUMBER_INGREDIENTS;
+    int i ; 
+    if (place==-1){
+        for(i = 0 ; i< NUMBER_INGREDIENTS ; i++){
+                LIST_INGREDIENTS[i]->servoAdress=-1;
+        }
+    }
+    else{
+        for(i = 0 ; i< NUMBER_INGREDIENTS ; i++){
+                if(LIST_INGREDIENTS[i]->servoAdress==place) LIST_INGREDIENTS[i]->servoAdress=-1;
+        }
+
+    }
+}
+
+int iddingredientofplace(int placement){
+    extern INGREDIENT* LIST_INGREDIENTS;
+    extern int NUMBER_INGREDIENTS;
+    int i;
+    int occurence=0;
+    int identity=-1;
+    for(i = 0 ; i< NUMBER_INGREDIENTS; i++){
+            if(LIST_INGREDIENTS[i]->servoAdress==placement){
+                identity=i;
+                occurence++;
+            }
+    }
+    if (identity!=-1 && occurence == 1) return identity;
+    if(occurence>1)resetIngredientPlace(placement);
+    return -1;  
 }
