@@ -98,18 +98,18 @@ cocktail_descriptors =[ 'Main_Alcool_Vodka',
        'Flavors_Smoky' ,
        'Flavors_Herbaceous' ,
 
-       'Clarke_broke_Ancestrals' ,
-       'Clarke_broke_Sours' ,
-       'Clarke_broke_Spirit_Forward' ,
-       'Clarke_broke_Duos_and_Trios' ,
-       'Clarke_broke_Champagne' ,
-       'Clarke_broke_Highballs_Collinses_and_Fizzes' ,
-       'Clarke_broke_Juleps_and_Smashes' ,
-       'Clarke_broke_Hot_Drinks' ,
-       'Clarke_broke_Flips_and_Nogs' ,
-       'Clarke_broke_Pousse_Family' ,
-       'Clarke_broke_Tropical_Style' ,
-       'Clarke_broke_Punches' ,
+       'Paul_Clarke_Ancestrals' ,
+       'Paul_Clarke_Sours' ,
+       'Paul_Clarke_Spirit_Forward' ,
+       'Paul_Clarke_Duos_and_Trios' ,
+       'Paul_Clarke_Champagne' ,
+       'Paul_Clarke_Highballs_Collinses_and_Fizzes' ,
+       'Paul_Clarke_Juleps_and_Smashes' ,
+       'Paul_Clarke_Hot_Drinks' ,
+       'Paul_Clarke_Flips_and_Nogs' ,
+       'Paul_Clarke_Pousse_Family' ,
+       'Paul_Clarke_Tropical_Style' ,
+       'Paul_Clarke_Punches' ,
 
        'Gary_Regan_Beer_Cider_Champagne' ,
        'Gary_Regan_Bottled' ,
@@ -185,7 +185,7 @@ cocktail_descriptors_group = [[0,1,2,3,4,5,6,7,8,9,10,11,12,13],
         [86,87,88,89,90,91,92,93,94,95,96],
         [97,98,99,100,101,102,103,104,105,106,107,108,109],
         [110,111,112,113,114,115,116,117,118,119,120,121,122,123]]
-cocktail_descriptors_title =['Main_Alcool','Genre','Preparation','Occasion','Flavors','Clarke_broke','Gary_Regan' , 'IBA' ,'Region','City','age']
+cocktail_descriptors_title =['Main_Alcool','Genre','Preparation','Occasion','Flavors','Paul_Clarke','Gary_Regan' , 'IBA' ,'Region','City','age']
 ingredient_data= ['name','base_name','type','birth_region','birth_date']
  
 class Cocktail:
