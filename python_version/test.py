@@ -8,10 +8,10 @@ from Cocktail import *
 class test():
 
     def __init__(self):
-        self.excel_path = "./test.xlsx"
-        self.sql_path = r"./test.db"
+        self.excel_path = "./DataTest/test.xlsx"
+        self.sql_path = r"./DataTest/test.db"
         self.Data = DataBase(self.sql_path)
-        self.IA_path= "./testMAtrix.npy"
+        self.IA_path= "./DataTest/testMatrix.npy"
 
     def read_excel(self):
         excel_file = excel_importer(self.excel_path, self.Data)
