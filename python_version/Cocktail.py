@@ -191,21 +191,23 @@ ingredient_data= ['name','base_name','type','birth_region','birth_date']
 class Cocktail:
 
     def __init__(self): 
-        self.Id=0
-        self.Name=""
-        self.Source_name=""
-        self.Variation_number=0
-        self.Picture_link=""
-        self.Glass=""
-        self.Ingredients_names=[]
-        self.Ingredients_measures=[]
-        self.Descriptors_Name = cocktail_descriptors
-        self.Descriptors_list_size = len(self.Descriptors_Name);
-        self.Descriptors_Value = [0. for i in range(self.Descriptors_list_size)] 
+        self.Id=0 #int
+        self.Name="" #str
+        self.Source_name="" #str
+        self.Picture_link="" #str
+        self.Glass="" #str
+        self.Ingredients_names=[] #str
+        self.Ingredients_measures=[] #str
+        self.Descriptors_Name = cocktail_descriptors #str
+        self.Descriptors_list_size = len(self.Descriptors_Name); #int
+        self.Descriptors_Value = [0. for i in range(self.Descriptors_list_size)]  #float
         self.Groups = cocktail_descriptors_group
 
     #def create_manual(self):
 
+    def show(self):
+        print(self.Id,self.Name,self.Source_name,self.Picture_link,self.Glass,self.Ingredients_names, self.Ingredients_measures)
+    
     def show_Descriptors_Names_by_groups(self):       
         for group in self.Groups:
             for element in group: 
@@ -233,20 +235,21 @@ class Cocktail:
     def Load_From_database(self,row):
         self.Id= int(row[0])
         self.Name= str(row[1])
-        self.Source_id= int(row[2])
-        self.Variation_number= int(row[3])
-        self.Picture_link= str(row[4])
-        self.Glass= str(row[5])
+        #convert source id in source_name
+        self.Source_name= str(row[2])
+        self.Picture_link= str(row[3])
+        self.Glass= str(row[4])
         self.Ingredients_names.clear()
         self.Ingredients_measures.clear()
         for i in range(15):
-            if(str(row[i+6])!= 0):
-                self.Ingredients_id.append(int(row[i+6]))
-                self.Ingredients_measures.append(float(row[i+ 21 ]))
+            if(str(row[i+5])!= 0):
+                #convert ingredient_id en ingredient_name
+                self.Ingredients_id.append(int(row[i+5]))
+                self.Ingredients_measures.append(float(row[i+ 20 ]))
             else: 
                 break
         for i in range(self.Descriptors_list_size):
-            self.Descriptors_Value[i] = float(row[i+36])
+            self.Descriptors_Value[i] = float(row[i+35])
         
         #function to migrate in database
     def Save_into_database(self,database):

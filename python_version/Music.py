@@ -212,4 +212,8 @@ class Music:
         self.Genre= str(row[7])
         for i in range(self.Extractor_list_size):
             self.Extractors_Value[i]= float(row[i+8])
+    
+    def show(self):
+        print(self.Id , self.Title,  self.Album, self.Comentary,self.Author,self.Year,self.File_path,self.Genre, self.Extractors_Value)
+
 

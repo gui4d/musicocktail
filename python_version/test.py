@@ -3,6 +3,7 @@ from DataBase import *
 from IA import *
 from Music import *
 from Cocktail import *
+from gui import *
 
 
 class test():
@@ -49,16 +50,24 @@ class test():
 
     def create_cocktail(self):
         pina_colada = Cocktail()
-        for i in range(pina_colada.Descriptors_list_size):
-            pina_colada.Descriptors_Value[i]=float(random.randint(0,100))/100.
-        print("pina colada :" + str(pina_colada.Descriptors_Value))
+        pina_colada.Randomize_Descriptors()
+        pina_colada.Name = "pina colada"
+        pina_colada.Source_name="none"
+        pina_colada.Picture_link="https://assets.afcdn.com/recipe/20180705/80258_w648h344c1cx974cy1535cxt0cyt0cxb2471cyb3164.jpg"
+        pina_colada.Glass="punch"
+        Ingredients_names=["rhum blanc", "rhum ambré", "jus d'annanas" , "noix de coco"]
+        self.Ingredients_measures=["40", "20" , "120", "40"]
         return pina_colada
 
     def create_music(self):
         muse_uprise = Music()
-        for i in range(muse_uprise.Extractor_list_size):
-            muse_uprise.Extractors_Value[i]=float(random.randint(0,100))/100.
-        print("muse uprise : " + str( muse_uprise.Extractors_Value))
+        muse_uprise.Title = "Uprise"
+        muse_uprise.Album = "Uprising"
+        muse_uprise.Author = "Muse"
+        muse_uprise.Comentary = " exemple"
+        muse_uprise.Year = "2009"
+        muse_uprise.Genre = "Rock"
+        muse_uprise.Randomize_Extractors()
         return muse_uprise
 
     def create_IA(self):
@@ -105,11 +114,30 @@ class test():
         Ia.show_Matrix()
         Ia.save_matrix_at(self.IA_path)
 
+    def graphical_Music_Modification(self): 
+        graph = gui()
+        music = self.create_music()
+        music.show()
+        graph.Modify_Music(music)
+        music.show()
+    
+    def graphical_Cocktail_Modification(self):
+        graph = gui()
+        cocktail = self.create_cocktail()
+        cocktail.show()
+        cocktail.show_Descriptors_Values_by_groups()
+        graph.Modify_Cocktail(cocktail)
+        cocktail.show()
+        cocktail.show_Descriptors_Values_by_groups()
+
+
 
 
 test = test()
 
 #test.create_and_read_database()
-test.excel_to_database()
+#test.excel_to_database()
 #test.distance_recipe_music()
 #test.SurAprentisage_IA()
+#test.graphical_Music_Modification()
+test.graphical_Cocktail_Modification()
