@@ -1,51 +1,59 @@
-from excel_import import *
+from Excel_import import *
 from DataBase import *
 from IA import *
 from Music import *
 from Cocktail import *
-from gui import *
+from Gui import *
 
 
-class test():
+class Test():
 
     def __init__(self):
-        self.excel_path = "./DataTest/test.xlsx"
+        self.excel_path = "./Database/Database.xlsx"
         self.sql_path = r"./DataTest/test.db"
         self.Data = DataBase(self.sql_path)
         self.IA_path= "./DataTest/testMatrix.npy"
 
     def read_excel(self):
-        excel_file = excel_importer(self.excel_path, self.Data)
+        excel_file = Excel_importer(self.excel_path)
         excel_file.load_ingredients("Ingredients")
         excel_file.load_recipes("Recettes")
         excel_file.load_musics("Musiques")
-        excel_file.show_data()
+        excel_file.summary()
 
-    def create_and_read_database(self):
+    def create_database(self):
         if (self.Data.open()):
             self.Data.create_tables()
-            self.Data.show_all()
-            print("ingredients : " + str(self.Data.number_ingredients()))
-            print("recipes : " + str(self.Data.number_recipes()))
-            print("musics : " + str(self.Data.number_musics()))
+            self.Data.summary()
+            self.Data.close()
+        
+    def read_database(self):
+        if (self.Data.open()):
+            ingredients = self.Data.ingredients()
+            for ingredient in ingredients:
+                ingredient.show()
+            recipes = self.Data.recipes()
+            for recipe in recipes : 
+                recipe.show()
+            musics = self.Data.musics()
+            for music in musics :
+                music.show()
+            self.Data.close()
 
     def excel_to_database(self):
         if (self.Data.open()):
             #self.Data.create_tables()
-            excel_file = excel_importer(self.excel_path, self.Data)
+            excel_file = Excel_importer(self.excel_path)
             list_ingredients = excel_file.load_ingredients("Ingredients")
             list_recipes = excel_file.load_recipes("Recettes")
             list_musics  = excel_file.load_musics("Musiques")
             for ingredient in list_ingredients:
                 self.Data.save_ingredient(ingredient)
             for recipe in list_recipes : 
-                print(recipe.Ingredients_names)
-                print(recipe.Ingredients_measures)
                 self.Data.save_recipe_data(recipe)
                 self.Data.save_recipe_descriptors(recipe)
             for music in list_musics:
                 self.Data.save_music_data(music)
-            self.Data.show_all()
             self.Data.close()
 
     def create_cocktail(self):
@@ -55,6 +63,7 @@ class test():
         pina_colada.Source_name="none"
         pina_colada.Picture_link="https://assets.afcdn.com/recipe/20180705/80258_w648h344c1cx974cy1535cxt0cyt0cxb2471cyb3164.jpg"
         pina_colada.Glass="punch"
+        pina_colada.Instructions = "pas d'instructions"
         Ingredients_names=["rhum blanc", "rhum ambré", "jus d'annanas" , "noix de coco"]
         self.Ingredients_measures=["40", "20" , "120", "40"]
         return pina_colada
@@ -82,11 +91,8 @@ class test():
         pina_colada = self.create_cocktail()
         muse_uprise = self.create_music()
         Correlation_test = self.create_IA()      
-        print("pina colada ",pina_colada.Descriptors_Value)
-        print("muse uprise ", muse_uprise.Extractors_Value)
-        print("alcool size ",pina_colada.Descriptors_list_size)
+        print("Cocktail size ",pina_colada.Descriptors_list_size)
         print("music size ", muse_uprise.Extractor_list_size)
-        print("correlation matrix ",Correlation_test.Matrix)
         distance = Correlation_test.Distance(muse_uprise,pina_colada)
         print( "Distance ", distance)
 
@@ -98,12 +104,6 @@ class test():
         Equivalent_Cocktail.Load_Descriptors_From_Array(Ia0.Equivalent_Cocktail_array(Music0));
         # do not pas by array but by MUSIC class 
         Ia0.show_Matrix()
-        print("MUSIC :")
-        print(Music0.Extractors_Value)
-        print("Cocktail :")
-        print(Cocktail0.Descriptors_Value)
-        print("Equivalent Cocktail :")
-        print(Equivalent_Cocktail.Descriptors_Value)
         for i in range (10):
             Ia0.Apprentissage(Music0,Cocktail0)
             Ia0.show_Matrix()
@@ -115,14 +115,14 @@ class test():
         Ia.save_matrix_at(self.IA_path)
 
     def graphical_Music_Modification(self): 
-        graph = gui()
+        graph = Gui()
         music = self.create_music()
         music.show()
         graph.Modify_Music(music)
         music.show()
     
     def graphical_Cocktail_Modification(self):
-        graph = gui()
+        graph = Gui()
         cocktail = self.create_cocktail()
         cocktail.show()
         cocktail.show_Descriptors_Values_by_groups()
@@ -131,13 +131,3 @@ class test():
         cocktail.show_Descriptors_Values_by_groups()
 
 
-
-
-test = test()
-
-#test.create_and_read_database()
-#test.excel_to_database()
-#test.distance_recipe_music()
-#test.SurAprentisage_IA()
-#test.graphical_Music_Modification()
-test.graphical_Cocktail_Modification()

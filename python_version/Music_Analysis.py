@@ -8,7 +8,9 @@ class Musi_Analysis():
         self.Music = Music
     
     def extract_Data(): 
+        return
 
     def extract_extractors(): 
+        return
     
     

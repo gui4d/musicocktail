@@ -7,20 +7,22 @@ from Cocktail import *
 
 ##transform into music , cocktail , recipe before going to DB  ( also Clean )
 
-class excel_importer():
+class Excel_importer():
 
-    def __init__(self,excel_path, DataBase):
+    def __init__(self,excel_path):
         
         self.excel_path = excel_path
         self.excel_ingredient= None
+        self.loaded_ingredients = []
         self.excel_recipe = None
+        self.loaded_recipes =[]
         self.excel_music= None
+        self.loaded_musics =[]
 
     def load_musics(self, tab_name):
         self.excel_music = pandas.read_excel(self.excel_path, tab_name) 
         new_musics= self.excel_music[music_data].dropna(how = 'all')
         table_size = new_musics.shape[0]
-        music_array = []
         for i in range(table_size):
             new_music = Music()
             music= new_musics.iloc[i,:]
@@ -31,15 +33,13 @@ class excel_importer():
             new_music.Year = music[4]
             new_music.File_path = music[5]
             new_music.Genre = music[6]
-            music_array.append(new_music)
-        return music_array
+            self.loaded_musics.append(new_music)
+        return self.loaded_musics
 
     def load_ingredients(self, tab_name):
         self.excel_ingredient = pandas.read_excel(self.excel_path, tab_name)
         new_ingredients = self.excel_ingredient[ingredient_data].dropna(how = 'all')
         table_size = new_ingredients.shape[0]
-        print("ingredients :" + str(table_size))
-        ingredient_list = []
         for i in range(table_size):
             ingredient_array= new_ingredients.iloc[i,:]
             ingredient = Ingredient()      
@@ -47,16 +47,14 @@ class excel_importer():
             ingredient.Base_name = str(ingredient_array["base_name"])
             ingredient.Type = str(ingredient_array["type"])
             ingredient.Birth_region = str(ingredient_array["birth_region"])
-            ingredient.Birth_date = int(ingredient_array["birth_date"])
-            ingredient_list.append(ingredient)
-        return ingredient_list
+            ingredient.Birth_date = str(ingredient_array["birth_date"])
+            self.loaded_ingredients.append(ingredient)
+        return self.loaded_ingredients
     
     def load_recipes(self, tab_name):
         self.excel_recipe = pandas.read_excel(self.excel_path, tab_name)
         new_recipes = self.excel_recipe[cocktail_data + cocktail_descriptors_title].dropna(how = 'all')
         table_size = new_recipes.shape[0]
-        print("Recipes :" + str(table_size))
-        recipe_array=[]
         for i in range(table_size):
             recipe= new_recipes.iloc[i,:]
             new_recipe = Cocktail()
@@ -64,20 +62,23 @@ class excel_importer():
             new_recipe.source_recipe= recipe[1]
             new_recipe.picture_link= recipe[2]
             new_recipe.glass =  recipe[3]
+            new_recipe.Instructions = recipe[4]
             ####find an other way to clean the entrant data 
-            ingredient_names = recipe[4:18].replace(' ', np.nan).replace('\r\n', np.nan).replace('\n', np.nan).dropna().tolist()
-            ingredient_measures = recipe[19:33].replace(' ', np.nan).dropna().replace('\r\n', np.nan).replace('\n', np.nan).dropna().tolist()
+            ingredient_names = recipe[5:19].replace(' ', np.nan).replace('\r\n', np.nan).replace('\n', np.nan).dropna().tolist()
+            ingredient_measures = recipe[20:34].replace(' ', np.nan).dropna().replace('\r\n', np.nan).replace('\n', np.nan).dropna().tolist()
             new_recipe.Ingredients_names = list(ingredient_names)
             new_recipe.Ingredients_measures = list(ingredient_measures)
+            new_recipe.Ingredients_measures = self.cocktail_unity_conversion(new_recipe.Ingredients_measures)
             ################################################""
             for i in range( len(cocktail_descriptors_group)):
-                if recipe[i+34] in cocktail_descriptors :
-                    descriptor_index = cocktail_descriptors.index(recipe[i+34])
+                if recipe[i+35] in cocktail_descriptors :
+                    descriptor_index = cocktail_descriptors.index(recipe[i+35])
                     new_recipe.Descriptors_Value[descriptor_index]= 1.
-            recipe_array.append(new_recipe)
-        return recipe_array
+            self.loaded_recipes.append(new_recipe)
+        return self.loaded_recipes
 
-    def show_data(self):
+
+    def show(self):
         if self.excel_ingredient is not None :
             print("ingredients #################")
             print(self.excel_ingredient.head())
@@ -87,6 +88,99 @@ class excel_importer():
         if self.excel_music is not None :
             print("musics #################")
             print(self.excel_music.head())
+
+    def summary(self):
+        if self.excel_ingredient is not None :
+            print("ingredients:",  len(self.loaded_ingredients))
+        if self.excel_recipe is not None :
+            print("Cocktails :", len(self.loaded_recipes))
+        if self.excel_music is not None :
+            print("musics :", len(self.loaded_musics))
+
+    def cocktail_unity_conversion(self,measure_array, total_amount=200):
+        already_poured = 0
+        clean_measure= []
+        complete= -1
+        part = []
+        total_part = 0
+        multiplier = 1
+        value = 0  
+        for measure in measure_array: 
+            multiplier = self.unity_finder(measure)
+            value= self.regex_convert(measure)
+            if measure.find("Fill")!=-1 or measure.find("Top")!=-1:
+                clean_measure.append(0)
+                complete = len(clean_measure)-1
+            elif measure.find("part")!=-1:
+                clean_measure.append(value)
+                total_part += value
+                part.append(len(clean_measure)-1)
+            else: 
+                clean_measure.append(multiplier*value)
+                already_poured += clean_measure[-1]            
+        if total_part!=0 and already_poured < total_amount: 
+            for i in part:
+                clean_measure[i] *= (total_amount - already_poured)/total_part
+        elif complete!=-1 and already_poured < total_amount: 
+            clean_measure[complete] = total_amount- already_poured
+        return(clean_measure)
+
+    def unity_finder(self,measure): #find the unity and give the conversition to the mililiter
+        if measure.find("oz") !=-1:
+            multplier= 29.5735
+        elif measure.find("cl") !=-1:
+            multplier = 10.
+        elif measure.find("Shot")!=-1 :
+            multplier= 44.3603
+        elif measure.find("dash")!=-1:
+            multplier= 0.62
+        elif measure.find("wedge")!=-1:
+            multplier = 0.5
+        elif measure.find("twist")!=-1:
+            multplier = 0.1
+        elif measure.find("cup")!=-1:
+            multplier = 236.588
+        elif measure.find("slash")!=-1:
+            multplier= 5.91
+        elif measure.find("tsp")!=-1:
+            multplier= 4.92892
+        elif measure.find("tbsp")!=-1:
+            multplier = 14.7868
+        elif measure.find("jigger")!=-1:
+            multplier= 44.3603
+        elif measure.find("juice")!=-1:
+            multplier= 30. 
+        else : 
+            multplier = 1.
+        return multplier
+
+    def regex_convert(self,element):# convert in float expression of type 2/3-4/5 other type gives 0
+        if element=="":
+            return 0
+        if element.isalpha():
+            return 0
+        size = len(element)
+        for i in range(size ):
+            if element[i] == " ":
+                return self.regex_convert(element[:i]) + self.regex_convert(element[i+1:])    
+        for i in range(size ):
+            if element[i] == "-":
+                return (self.regex_convert(element[:i]) + self.regex_convert(element[i+1:]))/2 
+        for i in range(size ):
+            if element[i] =="/":
+                divis = self.regex_convert(element[i+1])
+                if divis != 0:
+                    divid = self.regex_convert(element[:i])
+                    return divid/divis
+                else : 
+                    return 0
+        try:
+            element=float(element)
+            return element
+        except ValueError: 
+            return 0
+
+
 
 
 

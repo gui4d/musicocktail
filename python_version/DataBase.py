@@ -7,6 +7,7 @@ from IA import *
 ### faire les link entre tables 
 ###update les recurences d'ingredients et de recettes 
 ### update les fundaments ou suprimmer. => creer d'autres arborescences
+#remove TESTZONE #
 
 default_data_path = r"./Musicocktail.db"
 
@@ -39,7 +40,7 @@ class DataBase():
                 self.commit()
             self.connection.close()
 
-    def show_all(self):
+    def show(self):
         #make a preatier print : remove nan , add \n 
         print("musics##########")
         print(self.__all_musics_rows())
@@ -47,6 +48,14 @@ class DataBase():
         print(self.__all_recipes_rows())
         print("ingredients##########")
         print(self.__all_ingredients_rows())
+
+    def summary(self):
+        print("musics : ", self.number_musics())
+        print("recipes : ", self.number_recipes())
+        print("ingredient :" , self.number_ingredients())
+
+
+
 
     #### tables creation
     def create_tables(self):
@@ -78,6 +87,7 @@ class DataBase():
                     source_id INTEGER,
                     picture_link TEXT,
                     Glass TEXT NOT NULL,
+                    Instructions TEXT,
                     ingredient1_id INTEGER,
                     ingredient2_id INTEGER,
                     ingredient3_id INTEGER,
@@ -120,7 +130,7 @@ class DataBase():
                     source_id INTEGER,
                     type TEXT ,
                     birth_region TEXT,
-                    birth_date INTEGER, 
+                    birth_date TEXT, 
                     UNIQUE(name)
                     ); """
         self.__execute(command)
@@ -159,7 +169,7 @@ class DataBase():
         print("INFO: you have canceled " + str(number_change) + " change(s)")
 
     def __execute(self, command):
-        print("SQL: " + command.strip())
+        #print("SQL: " + command.strip())  # => to go in LOG
         if self.connection is None:
             return None
         else:
@@ -168,11 +178,11 @@ class DataBase():
                 cursor.execute(command)
                 return cursor
             except Error as e:
-                print(e)
+                print(e) 
                 return None
 
     def __execute_with_values( self, command, values ):
-        print("SQL :" + command.strip() + str(values) )
+        #print("SQL :" + command.strip() + str(values) ) # to go to LOG
         if self.connection is None:
             return None
         else:
@@ -185,8 +195,10 @@ class DataBase():
                 return None
 
     ###  music management
+
+    ### make a better function : regroup in one,divid in save and update take into account what is to update
     def save_music_data(self, music):
-        if music.Id != 0 :# update the music 
+        if music.Id != 0  :# update the music 
             command = """ UPDATE """ + self.current_music_table + """ SET title = ? , album = ? , commentary = ? ,author = ? ,year = ? ,file_path = ?, genre = ?  WHERE id = ?"""
             values = (music.Title, music.Album, music.Commentary , music.Author, music.Year, music.File_path, music.Genre , music.Id)      
         else : # create new music 
@@ -222,7 +234,7 @@ class DataBase():
             return int(cur.fetchall()[0][0])
         return 0 
     
-    def music(self, *args):
+    def musics(self, *args):
         command = ""
         if len(args) != 0:
             for arg in args:
@@ -239,26 +251,29 @@ class DataBase():
             command = " SELECT * FROM " + self.current_music_table
         cur = self.__execute(command)
         if cur is None :
-            return None
+            return []
         else :
             Musics=[]
             rows = cur.fetchall()
             for row in rows : 
-                Musics.append(__row_to_music(row))
+                Musics.append(self.__row_to_music(row))
             return Musics
     
     def __row_to_music(self,row):
             music = Music()
-            music.Id = int(row["id"])
-            music.Title = str(row["title"])
-            music.Album= str(row["album"])
-            music.Comentary = str(row["commentary"])
-            music.Author = str(row["author"])
-            music.Year = int (row["year"])
-            music.File_path = str (row["file_path"])
-            music.Genre = str(row["genre"])
+            music.Id = int(row[0])
+            music.Title = str(row[1])
+            music.Album= str(row[2])
+            music.Comentary = str(row[3])
+            music.Author = str(row[4])
+            music.Year = str (row[5])
+            music.File_path = str (row[6])
+            music.Genre = str(row[7])
             for i in range(len(music_extractors)):
-                music.Extractors_Value[i] = float( row[music_extractors[i]])
+                if( row[i + 8] != None):
+                    music.Extractors_Value[i] = float( row[i+8])
+                else:
+                    music.Extractors_Value[i] =0.
             return music
 
     def __all_musics_rows(self):
@@ -268,7 +283,7 @@ class DataBase():
             return []
         else :
             return  cur.fetchall()
-
+    
     ## recipe management
     def save_recipe_data(self,recipe):
         if recipe.Source_name !="":
@@ -282,21 +297,21 @@ class DataBase():
             return 0
 
         if recipe.Id != 0 :
-            values = tuple([recipe.Name, source_recipe_id , recipe.Picture_link, recipe.Glass] + ingredient_ids + recipe.Ingredients_measure+ [recipe.Id])
-            command = """ UPDATE """ + self.current_recipe_table + """ SET name = ? , source_id = ? ,picture_link = ? ,glass = ? """
+            values = tuple([recipe.Name, source_recipe_id , recipe.Picture_link, recipe.Glass , recipe.Instructions] + ingredient_ids + recipe.Ingredients_measure+ [recipe.Id])
+            command = """ UPDATE """ + self.current_recipe_table + """ SET name = ? , source_id = ? ,picture_link = ? ,glass = ?, Instructions = ? """
             for i in range(number_ingredient):
                 command += ", ingredient" + str(i+1) + "_id  = ? "
             for i in range(number_ingredient):
                 command += ", measure" + str(i+1) + " = ?"
             command +=""" WHERE id = ?"""      
         else :         
-            values = tuple([recipe.Name, source_recipe_id , recipe.Picture_link, recipe.Glass] + ingredient_ids + recipe.Ingredients_measures )
-            command = """INSERT INTO """ + self.current_recipe_table +   """(name , source_id ,picture_link ,glass """
+            values = tuple([recipe.Name, source_recipe_id , recipe.Picture_link, recipe.Glass , recipe.Instructions] + ingredient_ids + recipe.Ingredients_measures )
+            command = """INSERT INTO """ + self.current_recipe_table +   """(name , source_id ,picture_link ,glass , Instructions """
             for i in range(number_ingredient):
                 command += ", ingredient" + str(i+1) + "_id  "
             for i in range(number_ingredient):
                 command += ", measure" + str(i+1)
-            command += ")  VALUES(?,?,?,?"
+            command += ")  VALUES(?,?,?,?,?"
             for i in range(number_ingredient*2):
                 command += ",?"
             command += " )"
@@ -309,7 +324,7 @@ class DataBase():
 
     def save_recipe_descriptors(self, recipe):
         if recipe.Id == 0 : 
-            print( "save recipe before saving descriptors")
+            print( "save recipe before saving descriptors") 
             return False
         values =  tuple(list(recipe.Descriptors_Value).append(reipe.Id)) 
         command = """ UPDATE """ + self.current_recipe_table + """" SET """
@@ -330,7 +345,7 @@ class DataBase():
             return int(cur.fetchall()[0][0])
         return 0  
         
-    def recipe(self, *args):
+    def recipes(self, *args):
         command = ""
         if len(args) != 0:
             for arg in args:
@@ -347,17 +362,54 @@ class DataBase():
             command = " SELECT * FROM " + self.current_recipe_table
         cur = self.__execute(command)
         if cur is None :
-            return []
+                return []
         else :
-            return  cur.fetchall()
-        #make it return recipe
+            Cocktails=[]
+            rows = cur.fetchall()
+            for row in rows : 
+                Cocktails.append(self.__row_to_Cocktail(row))
+            return Cocktails
 
+    def __row_to_Cocktail(self,row): 
+        cocktail = Cocktail()
+        cocktail.Id= int(row[0])
+        cocktail.Name= str(row[1])
+        cocktail.Source_id= int(row[2])
+        cocktail.Source_name = self.name_of_recipe(cocktail.Source_id)
+        cocktail.Picture_link= str(row[3])
+        cocktail.Glass= str(row[4])
+        cocktail.Instructions = str(row[5]) 
+        cocktail.Ingredients_names.clear()
+        cocktail.Ingredients_measures.clear()
+        for i in range(15):
+            if(row[i+6]!= None):
+                cocktail.Ingredients_id.append(int(row[i+6]))
+                cocktail.Ingredients_names.append(self.name_of_ingredient(int(row[i+6])))
+                cocktail.Ingredients_measures.append(float(row[i+ 21 ]))
+            else: 
+                break
+        for i in range(cocktail.Descriptors_list_size):
+            if( row[i + 36 ] == None): 
+                cocktail.Descriptors_Value[i]= 0.
+            else :
+                cocktail.Descriptors_Value[i] = float(row[i+36])
+        return cocktail
+    
+    def name_of_recipe(self, id):
+        if id == 0 :
+            return ""
+        recipes = self.recipe(id)
+        if len(recipes)==0: 
+             return ""
+        else: 
+            return recipes[0].name      
+   
     def id_of_recipe(self, name):
-        cur = self.recipe(name)
-        if cur is None or cur==[]: 
+        recipes = self.recipe(name)
+        if len(recipes)==0: 
              return 0 
         else: 
-            return cur[0][0]
+            return recipes[0].Id
 
     def __all_recipes_rows(self):
         command = "SELECT *  FROM " + self.current_recipe_table
@@ -392,8 +444,7 @@ class DataBase():
         else : 
             return cur.lastrowid
 
-    # make return  ingredient
-    def ingredient(self, *args):
+    def ingredients(self, *args):
         command = ""
         if len(args) != 0:
             for arg in args:
@@ -412,16 +463,40 @@ class DataBase():
             command = " SELECT * FROM " + self.current_ingredient_table
         cur = self.__execute(command)
         if cur is None :
-            return []
+                return []
         else :
-            return  cur.fetchall()
+            Ingredients=[]
+            rows = cur.fetchall()
+            for row in rows : 
+                Ingredients.append(self.__row_to_ingredient(row))
+            return Ingredients
+
+    def __row_to_ingredient(self,row):
+        ingredient= Ingredient()
+        ingredient.Id = int(row[0])
+        ingredient.Name=str(row[1])
+        ingredient.Base_name=self.name_of_ingredient(int(row[2]))
+        ingredient.type= str( row[3])
+        ingredient.Birth_region= str(row[4])
+        ingredient.Birth_date = str(row[5])       
+        return ingredient  
     
     def id_of_ingredient(self,name):
-        cur = self.ingredient(name)
-        if cur is None or cur==[]: 
-             return 0 
+        ingredients = self.ingredients(name)
+        if len(ingredients) == 0:
+             return 0
         else: 
-            return cur[0][0]
+            return ingredients[0].Id
+
+    def name_of_ingredient(self,id):
+        if id== 0 :
+            return ""
+        ingredients = self.ingredients(id)
+        if len(ingredients) == 0:
+             return ""
+        else: 
+            return ingredients[0].Name
+
 
     def __all_ingredients_rows(self):
         command = "SELECT * FROM " + self.current_ingredient_table

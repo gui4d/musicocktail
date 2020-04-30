@@ -10,21 +10,22 @@ cocktail_data = ['name',
         'source_name',
         'picture_link',
         'Glass',
-        'ingredient1_id',
-        'ingredient2_id',
-        'ingredient3_id',
-        'ingredient4_id',
-        'ingredient5_id',
-        'ingredient6_id',
-        'ingredient7_id',
-        'ingredient8_id',
-        'ingredient9_id',
-        'ingredient10_id',
-        'ingredient11_id',
-        'ingredient12_id',
-        'ingredient13_id',
-        'ingredient14_id',
-        'ingredient15_id',
+        'Instructions',
+        'ingredient1',
+        'ingredient2',
+        'ingredient3',
+        'ingredient4',
+        'ingredient5',
+        'ingredient6',
+        'ingredient7',
+        'ingredient8',
+        'ingredient9',
+        'ingredient10',
+        'ingredient11',
+        'ingredient12',
+        'ingredient13',
+        'ingredient14',
+        'ingredient15',
         'measure1',
         'measure2',
         'measure3',
@@ -194,9 +195,12 @@ class Cocktail:
         self.Id=0 #int
         self.Name="" #str
         self.Source_name="" #str
+        self.Source_id= 0 #int
         self.Picture_link="" #str
         self.Glass="" #str
+        self.Instructions ="" #str
         self.Ingredients_names=[] #str
+        self.Ingredients_id=[] #int
         self.Ingredients_measures=[] #str
         self.Descriptors_Name = cocktail_descriptors #str
         self.Descriptors_list_size = len(self.Descriptors_Name); #int
@@ -206,7 +210,7 @@ class Cocktail:
     #def create_manual(self):
 
     def show(self):
-        print(self.Id,self.Name,self.Source_name,self.Picture_link,self.Glass,self.Ingredients_names, self.Ingredients_measures)
+        print(self.Id,self.Name,self.Source_name,self.Picture_link,self.Glass, self.Instructions,self.Ingredients_names, self.Ingredients_measures)
     
     def show_Descriptors_Names_by_groups(self):       
         for group in self.Groups:
@@ -230,43 +234,6 @@ class Cocktail:
                 self.Descriptors_Value[i]= Descriptors_Value[i]
     
 
-    ###function to migrate in dataBase 
-
-    def Load_From_database(self,row):
-        self.Id= int(row[0])
-        self.Name= str(row[1])
-        #convert source id in source_name
-        self.Source_name= str(row[2])
-        self.Picture_link= str(row[3])
-        self.Glass= str(row[4])
-        self.Ingredients_names.clear()
-        self.Ingredients_measures.clear()
-        for i in range(15):
-            if(str(row[i+5])!= 0):
-                #convert ingredient_id en ingredient_name
-                self.Ingredients_id.append(int(row[i+5]))
-                self.Ingredients_measures.append(float(row[i+ 20 ]))
-            else: 
-                break
-        for i in range(self.Descriptors_list_size):
-            self.Descriptors_Value[i] = float(row[i+35])
-        
-        #function to migrate in database
-    def Save_into_database(self,database):
-        if self.Id == 0 :
-            self.Id= database.create_new_recipe(self.Name ,self.Ingredients_id ,self.Ingredients_measures, self.Source_id , self.Variation_number,self.Picture_link,self.Glass)
-        if(self.Id != 0):
-            database.save_recipe_descriptors(self.Id, self.Descriptors_Value)
-        else: 
-            print("errror in music.save_into_database")
-
-    def Commit_Descriptors_to_database(self, database):
-        if(self.Id != None):
-            database.save_recipe_descriptors(self.Id, self.Descriptors_Value)
-        else: 
-            print("errror in music.save_into_database")
-
-
 class Ingredient:
 
     def __init__(self):
@@ -275,6 +242,8 @@ class Ingredient:
         self.Base_name=""
         self.type=""
         self.Birth_region=""
-        self.Birth_date = 0 
+        self.Birth_date = ""
     
+    def show(self):
+        print( self.Id , self.Name , self.Base_name ,self.type, self.Birth_region, self.Birth_date )
 

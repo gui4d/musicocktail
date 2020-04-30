@@ -199,19 +199,6 @@ class Music:
         if (len(Extractors_Value)==self.Extractor_list_size) :
             for i in range(self.Extractor_list_size):
                 self.Extractors_Value[i]= Extractors_Value[i]
-
-    #function to export in database
-    def Load_From_database(self,row):
-        self.Id = int(row[0])
-        self.Title= str(row[1])
-        self.Album= str(row[2])
-        self.Comentary= str(row[3])
-        self.Author= str(row[4])
-        self.Year= int(row[5])
-        self.File_path= str(row[6])
-        self.Genre= str(row[7])
-        for i in range(self.Extractor_list_size):
-            self.Extractors_Value[i]= float(row[i+8])
     
     def show(self):
         print(self.Id , self.Title,  self.Album, self.Comentary,self.Author,self.Year,self.File_path,self.Genre, self.Extractors_Value)
