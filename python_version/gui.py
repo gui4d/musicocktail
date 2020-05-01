@@ -46,10 +46,8 @@ class  Gui():
         [sg.Text('Glass', size=(15, 1)), sg.InputText(default_text=Cocktail.Glass)],
         [sg.Text('Instructions', size=(15, 1)), sg.InputText(default_text=Cocktail.Instructions)],
         ]
-        number_ingredient = len(Cocktail.Ingredients_names) 
-
-        for i in range(number_ingredient):
-            layout.append([sg.InputText(default_text=Cocktail.Ingredients_names[i]), sg.InputText(default_text=Cocktail.Ingredients_measures[i])])
+        for i in range(Cocktail.Number_ingredients):
+            layout.append([sg.Text(Cocktail.Ingredients[i][0], size=(15, 1)), sg.InputText(default_text=Cocktail.Ingredients[i][2])])
         for i in range(Cocktail.Descriptors_list_size):
             layout.append([sg.Text(Cocktail.Descriptors_Name[i], size=(15, 1)), sg.InputText(default_text=Cocktail.Descriptors_Value[i])])
         container =[[sg.Button('Submit'), sg.Button('Next'), sg.Button('Previous'), sg.Button('Stop')],
@@ -64,11 +62,10 @@ class  Gui():
             Cocktail.Picture_link=values[2]
             Cocktail.Glass=values[3]
             Cocktail.Instructions = values[4]
-            for i in range(number_ingredient):
-                Cocktail.Ingredients_names[i] = values[i + 5][0]
-                Cocktail.Ingredients_measures=[i] = values[i + 5][1]
+            for i in range(Cocktail.Number_ingredients):
+                Cocktail.Ingredients[i][2] = values[i + 5]
             for i in range(Cocktail.Descriptors_list_size): 
-                Cocktail.Descriptors_Value[i] = float(values[number_ingredient + 5 + i])
+                Cocktail.Descriptors_Value[i] = float(values[Cocktail.Number_ingredients + 5 + i])
         return event
     
 

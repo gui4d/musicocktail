@@ -8,7 +8,7 @@ from IA import *
 ###update les recurences d'ingredients et de recettes 
 ### update les fundaments ou suprimmer. => creer d'autres arborescences
 #remove TESTZONE #
-
+# send always 1 element by ask in reccipes , musics , ingredients function 
 default_data_path = r"./Musicocktail.db"
 
 class DataBase():
@@ -284,59 +284,78 @@ class DataBase():
         else :
             return  cur.fetchall()
     
-    ## recipe management
-    def save_recipe_data(self,recipe):
-        if recipe.Source_name !="":
-            source_recipe_id = self.id_of_recipe(recipe.Source_name)
-        else : 
-            source_recipe_id = 0
-        ingredient_ids = [ self.id_of_ingredient(ingredient) for ingredient in recipe.Ingredients_names]
-        number_ingredient = len(ingredient_ids)
-        if  0 in ingredient_ids: 
-            print( "WARNING : Missing ingredient in DataBase :" + recipe.Ingredients_names[ingredient_ids.index(0)])
-            return 0
+    ## recipe management 
+    def update_recipe_data(self, recipe):
+        if recipe.Id == 0 :
+            print( " recipe with no identification ") 
+            return 0 
+        values = tuple([recipe.Name, recipe.Source_id , recipe.Picture_link, recipe.Glass , recipe.Instructions] + [recipe.Ingredients[i][1] for i in range(recipe.Number_ingredients)] + [recipe.Ingredients[i][2] for i in range(recipe.Number_ingredients)] + [recipe.Id])
+        command = """ UPDATE """ + self.current_recipe_table + """ SET name = ? , source_id = ? ,picture_link = ? ,glass = ?, Instructions = ? """
+        for i in range(recipe.Number_ingredients):
+            command += ", ingredient" + str(i+1) + "_id  = ? "
+        for i in range(recipe.Number_ingredients):
+            command += ", measure" + str(i+1) + " = ?"
+        command +=""" WHERE id = ?"""  
 
-        if recipe.Id != 0 :
-            values = tuple([recipe.Name, source_recipe_id , recipe.Picture_link, recipe.Glass , recipe.Instructions] + ingredient_ids + recipe.Ingredients_measure+ [recipe.Id])
-            command = """ UPDATE """ + self.current_recipe_table + """ SET name = ? , source_id = ? ,picture_link = ? ,glass = ?, Instructions = ? """
-            for i in range(number_ingredient):
-                command += ", ingredient" + str(i+1) + "_id  = ? "
-            for i in range(number_ingredient):
-                command += ", measure" + str(i+1) + " = ?"
-            command +=""" WHERE id = ?"""      
-        else :         
-            values = tuple([recipe.Name, source_recipe_id , recipe.Picture_link, recipe.Glass , recipe.Instructions] + ingredient_ids + recipe.Ingredients_measures )
-            command = """INSERT INTO """ + self.current_recipe_table +   """(name , source_id ,picture_link ,glass , Instructions """
-            for i in range(number_ingredient):
-                command += ", ingredient" + str(i+1) + "_id  "
-            for i in range(number_ingredient):
-                command += ", measure" + str(i+1)
-            command += ")  VALUES(?,?,?,?,?"
-            for i in range(number_ingredient*2):
-                command += ",?"
-            command += " )"
-        
         cur = self.__execute_with_values(command, values)
         if cur is None : 
             return 0 
         else: 
             return cur.lastrowid
 
-    def save_recipe_descriptors(self, recipe):
+    def update_recipe_descriptors(self, recipe):
         if recipe.Id == 0 : 
-            print( "save recipe before saving descriptors") 
-            return False
-        values =  tuple(list(recipe.Descriptors_Value).append(reipe.Id)) 
-        command = """ UPDATE """ + self.current_recipe_table + """" SET """
-        for descriptors in cocktail_descriptors:
-            command += descriptors + "  = ? , "
-        command = command[:-2]
-        command += """ WHERE id = """ + str(recipe.Id)
-        cur  = self.__execute_with_values(command, values)
+            print("Recipe is not registered")
+            return 0 
+        else : 
+            values =  tuple(list(recipe.Descriptors_Value).append(recipe.Id)) 
+            command = """ UPDATE """ + self.current_recipe_table + """" SET """
+            for descriptors in cocktail_descriptors:
+                command += descriptors + "  = ? , "
+            command = command[:-2]
+            command += """ WHERE id = """ + str(recipe.Id)
+            cur  = self.__execute_with_values(command, values)
+            if cur is None : 
+                return False
+            else: 
+                return True
+
+    def save_recipe(self,recipe):
+        recipe.Source_id = self.id_of_recipe(recipe.Source_name)
+        for i in range(recipe.Number_ingredients):
+            recipe.Ingredients[i][1] = self.id_of_ingredient(recipe.Ingredients[i][0])
+            if recipe.Ingredients[i][1]==0 : 
+                print( "WARNING : Missing ingredient in DataBase :" + recipe.Ingredients[i][0])
+                return 0 
+                
+        values = tuple([recipe.Name, recipe.Source_id , recipe.Picture_link, recipe.Glass , recipe.Instructions] + [recipe.Ingredients[i][1] for i in range(recipe.Number_ingredients)]  + [recipe.Ingredients[i][2] for i in range(recipe.Number_ingredients)])
+        command = """INSERT INTO """ + self.current_recipe_table +   """(name , source_id ,picture_link ,glass , Instructions """
+        for i in range(recipe.Number_ingredients):
+            command += ", ingredient" + str(i+1) + "_id  "
+        for i in range(recipe.Number_ingredients):
+            command += ", measure" + str(i+1)
+        command += ")  VALUES(?,?,?,?,?"
+        for i in range(recipe.Number_ingredients*2):
+            command += ",?"
+        command += " )"
+        cur = self.__execute_with_values(command, values)
         if cur is None : 
-            return False
-        else: 
-            return True
+            return 0 
+        else:
+            recipe.Id =cur.lastrowid
+            des= list(recipe.Descriptors_Value)
+            des.append(recipe.Id)
+            values_bis =  tuple(des) 
+            command = """ UPDATE """ + self.current_recipe_table + """" SET """
+            for descriptors in cocktail_descriptors:
+                command += descriptors + "  = ? , "
+            command = command[:-2]
+            command += """ WHERE id = """ + str(recipe.Id)
+            cur  = self.__execute_with_values(command, values_bis)
+            if cur is None : 
+                return 0
+            else: 
+                return recipe.Id
 
     def number_recipes(self):
         command = " SELECT COUNT(*) FROM " + self.current_recipe_table
@@ -379,14 +398,13 @@ class DataBase():
         cocktail.Picture_link= str(row[3])
         cocktail.Glass= str(row[4])
         cocktail.Instructions = str(row[5]) 
-        cocktail.Ingredients_names.clear()
-        cocktail.Ingredients_measures.clear()
         for i in range(15):
             if(row[i+6]!= None):
-                cocktail.Ingredients_id.append(int(row[i+6]))
-                cocktail.Ingredients_names.append(self.name_of_ingredient(int(row[i+6])))
-                cocktail.Ingredients_measures.append(float(row[i+ 21 ]))
+                cocktail.Ingredients[i][1]=int(row[i+6]) # Id
+                cocktail.Ingredients[i][0]=self.name_of_ingredient(int(row[i+6])) # name
+                cocktail.Ingredients[i][2]=float(row[i+ 21 ]) # meaure
             else: 
+                cocktail.Number_ingredients = i 
                 break
         for i in range(cocktail.Descriptors_list_size):
             if( row[i + 36 ] == None): 
@@ -405,11 +423,13 @@ class DataBase():
             return recipes[0].name      
    
     def id_of_recipe(self, name):
-        recipes = self.recipe(name)
-        if len(recipes)==0: 
+        if name == "": 
+            return 0 
+        Cocktails = self.recipes(name)
+        if len(Cocktails)==0: 
              return 0 
         else: 
-            return recipes[0].Id
+            return Cocktails[0].Id
 
     def __all_recipes_rows(self):
         command = "SELECT *  FROM " + self.current_recipe_table

@@ -59,16 +59,25 @@ class Excel_importer():
             recipe= new_recipes.iloc[i,:]
             new_recipe = Cocktail()
             new_recipe.Name = recipe[0]
-            new_recipe.source_recipe= recipe[1]
-            new_recipe.picture_link= recipe[2]
-            new_recipe.glass =  recipe[3]
+            new_recipe.Source_recipe = recipe[1]
+            new_recipe.Picture_link = recipe[2]
+            new_recipe.Glass =  recipe[3]
             new_recipe.Instructions = recipe[4]
             ####find an other way to clean the entrant data 
             ingredient_names = recipe[5:19].replace(' ', np.nan).replace('\r\n', np.nan).replace('\n', np.nan).dropna().tolist()
             ingredient_measures = recipe[20:34].replace(' ', np.nan).dropna().replace('\r\n', np.nan).replace('\n', np.nan).dropna().tolist()
-            new_recipe.Ingredients_names = list(ingredient_names)
-            new_recipe.Ingredients_measures = list(ingredient_measures)
-            new_recipe.Ingredients_measures = self.cocktail_unity_conversion(new_recipe.Ingredients_measures)
+            ingredient_measures = self.cocktail_unity_conversion(ingredient_measures)
+            new_recipe.Number_ingredients = len(ingredient_names)
+            for i in range(new_recipe.Number_ingredients): 
+                        new_recipe.Ingredients[i][0]= ingredient_names[i]
+                        if new_recipe.Ingredients[i][0]=="":
+                            print( "WARNING : in load_recipe , empty ingredient")
+                        try:
+                            new_recipe.Ingredients[i][2] = ingredient_measures[i]
+                        except IndexError :
+                            new_recipe.Ingredients[i][2] = 0.
+                            print("WARNING : in load_recipe, missing measure in ", new_recipe.Name)
+            
             ################################################""
             for i in range( len(cocktail_descriptors_group)):
                 if recipe[i+35] in cocktail_descriptors :
@@ -99,25 +108,24 @@ class Excel_importer():
 
     def cocktail_unity_conversion(self,measure_array, total_amount=200):
         already_poured = 0
-        clean_measure= []
+        clean_measure= [ 0. for i in measure_array]
         complete= -1
         part = []
         total_part = 0
         multiplier = 1
         value = 0  
-        for measure in measure_array: 
-            multiplier = self.unity_finder(measure)
-            value= self.regex_convert(measure)
-            if measure.find("Fill")!=-1 or measure.find("Top")!=-1:
-                clean_measure.append(0)
-                complete = len(clean_measure)-1
-            elif measure.find("part")!=-1:
-                clean_measure.append(value)
+        for i in range(len(measure_array)): 
+            multiplier = self.unity_finder(measure_array[i])
+            value= self.regex_convert(measure_array[i])
+            if measure_array[i].find("Fill")!=-1 or measure_array[i].find("Top")!=-1:
+                complete = i
+            elif measure_array[i].find("part")!=-1:
+                clean_measure[i]=value
                 total_part += value
-                part.append(len(clean_measure)-1)
+                part.append(i)
             else: 
-                clean_measure.append(multiplier*value)
-                already_poured += clean_measure[-1]            
+                clean_measure[i] = multiplier*value
+                already_poured += clean_measure[i]            
         if total_part!=0 and already_poured < total_amount: 
             for i in part:
                 clean_measure[i] *= (total_amount - already_poured)/total_part
@@ -130,9 +138,9 @@ class Excel_importer():
             multplier= 29.5735
         elif measure.find("cl") !=-1:
             multplier = 10.
-        elif measure.find("Shot")!=-1 :
+        elif measure.find("Shot")!=-1 or measure.find("shot")!=-1  :
             multplier= 44.3603
-        elif measure.find("dash")!=-1:
+        elif measure.find("dash")!=-1 or measure.find("Dash")!=-1:
             multplier= 0.62
         elif measure.find("wedge")!=-1:
             multplier = 0.5
@@ -140,7 +148,7 @@ class Excel_importer():
             multplier = 0.1
         elif measure.find("cup")!=-1:
             multplier = 236.588
-        elif measure.find("slash")!=-1:
+        elif measure.find("splash")!=-1 or measure.find("Splash")!=-1:
             multplier= 5.91
         elif measure.find("tsp")!=-1:
             multplier= 4.92892
@@ -168,7 +176,7 @@ class Excel_importer():
                 return (self.regex_convert(element[:i]) + self.regex_convert(element[i+1:]))/2 
         for i in range(size ):
             if element[i] =="/":
-                divis = self.regex_convert(element[i+1])
+                divis = self.regex_convert(element[i+1:])
                 if divis != 0:
                     divid = self.regex_convert(element[:i])
                     return divid/divis

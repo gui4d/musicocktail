@@ -199,9 +199,8 @@ class Cocktail:
         self.Picture_link="" #str
         self.Glass="" #str
         self.Instructions ="" #str
-        self.Ingredients_names=[] #str
-        self.Ingredients_id=[] #int
-        self.Ingredients_measures=[] #str
+        self.Ingredients=[["",0,0.] for i in range(15)] #str name / #int id / #flot  measure
+        self.Number_ingredients = 0
         self.Descriptors_Name = cocktail_descriptors #str
         self.Descriptors_list_size = len(self.Descriptors_Name); #int
         self.Descriptors_Value = [0. for i in range(self.Descriptors_list_size)]  #float
@@ -210,7 +209,10 @@ class Cocktail:
     #def create_manual(self):
 
     def show(self):
-        print(self.Id,self.Name,self.Source_name,self.Picture_link,self.Glass, self.Instructions,self.Ingredients_names, self.Ingredients_measures)
+        print(self.Id,self.Name,self.Source_name,self.Picture_link,self.Glass, self.Instructions,self.Ingredients)
+    
+    def summary(self):
+        print(self.Id,self.Name,self.Source_name,self.Picture_link,self.Glass, self.Instructions,self.Ingredients)
     
     def show_Descriptors_Names_by_groups(self):       
         for group in self.Groups:

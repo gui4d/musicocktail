@@ -4,57 +4,34 @@ from IA import *
 from Music import *
 from Cocktail import *
 from Gui import *
+from Main import *
 
+class Test(Main):
 
-class Test():
+    def __init__(self , Excel_path = "./Database/Database.xlsx" , Sql_path = r"./DataTest/test.db" , IA_path= "./DataTest/testMatrix.npy", IA_ref_path ="./DataTest/testMatrix.npy"):
+        self.excel_path = Excel_path
+        self.excel = Excel_importer(self.excel_path)
+        self.excel_loaded = False
+        self.sql_path = Sql_path
+        self.data = DataBase(self.sql_path)
+        self.IA_path= IA_path
+        self.IA_ref_path = IA_ref_path
+        self.gui = Gui()
 
-    def __init__(self):
-        self.excel_path = "./Database/Database.xlsx"
-        self.sql_path = r"./DataTest/test.db"
-        self.Data = DataBase(self.sql_path)
-        self.IA_path= "./DataTest/testMatrix.npy"
-
-    def read_excel(self):
-        excel_file = Excel_importer(self.excel_path)
-        excel_file.load_ingredients("Ingredients")
-        excel_file.load_recipes("Recettes")
-        excel_file.load_musics("Musiques")
-        excel_file.summary()
-
-    def create_database(self):
-        if (self.Data.open()):
-            self.Data.create_tables()
-            self.Data.summary()
-            self.Data.close()
-        
-    def read_database(self):
-        if (self.Data.open()):
-            ingredients = self.Data.ingredients()
-            for ingredient in ingredients:
-                ingredient.show()
-            recipes = self.Data.recipes()
-            for recipe in recipes : 
-                recipe.show()
-            musics = self.Data.musics()
-            for music in musics :
-                music.show()
-            self.Data.close()
-
-    def excel_to_database(self):
-        if (self.Data.open()):
-            #self.Data.create_tables()
-            excel_file = Excel_importer(self.excel_path)
-            list_ingredients = excel_file.load_ingredients("Ingredients")
-            list_recipes = excel_file.load_recipes("Recettes")
-            list_musics  = excel_file.load_musics("Musiques")
-            for ingredient in list_ingredients:
-                self.Data.save_ingredient(ingredient)
-            for recipe in list_recipes : 
-                self.Data.save_recipe_data(recipe)
-                self.Data.save_recipe_descriptors(recipe)
-            for music in list_musics:
-                self.Data.save_music_data(music)
-            self.Data.close()
+    
+    def test_everything(self):
+        print("CREATE DATABASE ############################################")
+        self.create_database()
+        print("EXCEL TO DATABASE ############################################")
+        self.excel_to_database()
+        print("READ DATABASE ############################################")
+        self.read_database(verbose=False)
+        print("MODIFY DATABASE ###############")
+        self.graphical_Cocktails_Modification()
+        #self.distance_recipe_music()
+        #self.SurAprentisage_IA()
+        #self.graphical_Music_Modification()
+        #self.graphical_Cocktail_Modification()
 
     def create_cocktail(self):
         pina_colada = Cocktail()
@@ -86,7 +63,7 @@ class Test():
                 Correlation_test.Add_Relation(i,j, -i + j + math.sqrt(i*j) )
         Correlation_test.Normalise()
         return Correlation_test
-
+    
     def distance_recipe_music(self):
         pina_colada = self.create_cocktail()
         muse_uprise = self.create_music()
@@ -107,27 +84,5 @@ class Test():
         for i in range (10):
             Ia0.Apprentissage(Music0,Cocktail0)
             Ia0.show_Matrix()
-
-    def Manual_Learning_IA(self):
-        Ia = IA()
-        Ia.load_matrix_at(self.IA_path)
-        Ia.show_Matrix()
-        Ia.save_matrix_at(self.IA_path)
-
-    def graphical_Music_Modification(self): 
-        graph = Gui()
-        music = self.create_music()
-        music.show()
-        graph.Modify_Music(music)
-        music.show()
-    
-    def graphical_Cocktail_Modification(self):
-        graph = Gui()
-        cocktail = self.create_cocktail()
-        cocktail.show()
-        cocktail.show_Descriptors_Values_by_groups()
-        graph.Modify_Cocktail(cocktail)
-        cocktail.show()
-        cocktail.show_Descriptors_Values_by_groups()
 
 
