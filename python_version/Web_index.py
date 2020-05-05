@@ -1,8 +1,10 @@
+#!/usr/bin/python3
 # coding: utf-8
 import cgi 
 import cgitb
 from Web_template import *
-import csv   
+import csv 
+from datetime import datetime
 
 corelation_path= r'./Database/Correlations.csv'
 
@@ -16,6 +18,9 @@ if form.getvalue('Cocktail')!=None:
     print(infos)
     print(saved_page(infos))
     with open(corelation_path, 'a') as f:
+        now = datetime.now()
+        dt_string = now.strftime("%d/%m/%Y-%H:%M:%S")
+        infos.append(dt_string)
         writer = csv.writer(f)
         writer.writerow(infos)
 

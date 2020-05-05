@@ -1,7 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import math
-import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from datetime import date
 import random

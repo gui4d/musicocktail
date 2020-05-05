@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from DataBase import *
 from Music import *
 from Cocktail import *
