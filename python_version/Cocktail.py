@@ -54,14 +54,6 @@ cocktail_descriptors =[ 'Main_Alcool_Vodka',
        'Main_Alcool_Whiskey' ,
        'Main_Alcool_Tequila_and_Mezcal' , 
 
-       'Genre_Classic' , 
-       'Genre_Modern_Classics' ,
-       'Genre_Tiki_and_Tropical' ,
-       'Genre_Coffee_and_Dessert' ,
-       'Genre_Shots_and_Shooters',
-       'Genre_Punches' ,
-       'Genre_Nonalcoholic' ,
-
        'Preparation_On_the_Rocks' ,
        'Preparation_Up_Cocktails',
        'Preparation_Neat_Cocktails' ,
@@ -72,21 +64,29 @@ cocktail_descriptors =[ 'Main_Alcool_Vodka',
        'Preparation_Heated' ,
        'Preparation_Frozen_Blended' ,
 
-       'Occasion_New_Year_Eve' ,
-       'Occasion_Valentine_Day' ,
-       'Occasion_St_Patrick_Day' ,
-       'Occasion_National_day' ,
-       'Occasion_Halloween' ,
-       'Occasion_Thanksgiving' ,
-       'Occasion_Christmas' ,
-       'Occasion_Spring' ,
-       'Occasion_Summer' ,
-       'Occasion_Winter' ,
-       'Occasion_Autumn' ,
-       'Occasion_Brunch' ,
-       'Occasion_Aperitifs_and_Digestifs' ,
-       'Occasion_Nightcaps' ,
-       'Occasion_Other' ,
+        'Occasion_Soiree',
+        'Occasion_Party',
+        'Occasion_night',
+        'Occasion_moring',
+        'Occasion_celebration',
+        'Occasion_Romantic',
+        'Occasion_Terrace',
+        'Occasion_BBQ',
+        'Occasion_vacation',
+        'Occasion_Picnic',
+        'Occasion_Diner',
+        'Occasion_Aperetif_Digestifs',
+        'Occasion_Intelectual_time',
+        'Occasion_Hard_Time',
+        'Occasion_Reception',
+        'Occasion_Winter',
+        'Occasion_Spring',
+        'Occasion_Summer',
+        'Occasion_Autuumn',
+        'Occasion_Everyday',
+        'Occasion_Detox',
+        'Occasion_Special_event',
+        'Occasion_Coffe_Dessert',    
 
        'Flavors_Bitter' ,
        'Flavors_Sweet' ,
@@ -96,6 +96,14 @@ cocktail_descriptors =[ 'Main_Alcool_Vodka',
        'Flavors_Fruity' ,
        'Flavors_Smoky' ,
        'Flavors_Herbaceous' ,
+       'Flavors_Light',
+        'Flavors_Creamy',
+        'Flavors_Refreshing',
+        'Flavors_dry',
+        'Flavor_tonic',
+        'Flavor_acid',
+        'Flavor_mild',
+        'Flavor_flavored',
 
        'Paul_Clarke_Ancestrals' ,
        'Paul_Clarke_Sours' ,
@@ -128,36 +136,22 @@ cocktail_descriptors =[ 'Main_Alcool_Vodka',
        'Gary_Regan_Snappers' ,
        'Gary_Regan_Sours' ,
        'Gary_Regan_Tropical' ,
-
-       'IBA_unforgettables' ,
-       'IBA_Contemporary_classics' ,
-       'IBA_New_era' ,
-
-       'Region_Musulman' ,
-       'Region_Latino_American' ,
-       'Region_Slav' ,
-       'Region_extreme_orient' ,
-       'Region_Africa' ,
-       'Region_South_America' ,
-       'Region_Caribbean' ,
-       'Region_Europe' ,
-       'Region_Mediterranea' ,
-       'Region_India' ,
-       'Region_extreme_asia' ,
-
-       'City_Londres' ,
-       'City_Paris' ,
-       'City_Singapour' ,
-       'City_Venise' ,
-       'City_Massachusetts' ,
-       'City_Mexique' ,
-       'City_San_Francisco' ,
-       'City_Cuba' ,
-       'City_Brésil' ,
-       'City_Porto_Rico' ,
-       'City_California' ,
-       'City_New_York' ,
-       'City_Other' ,
+        'Region_North_Africa',
+        'Region_South_Africa',
+        'Region_South_America',
+        'Region_North_America',
+        'Region_East_Asia',
+        'Region_Center_Asia',
+        'Region_South_East_Asia',
+        'Region_Caribbean',
+        'Region_Eastern_Europe',
+        'Region_North_Europe',
+        'Region_India',
+        'Region_Orient',
+        'Region_Mediterranea',
+        'Region_island',
+        'Region_City',
+        'Region_countryside',
 
        'age_0' ,
        'age_1000' ,
@@ -173,17 +167,7 @@ cocktail_descriptors =[ 'Main_Alcool_Vodka',
        'age_2010' ,
        'age_2015' ,
        'age_2020' ,]
-cocktail_descriptors_group = [[0,1,2,3,4,5,6,7,8,9,10,11,12,13],
-        [14,15,16,17,18,19,20],
-        [21,22,23,24,25,26,27,28,29],
-        [30,31,32,33,34,35,36,37,38,39,40,41,42,43,44],
-        [45,46,47,48,49,50,51,52],
-        [53,54,55,56,57,58,59,60,61,62,63,64],
-        [65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82],
-        [83,84,85],
-        [86,87,88,89,90,91,92,93,94,95,96],
-        [97,98,99,100,101,102,103,104,105,106,107,108,109],
-        [110,111,112,113,114,115,116,117,118,119,120,121,122,123]]
+
 cocktail_descriptors_title =['Main_Alcool','Genre','Preparation','Occasion','Flavors','Paul_Clarke','Gary_Regan' , 'IBA' ,'Region','City','age']
 ingredient_data= ['name','base_name','type','birth_region','birth_date']
  
@@ -202,28 +186,20 @@ class Cocktail:
         self.Descriptors_Name = cocktail_descriptors #str
         self.Descriptors_list_size = len(self.Descriptors_Name); #int
         self.Descriptors_Value = [0. for i in range(self.Descriptors_list_size)]  #float
-        self.Groups = cocktail_descriptors_group
 
     #def create_manual(self):
 
     def show(self):
         print(self.Id,self.Name,self.Source_name,self.Picture_link,self.Glass, self.Instructions,self.Ingredients)
+        self.show_Descriptors()
     
     def summary(self):
         print(self.Id,self.Name,self.Source_name,self.Picture_link,self.Glass, self.Instructions,self.Ingredients)
     
-    def show_Descriptors_Names_by_groups(self):       
-        for group in self.Groups:
-            for element in group: 
-                print(self.Descriptors_Name[element])
-            print("###############")
-    
-    def show_Descriptors_Values_by_groups(self):       
-        for group in self.Groups:
-            for element in group: 
-                print(self.Descriptors_Value[element])
-            print("###############")
-    
+    def show_Descriptors(self):       
+            for i in range(self.Descriptors_list_size): 
+                print(self.Descriptors_Name[i], " : " , self.Descriptors_Value[i])
+       
     def Randomize_Descriptors(self):
         for i in range(self.Descriptors_list_size):
             self.Descriptors_Value[i]= float(random.randint(0,100))/100.

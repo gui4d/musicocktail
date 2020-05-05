@@ -13,13 +13,13 @@ class  Gui():
     def Modify_Music(self,Music): 
         layout = [
         [sg.Button('Submit'), sg.Button('Next'), sg.Button('Previous'), sg.Button('Stop')],
-        [sg.Text('Title', size=(15, 1)), sg.InputText(default_text=Music.Title)],
-        [sg.Text('Album', size=(15, 1)), sg.InputText(default_text=Music.Album)],
-        [sg.Text('Comentary', size=(15, 1)), sg.InputText(default_text=Music.Comentary)],
-        [sg.Text('Author', size=(15, 1)), sg.InputText(default_text=Music.Author)],
-        [sg.Text('Year', size=(15, 1)), sg.InputText(default_text=Music.Year)],
-        [sg.Text('File_path', size=(15, 1)), sg.InputText(default_text=Music.File_path)],
-        [sg.Text('Genre', size=(15, 1)), sg.InputText(default_text=Music.Genre)],
+        [sg.Text('Title', size=(25, 1)), sg.InputText(default_text=Music.Title)],
+        [sg.Text('Album', size=(25, 1)), sg.InputText(default_text=Music.Album)],
+        [sg.Text('Comentary', size=(25, 1)), sg.InputText(default_text=Music.Comentary)],
+        [sg.Text('Author', size=(25, 1)), sg.InputText(default_text=Music.Author)],
+        [sg.Text('Year', size=(25, 1)), sg.InputText(default_text=Music.Year)],
+        [sg.Text('File_path', size=(25, 1)), sg.InputText(default_text=Music.File_path)],
+        [sg.Text('Genre', size=(25, 1)), sg.InputText(default_text=Music.Genre)],
         ]
                  
         # Very basic window.  Return values using auto numbered key
@@ -40,16 +40,16 @@ class  Gui():
     def Modify_Cocktail(self,Cocktail):
         background = '#F0F0F0'
         layout = [
-        [sg.Text('Name', size=(15, 1)), sg.InputText(default_text=Cocktail.Name)],
-        [sg.Text('Source_name', size=(15, 1)), sg.InputText(default_text=Cocktail.Source_name)],
-        [sg.Text('Picture_link', size=(15, 1)), sg.InputText(default_text=Cocktail.Picture_link)],
-        [sg.Text('Glass', size=(15, 1)), sg.InputText(default_text=Cocktail.Glass)],
-        [sg.Text('Instructions', size=(15, 1)), sg.InputText(default_text=Cocktail.Instructions)],
+        [sg.Text('Name', size=(25, 1)), sg.InputText(default_text=Cocktail.Name)],
+        [sg.Text('Source_name', size=(25, 1)), sg.InputText(default_text=Cocktail.Source_name)],
+        [sg.Text('Picture_link', size=(25, 1)), sg.InputText(default_text=Cocktail.Picture_link)],
+        [sg.Text('Glass', size=(25, 1)), sg.InputText(default_text=Cocktail.Glass)],
+        [sg.Text('Instructions', size=(25, 1)), sg.InputText(default_text=Cocktail.Instructions)],
         ]
         for i in range(Cocktail.Number_ingredients):
-            layout.append([sg.Text(Cocktail.Ingredients[i][0], size=(15, 1)), sg.InputText(default_text=Cocktail.Ingredients[i][2])])
+            layout.append([sg.Text(Cocktail.Ingredients[i][0], size=(25, 1)), sg.InputText(default_text=Cocktail.Ingredients[i][2])])
         for i in range(Cocktail.Descriptors_list_size):
-            layout.append([sg.Text(Cocktail.Descriptors_Name[i], size=(15, 1)), sg.InputText(default_text=Cocktail.Descriptors_Value[i])])
+            layout.append([sg.Text(Cocktail.Descriptors_Name[i], size=(25, 1)), sg.InputText(default_text=Cocktail.Descriptors_Value[i])])
         container =[[sg.Button('Submit'), sg.Button('Next'), sg.Button('Previous'), sg.Button('Stop')],
                     [sg.Column(layout, scrollable=True)],
                 ]

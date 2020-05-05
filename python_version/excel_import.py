@@ -5,8 +5,6 @@ from Music import *
 from IA import *
 from Cocktail import * 
 
-##transform into music , cocktail , recipe before going to DB  ( also Clean )
-
 class Excel_importer():
 
     def __init__(self,excel_path):
@@ -77,12 +75,6 @@ class Excel_importer():
                         except IndexError :
                             new_recipe.Ingredients[i][2] = 0.
                             print("WARNING : in load_recipe, missing measure in ", new_recipe.Name)
-            
-            ################################################""
-            for i in range( len(cocktail_descriptors_group)):
-                if recipe[i+35] in cocktail_descriptors :
-                    descriptor_index = cocktail_descriptors.index(recipe[i+35])
-                    new_recipe.Descriptors_Value[descriptor_index]= 1.
             self.loaded_recipes.append(new_recipe)
         return self.loaded_recipes
 
