@@ -4,7 +4,14 @@ from Music import *
 from Cocktail import *
 import random  as rd
 
-template_site_begin="""
+#basic templates
+
+template_form_begin=""" <form action="/Web_index.py" target="_self">"""
+template_form_end="""</form>"""
+template_info= """<input type="hidden" name="{Name}" value="{Value}" />"""
+
+template_site_begin= """
+<!-- init -->
 <!DOCTYPE html>
 <html>
 <title>Musicockatail</title>
@@ -58,29 +65,23 @@ body, h1,h2,h3,h4,h5,h6 {
   <header class="w3-container w3-padding-32 w3-center w3-black" id="home">
     <h1 class="w3-jumbo">HELP THE MUSICOCKTAIL</h1>
   </header>
-
 """
 template_site_about= """
   <!-- About Section -->
   <div class="w3-content w3-justify w3-text-grey w3-padding-64" id="about">
     <h2 class="w3-text-light-grey">le Musicockatail c'est </h2>
-    <hr style="width:200px" class="w3-opacity">
-    <p> un barman automate, capable de choisir la boisson qui te ferais plaisir. Donne lui ta musique du moment et il te trouvera ce que tu as besoin... <br\>
+    <p> un barman automate, capable de choisir la boisson qui te ferait plaisir. Donne lui ta musique du moment et il te trouvera ce que tu as besoin... <br\>
 	 Mais pour l'instant il est un peu rouill&eacute , il a besoin de ton aide. Indique lui quel est le meilleur choix parmis la selection qu'il te propose. Avec de l'entrainement, il devrait s'am&eacuteliorer. 
 	</p>
-    <h3 class="w3-padding-16 w3-text-light-grey">Quelques chiffres</h3>
- 
-    <p class="w3-wide">Musiques &eacutecout&eacutees</p>
-    <div class="w3-white">
-      <div class="w3-dark-grey" style="height:28px;width:85%">0</div>
-    </div>
-    <p class="w3-wide">Cocktails en reserve</p>
-    <div class="w3-white">
-      <div class="w3-dark-grey" style="height:28px;width:85%">400</div>
-    </div><br>
-	<!-- End About Section -->
   </div>
 """
+
+template_Introduction_Reverse_Search= template_form_begin +""" <div class="w3-padding-64 w3-content w3-text-grey" id="search">
+    <h2 class="w3-text-light-grey">La Surprise du barman</h2>
+    <p>Le Barman te propose de te r&eacutealiser un Cocktail surprise, en &eacutechange tu lui trouve une musique apropri&eacute </p>
+    <button class="w3-button w3-white w3-padding-large w3-hover-black"  value="1" id="GET_Reverse_Search" name="GET_Reverse_Search" type="submit">  <i class="fa fa-glass"></i> Cocktail Surprise</button>
+    </div>
+""" + template_form_end
 
 template_site_end= """
 <!-- Footer -->
@@ -95,25 +96,14 @@ template_site_end= """
 </html>
 
 """
-#change action page 
-template_Music_selection= """
-  <!-- Music Selection-->
-  <div class="w3-padding-64 w3-content w3-text-grey" id="search">
-    <h2 class="w3-text-light-grey">Le comptoir</h2>
-    <hr style="width:200px" class="w3-opacity">
 
-    <p>Choisis ta musique du moment</p>
-
-    <form action="/Web_index.py" target="formDestination">
-      <p><input class="w3-input w3-padding-16" type="url" placeholder="lien url" required name="url"></p>
-      <p>
-        <button class="w3-button w3-light-grey w3-padding-large" type="submit">
-          <i class="fa fa-music"></i> ASK FOR COCKTAIL
-        </button>
-      </p>
-    </form>
-  <!-- End Music Selection -->
-  </div>
+template_cocktail_list_begin="""
+      <h3 class="w3-padding-16 w3-text-light-grey" > La Carte</h3>
+      <div class="w3-row-padding" style="margin:0 -16px">
+"""
+template_cocktail_list_end= """
+      </div> 
+      <h3 class=" w3-content w3-margin-bottom ">Riens ne te satisfait ? Relance la page !</h3> 
 """
 
 template_cocktail_begin=""" 
@@ -125,17 +115,19 @@ template_cocktail_begin="""
 template_cocktail_ingredients = """
             <li class="w3-padding-16">{ingredient}</li>"""
 
-template_cocktail_end = """
+template_cocktail_Select = """
             <li class="w3-light-grey w3-padding-24">
-                <button class="w3-button w3-white w3-padding-large w3-hover-black"  value="{id}" name="Cocktail" type="Cocktail">Choisir</button>
+                <button class="w3-button w3-white w3-padding-large w3-hover-black"  value="{Value}" id="GET_Results" name="GET_Results" type="submit">Choisir</button>
             </li>
-            </ul>
-		</div>
-    </div> """
+            """
 
-template_choosen_cocktail = """
+template_cocktail_end="""</ul>
+		                    </div>
+                      </div> """
+
+template_cocktail_result = """
     <div class="w3-content w3-margin-bottom  w3-opacity w3-hover-opacity-off " >
-      <h3 class="w3-padding-16 w3-text-light-grey" > Merci pour votre choix </h3>
+      <h3 class="w3-padding-16 w3-text-light-grey" > Merci pour ton aide ! </h3>
 		  <div style =" background-image: url('{Picture_link}');  background-color: black ; background-size: cover; background-repeat: no-repeat; >
         <p class="w3-xlarge w3-padding-32"></p>
         <p class="w3-dark-grey  w3-xlarge w3-padding-16 w3-center">{Name}</p>
@@ -146,32 +138,114 @@ template_choosen_cocktail = """
 		  </div>
     </div> 
 """
-template_choosen_Music = """
+
+template_Reverse_Search_begin=""" 
+    <div class="w3-content w3-margin-bottom   id="search" " >
+    <h2 class="w3-text-light-grey">La Surprise du Barman</h2>"""
+template_Reverse_Search_end="""
+    </div>
+    <div>
+    <p class="  w3-padding-64 w3-content w3-margin-bottom w3-text-light-grey">Tu n'aimes pas la surprise ? Relance la page !</p> </div> """
+
+template_Music_Select_begin= """ 
+    <div class="w3-padding-64 w3-content w3-text-grey" id="search">
+    <h2 class="w3-text-light-grey">Le comptoir</h2>
+    <p>Choisis ta musique du moment</p>
+"""
+template_Music_Search = """
+       <p><input class="w3-input w3-padding-16" type="url" placeholder="lien youtube" id="Music_url" required name="Music_url"></p>
+      <p>
+        <button class="w3-button w3-light-grey w3-padding-large" type="submit" value="1" id="GET_Cocktail_list" name="GET_Cocktail_list">
+          <i class="fa fa-music"></i> Choisir cette musique
+        </button>
+      </p>
+"""
+template_Music_Reverse_Search = """
+       <p><input class="w3-input w3-padding-16" type="url" placeholder="lien youtube" id="Music_url" required name="Music_url"></p>
+      <p>
+        <button class="w3-button w3-light-grey w3-padding-large" type="submit" value="0" id="GET_Results" name="GET_Results">
+          <i class="fa fa-music"></i> Choisir cette musique
+        </button>
+      </p>
+ """
+template_Music_Select_end = """ </div>
+"""
+template_Music_Result = """
 <div class="w3-content w3-margin-bottom " >
   <iframe width="560" height="315" src="{url}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>
 """
-template_new_choice = """
+
+template_Introduce_New_Choice =  """
     <div class="w3-container w3-padding-32 w3-center w3-black " >
-       <h1 class="w3-jumbo">New choice </h1>
+      <h2 class="w3-text-light-grey">Nouvel essai  ?</h2>
     </div> 
 """
-def template_cocktails_board(url):
-  Cocktails = Select_Cocktail_randomly() #_blank
-  html ="""
-    <form action="/Web_index.py" target="formDestination">
-      <h3 class="w3-padding-16 w3-text-light-grey" > La Carte</h3>
-      <div class="w3-row-padding" style="margin:0 -16px"> """
+
+
+### constructed template
+
+def template_music_Selection():
+  html = ""
+  html += template_Music_Select_begin
+  html += template_form_begin
+  html += template_Music_Search
+  html += template_form_end
+  html += template_Music_Select_end
+  return html
+      
+def template_cocktails_Selection(url):
+  Cocktails = Select_Cocktail_randomly(6) #_blank
+  html =""
+  html +=template_form_begin
+  html += template_cocktail_list_begin
   for  i in range(len(Cocktails)):
     html += template_cocktail_begin.format(Picture_link=Cocktails[i].Picture_link,Name= Cocktails[i].Name)
     for j in range(Cocktails[i].Number_ingredients):
       html += template_cocktail_ingredients.format(ingredient=Cocktails[i].Ingredients[j][0])
-    infos=','.join([str(Cocktails[i].Id),url])
-    html += template_cocktail_end.format(id=infos)
-  html += """</div> </form>"""
+    html += template_cocktail_Select.format(Value=str(i))
+    html += template_info.format(Value=Cocktails[i].Id, Name="Cocktail_id")
+    html += template_cocktail_end
+  html += template_cocktail_list_end
+  html += template_info.format(Value=url, Name="Music_url")
+  html += template_form_end
   return html 
 
-def Select_Cocktail_randomly(): 
+def  template_Reverse_Searh():
+      Cocktail = Select_Cocktail_randomly(1)[0]
+      html = ""
+      html += template_Reverse_Search_begin
+      html +=template_form_begin
+      html += template_cocktail_begin.format(Picture_link=Cocktail.Picture_link,Name= Cocktail.Name)
+      for j in range(Cocktail.Number_ingredients):
+        html += template_cocktail_ingredients.format(ingredient=Cocktail.Ingredients[j][0])
+      for j in range(Cocktail.Number_ingredients , 8, 1):
+        html += template_cocktail_ingredients.format(ingredient="")
+      html += template_info.format(Value=Cocktail.Id, Name="Cocktail_id")
+      html += template_cocktail_end
+      html += template_Music_Reverse_Search
+      html += template_form_end
+      html += template_Reverse_Search_end
+      return html 
+  
+
+def template_Result(Cocktail_id, Music_url):
+  data = DataBase( DataPath= r"./Database/Database.db")
+  html = ""
+  if (data.open()):
+    Cocktails= data.recipes(int(Cocktail_id))
+    if len(Cocktails)== 0: 
+      print("error cocktail",Cocktail_id )
+      return html
+    else:
+      html += template_cocktail_result.format(Picture_link=Cocktails[0].Picture_link,Name= Cocktails[0].Name)
+      #html += template_choosen_Music.format(url= Music_url)
+      return html
+  else : 
+    print("dataopen error ")
+    return html
+
+def Select_Cocktail_randomly( Number): 
   data = DataBase( DataPath= r"./Database/Database.db")
   if (data.open()):
     Cocktails= []
@@ -179,7 +253,7 @@ def Select_Cocktail_randomly():
     Number_Cocktails =data.number_recipes() 
     if Number_Cocktails == 0: 
       return[]
-    for i in range(6):
+    for i in range(Number):
       ids.append(rd.randint(1,Number_Cocktails))
       Cocktails.append(data.recipes(ids[-1])[0])
     data.close()
@@ -187,33 +261,23 @@ def Select_Cocktail_randomly():
   else : 
     return []
 
-def  template_result(infos):
-  data = DataBase( DataPath= r"./Database/Database.db")
-  html = ""
-  if (data.open()):
-    Cocktails= data.recipes(int(infos[0]))
-    if len(Cocktails)== 0: 
-      print("error cocktail",infos[0] )
-      return html
-    else:
-      html += template_choosen_cocktail.format(Picture_link=Cocktails[0].Picture_link,Name= Cocktails[0].Name)
-      #html += template_choosen_Music.format(url= infos[1])
-      return html
-  else : 
-    print("dataopen error ")
-    return html
-
+#pages
 
 def Welcome_page():
-  html = template_site_begin + template_site_about + template_Music_selection + template_site_end
+  html = template_site_begin + template_site_about + template_music_Selection() +  template_Introduction_Reverse_Search + template_site_end
   return html 
 
-def Cocktails_page(url):
-  html = template_site_begin + template_cocktails_board(url) + template_site_end
-  print(url)
+def Reverse_page():
+  html = template_site_begin + template_Reverse_Searh() + template_site_end
+  return html 
+      
+def Cocktails_list_page(Music_url):
+  print([Music_url])
+  html = template_site_begin + template_cocktails_Selection(Music_url) + template_site_end
   return html
 
-def saved_page(infos):
-  html = template_site_begin  + template_result(infos)+ template_new_choice +  template_Music_selection + template_site_end
+def Result_page(Music_url, Cocktail_id):
+  print([Cocktail_id,Music_url])
+  html = template_site_begin  + template_Result(Cocktail_id, Music_url)+ template_Introduce_New_Choice +  template_music_Selection() + template_Introduction_Reverse_Search + template_site_end
   return html
 
