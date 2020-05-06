@@ -6,7 +6,7 @@ import random  as rd
 
 #basic templates
 
-template_form_begin=""" <form action="/Web_index.py" target="_self">"""
+template_form_begin=""" <form action="/" target="_self">"""
 template_form_end="""</form>"""
 template_info= """<input type="hidden" name="{Name}" value="{Value}" />"""
 
@@ -17,7 +17,7 @@ template_site_begin= """
 <title>Musicockatail</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="http://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
@@ -42,11 +42,11 @@ body, h1,h2,h3,h4,h5,h6 {
 
 <!-- Icon Bar (Sidebar - hidden on small screens) -->
 <nav class="w3-sidebar w3-bar-block w3-small w3-hide-small w3-center">
-  <a href="#" class="w3-bar-item w3-button w3-padding-large w3-black">
+  <a href="/#" class="w3-bar-item w3-button w3-padding-large w3-black">
     <i class="fa fa-home w3-xxlarge"></i>
     <p>HOME</p>
   </a>
-  <a href="#search" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+  <a href="/#search" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
     <i class="fa fa-search w3-xxlarge"></i>
     <p>COCKTAILS</p>
   </a>
@@ -55,8 +55,8 @@ body, h1,h2,h3,h4,h5,h6 {
 <!-- Navbar on small screens (Hidden on medium and large screens) -->
 <div class="w3-top w3-hide-large w3-hide-medium" id="myNavbar">
   <div class="w3-bar w3-black w3-opacity w3-hover-opacity-off w3-center w3-small">
-    <a href="#" class="w3-bar-item w3-button" style="width:25% !important">HOME</a>
-    <a href="#search" class="w3-bar-item w3-button" style="width:25% !important">COCKTAILS</a>
+    <a href="/#" class="w3-bar-item w3-button" style="width:25% !important">HOME</a>
+    <a href="/#search" class="w3-bar-item w3-button" style="width:25% !important">COCKTAILS</a>
   </div>
 </div>
 <!-- Page Content -->
@@ -70,15 +70,15 @@ template_site_about= """
   <!-- About Section -->
   <div class="w3-content w3-justify w3-text-grey w3-padding-64" id="about">
     <h2 class="w3-text-light-grey">le Musicockatail c'est </h2>
-    <p> un barman automate, capable de choisir la boisson qui te ferait plaisir. Donne lui ta musique du moment et il te trouvera ce que tu as besoin... <br\>
-	 Mais pour l'instant il est un peu rouill&eacute , il a besoin de ton aide. Indique lui quel est le meilleur choix parmis la selection qu'il te propose. Avec de l'entrainement, il devrait s'am&eacuteliorer. 
+    <p> Un barman automate, capable de choisir la boisson qui te ferait plaisir. Donne lui ta musique du moment et il te trouvera ce dont tu as besoin... <br\>
+	 Mais pour l'instant il est un peu rouill&eacute, il a besoin de ton aide. Indique lui quel est le meilleur choix parmis la selection qu'il te propose. Avec de l'entrainement, il devrait s'am&eacuteliorer. 
 	</p>
   </div>
 """
 
 template_Introduction_Reverse_Search= template_form_begin +""" <div class="w3-padding-64 w3-content w3-text-grey" id="search">
     <h2 class="w3-text-light-grey">La Surprise du barman</h2>
-    <p>Le Barman te propose de te r&eacutealiser un Cocktail surprise, en &eacutechange tu lui trouve une musique apropri&eacute </p>
+    <p>Le barman te propose de te r&eacutealiser un Cocktail surprise, en &eacutechange tu lui trouve une musique apropri&eacute </p>
     <button class="w3-button w3-white w3-padding-large w3-hover-black"  value="1" id="GET_Reverse_Search" name="GET_Reverse_Search" type="submit">  <i class="fa fa-glass"></i> Cocktail Surprise</button>
     </div>
 """ + template_form_end
@@ -264,7 +264,7 @@ def Select_Cocktail_randomly( Number):
 #pages
 
 def Welcome_page():
-  html = template_site_begin + template_site_about + template_music_Selection() +  template_Introduction_Reverse_Search + template_site_end
+  html = template_site_begin + template_site_about + template_music_Selection() + template_site_end
   return html 
 
 def Reverse_page():
